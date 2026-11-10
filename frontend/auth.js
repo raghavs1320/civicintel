@@ -64,19 +64,19 @@ function handleUnauthorized(reason) {
   const main = document.querySelector('main');
   if (main) {
     main.innerHTML = `
-      <div class="max-w-md mx-auto my-16 bg-slate-900 border border-slate-800 rounded-3xl p-8 text-center shadow-2xl">
-        <div class="w-12 h-12 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-amber-500/20">
-          <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+      <div class="max-w-md mx-auto my-16 bg-white border border-slate-200 rounded-3xl p-8 text-center shadow-xl">
+        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-amber-200">
+          <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
         </div>
-        <h2 class="text-xl font-bold text-white mb-2">Member License Required</h2>
-        <p class="text-xs text-slate-400 mb-6 leading-relaxed">
+        <h2 class="text-xl font-bold text-slate-900 mb-2">Member License Required</h2>
+        <p class="text-xs text-slate-600 mb-6 leading-relaxed">
           This portal feed is licensed exclusively to verified territory sales representatives. Start your 7-day trial to unlock full unmasked direct cell phone numbers.
         </p>
         <div class="space-y-3">
-          <a href="index.html#pricing" class="block w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs py-3.5 rounded-xl transition shadow-lg shadow-emerald-500/20">
+          <a href="checkout.html" class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-3.5 rounded-xl transition shadow-sm">
             Activate 7-Day Access for $1.00 ➔
           </a>
-          <button onclick="activateDemoAccess()" class="block w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs py-2.5 rounded-xl border border-slate-700 transition">
+          <button onclick="activateDemoAccess()" class="block w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs py-2.5 rounded-xl border border-slate-300 transition">
             Test Demo License (Instant Access)
           </button>
         </div>

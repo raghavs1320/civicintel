@@ -7,7 +7,7 @@
       "metro": "Austin",
       "endpoint": "https://data.austintexas.gov/resource/3syk-w9eu.json",
       "type": "socrata_json",
-      "filter_query": "SELECT * WHERE permit_class_mapped = 'Commercial' AND issued_in_last_30_days = 'Yes' ORDER BY issue_date DESC LIMIT 100",
+      "filter_query": "SELECT * WHERE permit_class_mapped = 'Commercial' ORDER BY issue_date DESC LIMIT 200",
       "field_mappings": {
         "permit_id": "permit_number",
         "description": "description",
@@ -28,7 +28,7 @@
       "metro": "Orlando",
       "endpoint": "https://data.cityoforlando.net/resource/ryhf-m453.json",
       "type": "socrata_json",
-      "filter_query": "SELECT * WHERE plan_review_type LIKE '%Commercial%' AND estimated_cost > 25000 ORDER BY processed_date DESC LIMIT 100",
+      "filter_query": "SELECT * WHERE plan_review_type LIKE '%Commercial%' AND estimated_cost > 25000 ORDER BY processed_date DESC LIMIT 200",
       "field_mappings": {
         "permit_id": "permit_number",
         "description": "project_name",
@@ -52,7 +52,7 @@
       "metro": "Dallas",
       "endpoint": "https://www.dallasopendata.com/resource/e7gq-4sah.json",
       "type": "socrata_json",
-      "filter_query": "SELECT * WHERE value > 25000 ORDER BY issued_date DESC LIMIT 100",
+      "filter_query": "SELECT * WHERE value > 25000 ORDER BY issued_date DESC LIMIT 200",
       "field_mappings": {
         "permit_id": "permit_number",
         "description": "work_description",
