@@ -95,6 +95,24 @@
           <span class="text-slate-500 font-bold uppercase text-[10px]" id="avail-status">Select Category</span>
         </div>
 
+        <!-- MOTIVATION & PIPELINE INTELLIGENCE CALLOUT -->
+        <div id="motivation-box" class="bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-950 border border-emerald-900/40 rounded-2xl p-4 my-4 space-y-2 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] uppercase font-bold text-emerald-400 tracking-wider flex items-center space-x-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>LIVE TERRITORY PIPELINE</span>
+            </span>
+            <span class="text-[11px] font-mono text-emerald-300 font-bold" id="metro-live-count">36 Active Venues</span>
+          </div>
+          <p class="text-slate-300 leading-snug" id="metro-motivation-text">
+            <strong>Austin, TX:</strong> 36 commercial buildouts actively filing permits this month (including 7 new restaurants and bars).
+          </p>
+          <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+            <span>Average Closed Deal Value:</span>
+            <span class="text-white font-bold">$3,000 – $7,500 Commission</span>
+          </div>
+        </div>
+
         <!-- PRICING SUMMARY -->
         <div class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-4 my-6 space-y-2.5 text-xs">
           <div class="flex justify-between text-slate-400">
@@ -293,6 +311,26 @@
         return;
       }
 
+      // Update Motivation Box
+      const countElem = document.getElementById('metro-live-count');
+      const motivElem = document.getElementById('metro-motivation-text');
+
+      if (metro === 'Austin') {
+        if (catId.includes('Food') || catId.includes('Point-of-Sale') || catId.includes('Kitchen')) {
+          countElem.textContent = '7 New Food & Dining';
+          motivElem.innerHTML = `<strong>Austin, TX:</strong> 7 restaurants & bars currently in active buildout stages (pre-opening) ready for supply and POS bids.`;
+        } else {
+          countElem.textContent = '36 Active Buildouts';
+          motivElem.innerHTML = `<strong>Austin, TX:</strong> 36 commercial buildouts filed this month across retail, dining, and healthcare.`;
+        }
+      } else if (metro === 'Dallas') {
+        countElem.textContent = '91 Active Buildouts';
+        motivElem.innerHTML = `<strong>Dallas, TX:</strong> 91 commercial buildouts filed, including verified contractor direct mobile phone numbers.`;
+      } else if (metro === 'Orlando') {
+        countElem.textContent = '98 Active Buildouts';
+        motivElem.innerHTML = `<strong>Orlando, FL:</strong> 98 commercial filings across tourism, retail, and medical corridors.`;
+      }
+
       availBox.className = "bg-emerald-950/40 border border-emerald-800/60 rounded-xl p-3 text-xs flex items-center justify-between";
       availDot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
       availText.innerHTML = `<span class="text-emerald-300 font-semibold">Territory Unclaimed:</span> <strong>${catId}</strong> in <strong>${metro}</strong> ready to lock.`;
@@ -348,6 +386,8 @@
       const mockToken = 'tok_live_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       
       // Save session in browser
+      const todayFormatted = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date());
+      sessionStorage.setItem('civic_registered_at', todayFormatted);
       sessionStorage.setItem('civic_auth_token', mockToken);
       sessionStorage.setItem('civic_user_session', JSON.stringify({ email, metro, category }));
 

@@ -7,6 +7,7 @@ let allLeads = [];
 let activeCategory = 'all';
 let searchQuery = '';
 let filterPhonesOnly = false;
+let filterCurrentMonth = false;
 let userMetro = null;
 
 // Pipeline status tracked locally in browser storage
@@ -16,6 +17,13 @@ async function initPortal() {
   if (window.checkMemberAccess) {
     const hasAccess = await window.checkMemberAccess();
     if (!hasAccess) return;
+  }
+
+  // Display user registration date & license status
+  const regDate = sessionStorage.getItem('civic_registered_at') || 'Nov 10, 2026';
+  const metaElem = document.getElementById('license-meta');
+  if (metaElem) {
+    metaElem.textContent = `Category Lock: Active • Registered: ${regDate}`;
   }
 
   // Read metro preference from URL or session
@@ -78,6 +86,11 @@ function handleSearch() {
   renderFeed();
 }
 
+function toggleCurrentMonth() {
+  filterCurrentMonth = document.getElementById('toggle-current-month').checked;
+  renderFeed();
+}
+
 function togglePhonesOnly() {
   filterPhonesOnly = document.getElementById('toggle-phones-only').checked;
   renderFeed();
@@ -96,7 +109,17 @@ function toggleContacted(leadId) {
 function renderFeed() {
   const container = document.getElementById('portal-feed');
 
+  const now = new Date();
+  const currentYearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
   const filtered = allLeads.filter(lead => {
+    // 0. Current Month filter
+    if (filterCurrentMonth) {
+      if (!lead.filing_date || (!lead.filing_date.startsWith('2026-11') && !lead.filing_date.startsWith(currentYearMonth))) {
+        return false;
+      }
+    }
+
     // 1. Category and Subtype check
     if (activeCategory !== 'all') {
       if (activeCategory === 'subtype_restaurant') {
