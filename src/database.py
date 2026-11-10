@@ -189,8 +189,35 @@ def get_public_preview_leads(metro: Optional[str] = None, limit: int = 3) -> Lis
     return previews
 
 
+def export_frontend_feeds():
+    """
+    Exports the latest database records directly to the frontend data directory:
+    1. frontend/data/members_feed.json (Full unmasked leads for member dashboards)
+    2. frontend/data/previews.json (Masked teaser leads organized by metro)
+    """
+    frontend_data_dir = os.path.join(os.path.dirname(__file__), "..", "frontend", "data")
+    os.makedirs(frontend_data_dir, exist_ok=True)
+    
+    # 1. Export members feed (All leads, unmasked)
+    members_feed = get_leads_for_portal(limit=1000)
+    members_path = os.path.join(frontend_data_dir, "members_feed.json")
+    with open(members_path, "w", encoding="utf-8") as f:
+        json.dump(members_feed, f, indent=2)
+    logging.info(f"Exported {len(members_feed)} unmasked leads to {members_path}")
+    
+    # 2. Export preview feeds organized by metro
+    previews_by_metro = {}
+    for metro in ["Austin", "Dallas", "Orlando"]:
+        previews_by_metro[metro] = get_public_preview_leads(metro=metro, limit=30)
+    
+    previews_path = os.path.join(frontend_data_dir, "previews.json")
+    with open(previews_path, "w", encoding="utf-8") as f:
+        json.dump(previews_by_metro, f, indent=2)
+    logging.info(f"Exported preview leads for {len(previews_by_metro)} metros to {previews_path}")
+
+
 def load_dossier_data_into_db() -> int:
-    """Helper to populate the database with the latest generated dossier leads."""
+    """Helper to populate the database with the latest generated dossier leads and export feeds."""
     if not os.path.exists(INPUT_FILE):
         logging.error("No dossier leads found. Run Part 5 first.")
         return 0
@@ -200,6 +227,7 @@ def load_dossier_data_into_db() -> int:
 
     init_db()
     count = upsert_leads_batch(leads)
+    export_frontend_feeds()
     return count
 
 
