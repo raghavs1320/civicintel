@@ -1,0 +1,44 @@
+name: Autonomous Daily Permitting Harvester
+
+on:
+  schedule:
+    # Runs Monday through Friday at 6:00 AM UTC (2:00 AM Eastern / 11:00 PM Pacific)
+    - cron: '0 6 * * 1-5'
+  workflow_dispatch: # Allows manual trigger anytime from GitHub dashboard
+
+jobs:
+  run-harvester:
+    name: Harvest, Enrich & Update Master Database
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Execute Full Autonomous Pipeline
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          APOLLO_API_KEY: ${{ secrets.APOLLO_API_KEY }}
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+          AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
+        run: |
+          PYTHONPATH=. python3 src/orchestrator.py
+
+      - name: Commit and Push Updated Leads Database
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-Harvest: Update leads database [$(date -u +'%Y-%m-%d %H:%M UTC')]" && git push)
+

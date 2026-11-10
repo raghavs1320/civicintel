@@ -1,0 +1,71 @@
+{
+  "sources": [
+    {
+      "id": "austin_commercial_permits",
+      "name": "City of Austin Issued Construction Permits",
+      "state": "TX",
+      "metro": "Austin",
+      "endpoint": "https://data.austintexas.gov/resource/3syk-w9eu.json",
+      "type": "socrata_json",
+      "filter_query": "SELECT * WHERE permit_class_mapped = 'Commercial' AND issued_in_last_30_days = 'Yes' ORDER BY issue_date DESC LIMIT 100",
+      "field_mappings": {
+        "permit_id": "permit_number",
+        "description": "description",
+        "work_class": "work_class",
+        "address": "original_address1",
+        "city": "original_city",
+        "state": "original_state",
+        "zip_code": "original_zip",
+        "issue_date": "issue_date",
+        "status": "status_current",
+        "official_url": "link.url"
+      }
+    },
+    {
+      "id": "orlando_commercial_permits",
+      "name": "City of Orlando Commercial Permit Applications",
+      "state": "FL",
+      "metro": "Orlando",
+      "endpoint": "https://data.cityoforlando.net/resource/ryhf-m453.json",
+      "type": "socrata_json",
+      "filter_query": "SELECT * WHERE plan_review_type LIKE '%Commercial%' AND estimated_cost > 25000 ORDER BY processed_date DESC LIMIT 100",
+      "field_mappings": {
+        "permit_id": "permit_number",
+        "description": "project_name",
+        "work_class": "worktype",
+        "address": "permit_address",
+        "city": "Orlando",
+        "state": "FL",
+        "zip_code": "neighborhood",
+        "issue_date": "processed_date",
+        "valuation": "estimated_cost",
+        "status": "application_status",
+        "owner_name": "property_owner_name",
+        "contractor_name": "contractor_name",
+        "contractor_address": "contractor_address"
+      }
+    },
+    {
+      "id": "dallas_commercial_permits",
+      "name": "City of Dallas Building Permits",
+      "state": "TX",
+      "metro": "Dallas",
+      "endpoint": "https://www.dallasopendata.com/resource/e7gq-4sah.json",
+      "type": "socrata_json",
+      "filter_query": "SELECT * WHERE value > 25000 ORDER BY issued_date DESC LIMIT 100",
+      "field_mappings": {
+        "permit_id": "permit_number",
+        "description": "work_description",
+        "work_class": "permit_type",
+        "address": "street_address",
+        "city": "Dallas",
+        "state": "TX",
+        "zip_code": "zip_code",
+        "issue_date": "issued_date",
+        "valuation": "value",
+        "contractor_info": "contractor"
+      }
+    }
+  ]
+}
+

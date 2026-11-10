@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "name": "civicintel-daas",
+  "public": true,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/data/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=300" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    }
+  ],
+  "routes": [
+    { "src": "/checkout", "dest": "/frontend/checkout.html" },
+    { "src": "/portal", "dest": "/frontend/portal.html" },
+    { "src": "/data/(.*)", "dest": "/frontend/data/$1" },
+    { "src": "/(.*)", "dest": "/frontend/$1" }
+  ]
+}
+

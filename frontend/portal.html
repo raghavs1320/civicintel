@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Intelligence Portal — CivicIntel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .mono { font-family: 'Space Mono', monospace; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased min-h-screen selection:bg-emerald-500 selection:text-slate-950">
+
+  <!-- PORTAL TOP NAVIGATION -->
+  <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <a href="portal.html" class="font-extrabold text-lg tracking-tight flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>CIVIC<span class="text-emerald-400">INTEL</span></span>
+        </a>
+        <span class="text-xs bg-emerald-950/80 text-emerald-400 font-bold px-2.5 py-0.5 rounded-full border border-emerald-800 hidden sm:inline-block">
+          MEMBER ACTIVE
+        </span>
+      </div>
+
+      <div class="flex items-center space-x-3 text-xs">
+        <div class="hidden sm:block text-right">
+          <div class="font-bold text-slate-200" id="user-display">Territory Licensee</div>
+          <div class="text-[10px] text-emerald-400 font-mono">Category Lock: Active</div>
+        </div>
+        <a href="index.html" class="text-slate-400 hover:text-slate-200 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg transition">
+          Sign Out
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-6">
+
+    <!-- TERRITORY & STATS HEADER -->
+    <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-slate-800/80 rounded-2xl p-5 mb-6 shadow-xl">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-400 mb-1 flex items-center space-x-1.5">
+            <span>●</span>
+            <span id="territory-name">AUSTIN & TEXAS METRO CORRIDOR</span>
+            <select id="portal-metro-switch" onchange="switchPortalMetro(this.value)" class="ml-2 bg-slate-950 text-slate-300 text-[11px] border border-slate-800 rounded px-2 py-0.5 focus:outline-none focus:border-emerald-500">
+              <option value="Austin">Austin, TX</option>
+              <option value="Dallas">Dallas, TX</option>
+              <option value="Orlando">Orlando, FL</option>
+              <option value="all">All Available Metros</option>
+            </select>
+          </div>
+          <h1 class="text-2xl font-extrabold text-white tracking-tight">Pre-Opening Pipeline Feed</h1>
+          <p class="text-xs text-slate-400 mt-0.5">Updated daily at 6:00 AM UTC. Tap any phone number to dial directly.</p>
+        </div>
+
+        <!-- SEARCH INPUT -->
+        <div class="relative w-full sm:w-72">
+          <input
+            type="text"
+            id="search-input"
+            oninput="handleSearch()"
+            placeholder="Search concept, street, or owner..."
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORY & SUB-TYPE FILTER PILLS -->
+    <div class="flex items-center space-x-2 overflow-x-auto hide-scrollbar pb-3 mb-6" id="filter-bar">
+      <button onclick="setCategoryFilter('all')" class="filter-pill whitespace-nowrap text-xs font-bold px-4 py-2 rounded-xl transition bg-emerald-500 text-slate-950" data-cat="all">
+        All Openings (<span id="count-all">225</span>)
+      </button>
+      <button onclick="setCategoryFilter('Hospitality & Dining')" class="filter-pill whitespace-nowrap text-xs font-bold px-4 py-2 rounded-xl transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800" data-cat="Hospitality & Dining">
+        🍕 All Food &amp; Drink (<span id="count-hosp">15</span>)
+      </button>
+      <button onclick="setCategoryFilter('subtype_restaurant')" class="filter-pill whitespace-nowrap text-xs font-bold px-4 py-2 rounded-xl transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800" data-cat="subtype_restaurant">
+        🍝 Restaurants
+      </button>
+      <button onclick="setCategoryFilter('subtype_bar')" class="filter-pill whitespace-nowrap text-xs font-bold px-4 py-2 rounded-xl transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800" data-cat="subtype_bar">
+        🍸 Bars &amp; Breweries
+      </button>
+      <button onclick="setCategoryFilter('subtype_cafe')" class="filter-pill whitespace-nowrap text-xs font-bold px-4 py-2 rounded-xl transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800" data-cat="subtype_cafe">
+        ☕ Cafes &amp; Bakeries
+      </button>
+      <button onclick="setCategoryFilter('Retail & Commercial Buildout')" class="filter-pill whitespace-nowrap text-xs font-bold px-4 py-2 rounded-xl transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800" data-cat="Retail & Commercial Buildout">
+        🛍️ Retail Buildouts (<span id="count-retail">58</span>)
+      </button>
+      <button onclick="setCategoryFilter('Healthcare & Wellness')" class="filter-pill whitespace-nowrap text-xs font-bold px-4 py-2 rounded-xl transition bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800" data-cat="Healthcare & Wellness">
+        🏥 Gyms &amp; Clinics (<span id="count-health">13</span>)
+      </button>
+    </div>
+
+    <!-- PIPELINE SUMMARY STRIP -->
+    <div class="flex items-center justify-between text-xs text-slate-400 mb-4 px-1">
+      <div>Showing <span class="font-bold text-white" id="visible-count">0</span> matching opportunities</div>
+      <div class="flex items-center space-x-2">
+        <label class="flex items-center space-x-1.5 cursor-pointer text-slate-400 hover:text-slate-200 select-none">
+          <input type="checkbox" id="toggle-phones-only" onchange="togglePhonesOnly()" class="rounded bg-slate-900 border-slate-800 text-emerald-500 focus:ring-0">
+          <span>Direct Phones Only</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- PORTAL LEADS FEED -->
+    <div id="portal-feed" class="space-y-4">
+      <!-- Injected via portal.js -->
+    </div>
+
+  </main>
+
+  <script src="auth.js"></script>
+  <script src="portal.js"></script>
+</body>
+</html>
+

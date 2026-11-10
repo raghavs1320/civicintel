@@ -1,0 +1,4 @@
+# CivicIntel Harvester Dependencies
+# Note: Core pipeline uses Python standard library for zero-overhead execution
+requests>=2.31.0
+
