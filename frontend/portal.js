@@ -175,8 +175,9 @@ function renderFeed() {
             <span class="text-[11px] font-medium text-slate-400 bg-slate-800/80 px-2.5 py-0.5 rounded-full">
               ${escapeHtml(lead.metro)}, ${escapeHtml(lead.state)}
             </span>
-            <span class="text-[11px] font-medium text-slate-500">
-              Filed: ${lead.filing_date || 'Recent'}
+            <span class="text-[11px] font-medium text-slate-300 bg-slate-950 px-2.5 py-0.5 rounded-full border border-slate-800 flex items-center space-x-1">
+              <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <span>Government Registered: ${lead.filing_date || 'Current Active Permit'}</span>
             </span>
           </div>
 
