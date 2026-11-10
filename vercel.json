@@ -1,7 +1,7 @@
 {
-  "version": 2,
-  "name": "civicintel-daas",
-  "public": true,
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "outputDirectory": "frontend",
   "cleanUrls": true,
   "trailingSlash": false,
   "headers": [
@@ -13,11 +13,8 @@
       ]
     }
   ],
-  "routes": [
-    { "src": "/checkout", "dest": "/frontend/checkout.html" },
-    { "src": "/portal", "dest": "/frontend/portal.html" },
-    { "src": "/data/(.*)", "dest": "/frontend/data/$1" },
-    { "src": "/(.*)", "dest": "/frontend/$1" }
+  "rewrites": [
+    { "source": "/checkout", "destination": "/checkout.html" },
+    { "source": "/portal", "destination": "/portal.html" }
   ]
 }
-
