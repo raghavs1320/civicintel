@@ -208,7 +208,7 @@ def export_frontend_feeds():
     # 2. Export preview feeds organized by metro
     previews_by_metro = {}
     for metro in ["Austin", "Dallas", "Orlando"]:
-        previews_by_metro[metro] = get_public_preview_leads(metro=metro, limit=30)
+        previews_by_metro[metro] = get_public_preview_leads(metro=metro, limit=1000)
     
     previews_path = os.path.join(frontend_data_dir, "previews.json")
     with open(previews_path, "w", encoding="utf-8") as f:

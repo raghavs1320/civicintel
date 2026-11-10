@@ -26,14 +26,44 @@ function applyUserPreferences() {
   selectedCategory = document.getElementById('user-category-input').value;
   selectedMinVal = Number(document.getElementById('user-valuation-input').value) || 0;
 
+  // Sync city buttons
+  document.querySelectorAll('.city-tab-btn').forEach(btn => {
+    if (btn.dataset.metro === selectedMetro) {
+      btn.className = "city-tab-btn text-xs font-bold px-4 py-2 rounded-xl transition bg-slate-900 text-white shadow-sm";
+    } else {
+      btn.className = "city-tab-btn text-xs font-bold px-4 py-2 rounded-xl transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200";
+    }
+  });
+
+  // Sync category buttons
+  document.querySelectorAll('.cat-pill-btn').forEach(btn => {
+    if (btn.dataset.category === selectedCategory) {
+      btn.className = "cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-emerald-600 text-white shadow-sm";
+    } else {
+      btn.className = "cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-white hover:bg-slate-50 text-slate-600 border border-slate-200";
+    }
+  });
+
   // Update showcase heading
   const heading = document.getElementById('showcase-heading');
-  const catLabel = selectedCategory === 'all' ? 'All Commercial Openings' : selectedCategory;
+  const catLabel = selectedCategory === 'all' ? 'All Commercial Buildouts' : selectedCategory;
   if (heading) {
     heading.textContent = `Tailored Leads Preview: ${catLabel} in ${selectedMetro}`;
   }
 
   renderFilteredCards();
+}
+
+function selectMetroTab(metro) {
+  const metroInput = document.getElementById('user-metro-input');
+  if (metroInput) metroInput.value = metro;
+  applyUserPreferences();
+}
+
+function selectCategoryPill(category) {
+  const catInput = document.getElementById('user-category-input');
+  if (catInput) catInput.value = category;
+  applyUserPreferences();
 }
 
 function renderFilteredCards() {
@@ -43,8 +73,14 @@ function renderFilteredCards() {
   // Filter based on user preferences
   const matched = rawList.filter(lead => {
     // Category match
-    if (selectedCategory !== 'all' && lead.category !== selectedCategory) {
-      return false;
+    if (selectedCategory !== 'all') {
+      if (selectedCategory === 'Retail & Commercial Buildout') {
+        if (lead.category !== 'Retail & Commercial Buildout' && lead.category !== 'General Commercial') {
+          return false;
+        }
+      } else if (lead.category !== selectedCategory) {
+        return false;
+      }
     }
     // Valuation match
     if (selectedMinVal > 0 && (lead.estimated_valuation || 0) < selectedMinVal) {
@@ -53,10 +89,18 @@ function renderFilteredCards() {
     return true;
   });
 
-  // Update matched count badge
+  // Calculate pipeline valuation
+  const totalValuation = matched.reduce((acc, lead) => acc + (lead.estimated_valuation || 0), 0);
+  const valString = totalValuation > 0 ? ` ($${Math.round(totalValuation).toLocaleString()} Pipeline)` : '';
+
+  // Update matched count badge & notification box
   const countBadge = document.getElementById('matched-lead-count');
   if (countBadge) {
     countBadge.textContent = matched.length;
+  }
+  const notifText = document.getElementById('filter-notif-text');
+  if (notifText) {
+    notifText.innerHTML = `Showing <strong class="text-slate-900 font-bold">${matched.length}</strong> active pre-opening projects${valString} in ${selectedMetro}.`;
   }
 
   if (matched.length === 0) {
@@ -75,7 +119,10 @@ function renderFilteredCards() {
     return;
   }
 
-  container.innerHTML = matched.map((lead) => `
+  // Display top 30 leads for fast browser responsiveness
+  const displayList = matched.slice(0, 30);
+
+  const cardsHtml = displayList.map((lead) => `
     <div class="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 transition-all duration-200 shadow-sm hover:shadow-md">
       <!-- HEADER ROW -->
       <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
@@ -136,6 +183,23 @@ function renderFilteredCards() {
       </div>
     </div>
   `).join('');
+
+  // If more leads exist than the 30 previewed, show high-converting unlock banner
+  const overflowNotice = matched.length > 30 ? `
+    <div class="bg-gradient-to-r from-emerald-50 to-slate-50 border border-emerald-200 rounded-2xl p-6 text-center my-6">
+      <div class="font-extrabold text-sm text-slate-900 mb-1">
+        Viewing Top 30 of ${matched.length} Verified Projects in ${selectedMetro}
+      </div>
+      <p class="text-xs text-slate-600 mb-4 max-w-lg mx-auto">
+        Our master database tracks all ${matched.length} active commercial buildouts for this territory. Start your 7-day trial for $1.00 to unlock direct cell phone numbers for all ${matched.length} projects.
+      </p>
+      <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs px-6 py-3 rounded-xl transition shadow-md">
+        Unlock All ${matched.length} Leads for $1.00 ➔
+      </button>
+    </div>
+  ` : '';
+
+  container.innerHTML = cardsHtml + overflowNotice;
 }
 
 function goToPersonalizedCheckout() {
