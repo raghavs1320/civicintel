@@ -62,7 +62,9 @@ function renderFilteredCards() {
   if (matched.length === 0) {
     container.innerHTML = `
       <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-10 text-center text-slate-400">
-        <div class="text-3xl mb-2">🔍</div>
+        <div class="w-10 h-10 mx-auto mb-3 text-slate-600 flex items-center justify-center">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
         <h4 class="text-base font-bold text-white mb-1">No Filings Matched This Exact Filter</h4>
         <p class="text-xs text-slate-400 max-w-md mx-auto">
           We found filings in ${selectedMetro}, but none matching "${selectedCategory}" over $${selectedMinVal.toLocaleString()}. 
@@ -122,15 +124,14 @@ function renderFilteredCards() {
         </div>
       </div>
 
-      <!-- AI SALES DOSSIER BOX -->
-      <div class="bg-emerald-950/20 border border-emerald-900/30 rounded-xl p-3.5 text-xs text-slate-300 space-y-1.5">
-        <div class="font-bold text-emerald-400 flex items-center space-x-1.5 mb-1">
-          <span class="text-sm">🧠</span>
-          <span>AI EXECUTIVE SALES DOSSIER</span>
+      <!-- PROJECT SCOPE BOX -->
+      <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5 text-xs text-slate-300 space-y-1">
+        <div class="font-bold text-slate-400 uppercase text-[10px] tracking-wider mb-1 flex items-center space-x-1.5">
+          <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>PROJECT SCOPE &amp; PERMIT DETAILS</span>
         </div>
-        <p><strong class="text-slate-400">Snapshot:</strong> ${escapeHtml(lead.concept_snapshot || '')}</p>
-        <p><strong class="text-slate-400">Signals:</strong> ${escapeHtml(lead.buildout_signals || '')}</p>
-        <p><strong class="text-slate-400">Pitch Angle:</strong> ${escapeHtml(lead.pitch_angle || '')}</p>
+        <p class="text-slate-200">${escapeHtml(lead.concept_snapshot || lead.work_description || 'Commercial interior buildout and equipment installation.')}</p>
+        ${lead.buildout_signals ? `<p class="text-slate-400 text-[11px]"><strong class="text-slate-300">Permit Scope:</strong> ${escapeHtml(lead.buildout_signals)}</p>` : ''}
       </div>
     </div>
   `).join('');
