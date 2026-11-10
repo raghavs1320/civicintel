@@ -119,8 +119,8 @@ function renderFilteredCards() {
     return;
   }
 
-  // Display top 30 leads for fast browser responsiveness
-  const displayList = matched.slice(0, 30);
+  // Display top 10 verified leads for a sleek, high-converting preview
+  const displayList = matched.slice(0, 10);
 
   const cardsHtml = displayList.map((lead) => `
     <div class="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 transition-all duration-200 shadow-sm hover:shadow-md">
@@ -184,18 +184,48 @@ function renderFilteredCards() {
     </div>
   `).join('');
 
-  // If more leads exist than the 30 previewed, show high-converting unlock banner
-  const overflowNotice = matched.length > 30 ? `
-    <div class="bg-gradient-to-r from-emerald-50 to-slate-50 border border-emerald-200 rounded-2xl p-6 text-center my-6">
-      <div class="font-extrabold text-sm text-slate-900 mb-1">
-        Viewing Top 30 of ${matched.length} Verified Projects in ${selectedMetro}
+  // If more leads exist than the 10 previewed, show luxury high-converting unlock banner
+  const overflowNotice = matched.length > 10 ? `
+    <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-white border border-slate-800 rounded-3xl p-8 sm:p-10 text-center my-8 shadow-2xl relative overflow-hidden">
+      <!-- Glow ambient background -->
+      <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="inline-flex items-center space-x-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3.5 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Official Municipal Registry • Synchronized Daily at 6:00 AM UTC</span>
       </div>
-      <p class="text-xs text-slate-600 mb-4 max-w-lg mx-auto">
-        Our master database tracks all ${matched.length} active commercial buildouts for this territory. Start your 7-day trial for $1.00 to unlock direct cell phone numbers for all ${matched.length} projects.
+
+      <h3 class="text-xl sm:text-3xl font-extrabold text-white mb-3 tracking-tight">
+        Viewing Top 10 of ${matched.length} Active Filings in ${selectedMetro}
+      </h3>
+
+      <p class="text-xs sm:text-sm text-slate-300 mb-6 max-w-xl mx-auto leading-relaxed">
+        Our intelligence pipeline queries municipal building clerk databases every morning to detect new commercial buildouts within 24 hours of filing. Activate your 7-day trial for $1.00 to unlock direct cell phone numbers for all ${matched.length} projects and receive automated daily lead alerts.
       </p>
-      <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs px-6 py-3 rounded-xl transition shadow-md">
-        Unlock All ${matched.length} Leads for $1.00 ➔
-      </button>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <button onclick="goToPersonalizedCheckout()" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm px-8 py-4 rounded-xl transition shadow-lg shadow-emerald-500/20 cursor-pointer flex items-center justify-center space-x-2">
+          <span>Unlock All ${matched.length} Leads &amp; Daily Sync for $1.00</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+      </div>
+
+      <div class="mt-4 flex items-center justify-center space-x-4 text-[11px] text-slate-400">
+        <span class="flex items-center space-x-1">
+          <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <span>Daily Automated Updates</span>
+        </span>
+        <span>•</span>
+        <span class="flex items-center space-x-1">
+          <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <span>1 Rep Per Category Exclusivity</span>
+        </span>
+        <span>•</span>
+        <span class="flex items-center space-x-1">
+          <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <span>Cancel Anytime in 1 Click</span>
+        </span>
+      </div>
     </div>
   ` : '';
 

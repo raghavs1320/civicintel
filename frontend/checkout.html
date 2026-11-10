@@ -317,17 +317,17 @@
       if (metro === 'Austin') {
         if (catId.includes('Food') || catId.includes('Point-of-Sale') || catId.includes('Kitchen')) {
           countElem.textContent = '13 New Food & Dining';
-          motivElem.innerHTML = `<strong>Austin, TX:</strong> 13 restaurants & bars currently in active buildout stages (pre-opening) ready for supply and POS bids.`;
+          motivElem.innerHTML = `<strong>Austin, TX:</strong> 13 restaurants & bars currently in active buildouts. Official city records synchronized daily at 6:00 AM UTC.`;
         } else {
           countElem.textContent = '71 Active Buildouts';
-          motivElem.innerHTML = `<strong>Austin, TX:</strong> 71 commercial buildouts filed across retail, dining, and healthcare.`;
+          motivElem.innerHTML = `<strong>Austin, TX:</strong> 71 commercial buildouts filed across retail, dining, and healthcare. Updated daily from municipal clerk dockets.`;
         }
       } else if (metro === 'Dallas') {
         countElem.textContent = '187 Active Buildouts ($199M)';
-        motivElem.innerHTML = `<strong>Dallas, TX:</strong> 187 commercial buildouts filed, including verified contractor direct mobile phone numbers.`;
+        motivElem.innerHTML = `<strong>Dallas, TX:</strong> 187 commercial buildouts filed with verified contractor mobile numbers. Synchronized daily at 6:00 AM UTC.`;
       } else if (metro === 'Orlando') {
         countElem.textContent = '190 Active Buildouts ($284M)';
-        motivElem.innerHTML = `<strong>Orlando, FL:</strong> 190 commercial filings across tourism, retail, and medical corridors.`;
+        motivElem.innerHTML = `<strong>Orlando, FL:</strong> 190 commercial filings across tourism and medical corridors. Synchronized daily at 6:00 AM UTC.`;
       }
 
       availBox.className = "bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-xs flex items-center justify-between";
