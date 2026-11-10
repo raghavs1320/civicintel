@@ -39,6 +39,6 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add data/
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-Harvest: Update leads database [$(date -u +'%Y-%m-%d %H:%M UTC')]" && git push)
+          git add data/ frontend/data/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-Harvest: Update leads database and member feed [$(date -u +'%Y-%m-%d %H:%M UTC')]" && git push)
 
