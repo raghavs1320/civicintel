@@ -75,7 +75,7 @@
               class="city-btn border rounded-xl p-4 text-left transition cursor-pointer border-blue-700 bg-blue-50/60 ring-2 ring-blue-700/20">
               <div class="flex items-center justify-between mb-1">
                 <span class="font-bold text-slate-900">Austin, TX</span>
-                <span class="mono text-[10px] font-semibold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md">141</span>
+                <span id="city-count-badge-Austin" class="mono text-[10px] font-semibold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md">141</span>
               </div>
               <div class="text-xs text-slate-500">Travis County corridors</div>
               <div id="city-seats-Austin" class="text-[11px] mono text-blue-700 font-semibold mt-2">Checking...</div>
@@ -88,7 +88,7 @@
               class="city-btn border border-slate-200 bg-white hover:bg-slate-50 rounded-xl p-4 text-left transition cursor-pointer">
               <div class="flex items-center justify-between mb-1">
                 <span class="font-bold text-slate-800">Dallas, TX</span>
-                <span class="mono text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">230</span>
+                <span id="city-count-badge-Dallas" class="mono text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">230</span>
               </div>
               <div class="text-xs text-slate-500">DFW north &amp; central</div>
               <div id="city-seats-Dallas" class="text-[11px] mono text-slate-500 font-semibold mt-2">Checking...</div>
@@ -101,7 +101,7 @@
               class="city-btn border border-slate-200 bg-white hover:bg-slate-50 rounded-xl p-4 text-left transition cursor-pointer">
               <div class="flex items-center justify-between mb-1">
                 <span class="font-bold text-slate-800">Orlando, FL</span>
-                <span class="mono text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">227</span>
+                <span id="city-count-badge-Orlando" class="mono text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">227</span>
               </div>
               <div class="text-xs text-slate-500">Orange County hospitality strip</div>
               <div id="city-seats-Orlando" class="text-[11px] mono text-slate-500 font-semibold mt-2">Checking...</div>
@@ -315,6 +315,7 @@
       }
 
       prefillFromURL();
+      initDynamicCounts();
       updateCityButtonsUI();
       renderCategories();
       renderMatrixTable();
@@ -344,13 +345,37 @@
       }
     }
 
+    let liveMetroCounts = { Austin: 141, Dallas: 230, Orlando: 227 };
+
+    async function initDynamicCounts() {
+      try {
+        const resp = await fetch('data/previews.json');
+        if (resp.ok) {
+          const previews = await resp.json();
+          ['Austin', 'Dallas', 'Orlando'].forEach(c => {
+            const list = previews[c] || [];
+            if (list.length) {
+              liveMetroCounts[c] = list.length;
+              const badge = document.getElementById(`city-count-badge-${c}`);
+              if (badge) badge.textContent = list.length;
+            }
+          });
+          const currCount = liveMetroCounts[currentCity] || 0;
+          const leadBadge = document.getElementById('city-lead-count-badge');
+          if (leadBadge && currCount) {
+            leadBadge.textContent = `${currCount} permits indexed`;
+          }
+        }
+      } catch (err) {}
+    }
+
     function setCity(city) {
       currentCity = city;
       document.getElementById('selected-city').value = city;
       document.getElementById('locked-seat-notice').classList.add('hidden');
 
-      const counts = { Austin: '141 permits indexed', Dallas: '230 permits indexed', Orlando: '227 permits indexed' };
-      document.getElementById('city-lead-count-badge').textContent = counts[city] || '';
+      const count = liveMetroCounts[city] || 0;
+      document.getElementById('city-lead-count-badge').textContent = `${count} permits indexed`;
 
       if (selectedCategoryId) {
         const status = getSeatStatus(city, selectedCategoryId);

@@ -317,6 +317,14 @@ function toggleRow(leadId) {
   }
 }
 
+function getComparableDate(lead) {
+  var d = lead.filing_date;
+  if (!d || d === 'Recent') {
+    return (lead.created_at && lead.created_at.slice(0, 10)) || '2099-12-31';
+  }
+  return String(d).trim();
+}
+
 /* ─── Main render ───────────────────────────────────────────────────────────── */
 function renderFeed() {
   var container = document.getElementById('portal-feed');
@@ -367,10 +375,10 @@ function renderFeed() {
     return true;
   });
 
-  /* Sort: newest filing date first */
+  /* Sort: newest filing date first ALWAYS */
   filtered.sort(function (a, b) {
-    var da = (a.filing_date && a.filing_date !== 'Recent') ? a.filing_date : '0000-00-00';
-    var db = (b.filing_date && b.filing_date !== 'Recent') ? b.filing_date : '0000-00-00';
+    var da = getComparableDate(a);
+    var db = getComparableDate(b);
     return db < da ? -1 : db > da ? 1 : 0;
   });
 
@@ -407,7 +415,7 @@ function renderFeed() {
 
 function buildRow(lead, now, d14) {
   var connected  = isLeadConnected(lead.lead_id);
-  var isNew      = lead.filing_date && lead.filing_date !== 'Recent' && (now - new Date(lead.filing_date).getTime()) <= d14;
+  var isNew      = (lead.filing_date === 'Recent') || (lead.filing_date && (now - new Date(lead.filing_date).getTime()) <= d14);
   var hasPhone   = lead.display_phone && lead.display_phone.indexOf('Pending') === -1 && lead.has_direct_phone;
   var budget     = lead.estimated_valuation ? '$' + Number(lead.estimated_valuation).toLocaleString() : '—';
   var shortDate  = lead.filing_date && lead.filing_date !== 'Recent' ? formatDateShort(lead.filing_date) : 'Recent';
