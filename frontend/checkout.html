@@ -7,9 +7,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { font-family: 'Inter', sans-serif; }
     .mono { font-family: 'Space Mono', monospace; }
   </style>
 </head>
@@ -64,9 +64,9 @@
             id="metro"
             onchange="renderCategoryGrid()"
             class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:border-emerald-600 focus:bg-white transition">
-            <option value="Austin" selected>Austin, TX (71 Active Commercial Buildouts)</option>
-            <option value="Dallas">Dallas, TX (187 Active Commercial Buildouts)</option>
-            <option value="Orlando">Orlando, FL (190 Active Commercial Buildouts)</option>
+            <option value="Austin" selected>Austin, TX (121 Verified Businesses)</option>
+            <option value="Dallas">Dallas, TX (213 Verified Businesses)</option>
+            <option value="Orlando">Orlando, FL (227 Verified Businesses)</option>
           </select>
         </div>
 
@@ -323,8 +323,8 @@
           motivElem.innerHTML = `<strong>Austin, TX:</strong> 121 commercial buildouts filed across retail, dining, and healthcare. Updated daily from municipal clerk dockets.`;
         }
       } else if (metro === 'Dallas') {
-        countElem.textContent = '187 Active Buildouts ($199.2M)';
-        motivElem.innerHTML = `<strong>Dallas, TX:</strong> 187 commercial buildouts filed with verified contractor mobile numbers. Synchronized daily at 6:00 AM UTC.`;
+        countElem.textContent = '213 Active Buildouts ($199.2M)';
+        motivElem.innerHTML = `<strong>Dallas, TX:</strong> 213 commercial buildouts filed with verified contractor mobile numbers. Synchronized daily at 6:00 AM UTC.`;
       } else if (metro === 'Orlando') {
         countElem.textContent = '227 Active Buildouts ($312.3M)';
         motivElem.innerHTML = `<strong>Orlando, FL:</strong> 227 commercial filings across tourism and medical corridors. Synchronized daily at 6:00 AM UTC.`;

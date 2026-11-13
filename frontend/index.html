@@ -3,81 +3,140 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CivicIntel — Commercial Pre-Opening Permitting Intelligence</title>
+  <title>CivicIntel — Find New Businesses Opening In Your City</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
     .mono { font-family: 'Space Mono', monospace; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900 antialiased min-h-screen selection:bg-emerald-100 selection:text-emerald-900">
 
-  <!-- TOP NAVIGATION HEADER -->
-  <header class="border-b border-slate-200 bg-white/95 backdrop-blur sticky top-0 z-50 shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+  <!-- NAVIGATION HEADER -->
+  <header class="border-b border-slate-200 bg-white/95 backdrop-blur sticky top-0 z-50 shadow-xs">
+    <div class="max-w-6xl mx-auto px-4 h-18 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse"></span>
-        <span class="font-extrabold text-lg tracking-tight text-slate-900">CIVIC<span class="text-emerald-600">INTEL</span></span>
-        <span class="hidden sm:inline-block text-[11px] bg-slate-100 text-slate-600 font-semibold px-2.5 py-0.5 rounded border border-slate-200">Commercial DaaS</span>
+        <a href="index.html" class="flex items-center space-x-2">
+          <span class="w-3 h-3 rounded-full bg-emerald-600"></span>
+          <span class="font-extrabold text-xl tracking-tight text-slate-900">CIVIC<span class="text-emerald-600">INTEL</span></span>
+        </a>
+        <span class="hidden sm:inline-block text-xs bg-slate-100 text-slate-700 font-semibold px-3 py-1 rounded-full border border-slate-200">
+          New Business Leads
+        </span>
       </div>
+
       <div class="flex items-center space-x-4">
-        <a href="#leads" class="text-xs font-semibold text-slate-600 hover:text-slate-900 transition">Live Previews</a>
-        <a href="#customize" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg transition shadow-sm">
-          Select Your Territory ($1)
+        <a href="#leads" class="text-sm font-semibold text-slate-600 hover:text-slate-900 transition">
+          Browse Leads
+        </a>
+        <a href="#pricing" class="text-sm bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl transition shadow-xs">
+          Try for $1 →
         </a>
       </div>
     </div>
   </header>
 
-  <!-- HERO SECTION -->
-  <section class="max-w-4xl mx-auto px-4 pt-16 pb-10 text-center">
-    <div class="flex flex-wrap items-center justify-center gap-2 mb-6">
-      <div class="inline-flex items-center space-x-2 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold px-3.5 py-1.5 rounded-full">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-        <span>MUNICIPAL RECORDS • SYNCHRONIZED DAILY</span>
-      </div>
-      <div class="inline-flex items-center space-x-1.5 bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-full">
-        <span>1 EXCLUSIVE REP PER CATEGORY</span>
-      </div>
+  <!-- HERO SECTION: SIMPLE & PLAIN ENGLISH -->
+  <section class="max-w-4xl mx-auto px-4 pt-16 pb-12 text-center">
+    
+    <div class="inline-flex items-center space-x-2 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
+      <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+      <span>Updated every weekday morning from official city records</span>
     </div>
 
-    <h1 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15] mb-6">
-      Close Deals <span class="text-emerald-600">Before</span> Construction Starts.
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.15] mb-6">
+      Get the phone numbers of new businesses opening in your city — <span class="text-emerald-600">before they open.</span>
     </h1>
 
-    <p class="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed mb-8">
-      Identify pre-opening restaurants, retail buildouts, and commercial venues months before opening day. Direct decision maker phone numbers extracted directly from municipal dockets.
+    <p class="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed mb-8">
+      When a new restaurant, store, or clinic signs a lease, they must file permits with the city. We collect these records every morning, find the real owner's direct cell phone, and give it to you so you can reach out first.
     </p>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+      <a href="#leads" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-bold text-base px-7 py-3.5 rounded-xl transition shadow-sm">
+        See Real Leads Below ↓
+      </a>
+      <a href="#pricing" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-base px-7 py-3.5 rounded-xl transition shadow-sm">
+        Start 7-Day Trial for $1.00 →
+      </a>
+    </div>
+
   </section>
 
-  <!-- UNIFIED PIPELINE & FILINGS EXPLORER -->
-  <section id="leads" class="max-w-5xl mx-auto px-4 pb-16">
-    <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-7 shadow-sm">
+  <!-- HOW IT WORKS IN 3 SIMPLE STEPS -->
+  <section class="max-w-5xl mx-auto px-4 pb-14">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-left">
       
-      <!-- Territory & Vertical Selection Toolbar -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 font-extrabold text-base mb-4">
+          1
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 mb-2">Business Registers with City</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          A new business signs a commercial lease and files building permits with the city to start remodeling.
+        </p>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 font-extrabold text-base mb-4">
+          2
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 mb-2">We Find the Owner's Phone</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          Our system finds the permit within 24 hours and tracks down the real decision maker's direct mobile phone number.
+        </p>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 font-extrabold text-base mb-4">
+          3
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 mb-2">You Call &amp; Close Deals First</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          You reach out 60 to 90 days before anyone else even knows the business exists, helping you close more sales.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- INTERACTIVE LEADS EXPLORER -->
+  <section id="leads" class="max-w-5xl mx-auto px-4 pb-16">
+    <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+      
+      <!-- Section Header -->
+      <div class="mb-6 pb-4 border-b border-slate-100">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Browse Real Leads in Your City
+        </h2>
+        <p class="text-sm text-slate-500 mt-1">
+          These are real businesses currently under construction. Click below to filter by city and category:
+        </p>
+      </div>
+
+      <!-- Controls: City & Category -->
       <div class="space-y-4">
         
-        <!-- Metro Territory Tabs -->
+        <!-- City Buttons -->
         <div>
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Target Territory</span>
-            <span class="text-xs text-slate-400 font-mono">Live Municipal Feed</span>
-          </div>
-          <div class="flex flex-wrap gap-2" id="city-tabs-container">
-            <button onclick="selectMetroTab('Austin')" class="city-tab-btn text-xs font-bold px-4 py-2 rounded-lg transition bg-slate-900 text-white shadow-sm flex items-center space-x-1" data-metro="Austin">
+          <span class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5">
+            Select City
+          </span>
+          <div class="flex flex-wrap gap-2.5" id="city-tabs-container">
+            <button onclick="selectMetroTab('Austin')" class="city-tab-btn text-sm font-bold px-5 py-2.5 rounded-xl transition bg-slate-900 text-white shadow-xs flex items-center space-x-1.5" data-metro="Austin">
               <span>Austin, TX</span>
-              <span class="opacity-80 font-mono text-[11px] ml-1">(121 Filings)</span>
+              <span class="opacity-80 font-mono text-xs">(121 Leads)</span>
             </button>
-            <button onclick="selectMetroTab('Dallas')" class="city-tab-btn text-xs font-bold px-4 py-2 rounded-lg transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-1" data-metro="Dallas">
+            <button onclick="selectMetroTab('Dallas')" class="city-tab-btn text-sm font-bold px-5 py-2.5 rounded-xl transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-1.5" data-metro="Dallas">
               <span>Dallas, TX</span>
-              <span class="opacity-80 font-mono text-[11px] ml-1">(213 • $199.2M)</span>
+              <span class="opacity-80 font-mono text-xs">(213 Leads)</span>
             </button>
-            <button onclick="selectMetroTab('Orlando')" class="city-tab-btn text-xs font-bold px-4 py-2 rounded-lg transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-1" data-metro="Orlando">
+            <button onclick="selectMetroTab('Orlando')" class="city-tab-btn text-sm font-bold px-5 py-2.5 rounded-xl transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-1.5" data-metro="Orlando">
               <span>Orlando, FL</span>
-              <span class="opacity-80 font-mono text-[11px] ml-1">(227 • $312.3M)</span>
+              <span class="opacity-80 font-mono text-xs">(227 Leads)</span>
             </button>
           </div>
           <select id="user-metro-input" onchange="applyUserPreferences()" class="hidden">
@@ -87,21 +146,23 @@
           </select>
         </div>
 
-        <!-- Industry Vertical Pills -->
-        <div class="pt-1">
-          <span class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Industry Vertical</span>
+        <!-- Category Pills -->
+        <div class="pt-2">
+          <span class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5">
+            Select Business Type
+          </span>
           <div class="flex flex-wrap gap-2" id="category-pills-container">
-            <button onclick="selectCategoryPill('all')" class="cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-emerald-600 text-white shadow-sm" data-category="all">
-              All Commercial
+            <button onclick="selectCategoryPill('all')" class="cat-pill-btn text-sm font-bold px-4 py-2 rounded-xl transition bg-emerald-600 text-white shadow-xs" data-category="all">
+              All Businesses
             </button>
-            <button onclick="selectCategoryPill('Hospitality & Dining')" class="cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-white hover:bg-slate-50 text-slate-600 border border-slate-200" data-category="Hospitality & Dining">
+            <button onclick="selectCategoryPill('Hospitality & Dining')" class="cat-pill-btn text-sm font-bold px-4 py-2 rounded-xl transition bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-xs" data-category="Hospitality & Dining">
               Restaurants &amp; Bars
             </button>
-            <button onclick="selectCategoryPill('Retail & Commercial Buildout')" class="cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-white hover:bg-slate-50 text-slate-600 border border-slate-200" data-category="Retail & Commercial Buildout">
-              Retail &amp; Commercial
+            <button onclick="selectCategoryPill('Retail & Commercial Buildout')" class="cat-pill-btn text-sm font-bold px-4 py-2 rounded-xl transition bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-xs" data-category="Retail & Commercial Buildout">
+              Retail Stores
             </button>
-            <button onclick="selectCategoryPill('Healthcare & Wellness')" class="cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-white hover:bg-slate-50 text-slate-600 border border-slate-200" data-category="Healthcare & Wellness">
-              Healthcare &amp; Clinics
+            <button onclick="selectCategoryPill('Healthcare & Wellness')" class="cat-pill-btn text-sm font-bold px-4 py-2 rounded-xl transition bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-xs" data-category="Healthcare & Wellness">
+              Clinics &amp; Gyms
             </button>
           </div>
           <select id="user-category-input" onchange="applyUserPreferences()" class="hidden">
@@ -115,124 +176,126 @@
 
       </div>
 
-      <!-- Live Pipeline Summary & View Switcher Bar -->
-      <div class="mt-6 pt-5 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      <!-- Live Pipeline Summary & View Switcher -->
+      <div class="mt-6 pt-5 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
         <div class="text-slate-600 font-medium" id="filter-notif-text">
-          Showing top 10 filings in <strong class="text-slate-900 font-bold" id="summary-metro-name">Austin, TX</strong> (<span id="matched-lead-count">121</span> total in pipeline)
+          Showing 10 of <strong class="text-slate-900 font-bold" id="matched-lead-count">121</strong> businesses opening in <strong class="text-slate-900 font-bold" id="summary-metro-name">Austin, TX</strong>
         </div>
 
         <div class="flex items-center space-x-2.5">
           <div class="bg-slate-100 p-0.5 rounded-lg border border-slate-200 flex items-center">
-            <button id="view-cards-btn" onclick="setViewMode('cards')" class="text-xs font-bold px-3 py-1 rounded-md transition bg-white text-slate-900 shadow-sm">
-              Feed View
+            <button id="view-cards-btn" onclick="setViewMode('cards')" class="text-xs font-bold px-3 py-1.5 rounded-md transition bg-white text-slate-900 shadow-xs">
+              Card View
             </button>
-            <button id="view-table-btn" onclick="setViewMode('table')" class="text-xs font-semibold px-3 py-1 rounded-md transition text-slate-600 hover:text-slate-900">
+            <button id="view-table-btn" onclick="setViewMode('table')" class="text-xs font-semibold px-3 py-1.5 rounded-md transition text-slate-600 hover:text-slate-900">
               Table View
             </button>
           </div>
-          <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
-            Reserve Territory ($1.00) →
+          <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3.5 py-2 rounded-lg transition shadow-xs whitespace-nowrap">
+            Lock Your City ($1) →
           </button>
         </div>
       </div>
 
-      <!-- Hidden Heading for accessibility/DOM sync -->
-      <h2 class="sr-only" id="showcase-heading">All Commercial Filings</h2>
+      <!-- Hidden Heading for DOM sync -->
+      <h2 class="sr-only" id="showcase-heading">All Businesses</h2>
 
-      <!-- Dynamic Filings Container -->
-      <div id="leads-container" class="mt-5 space-y-3">
+      <!-- Dynamic Cards Container -->
+      <div id="leads-container" class="mt-6 space-y-4">
         <!-- Loaded dynamically via app.js -->
       </div>
 
     </div>
   </section>
 
-  <!-- VALUE PROPOSITION TILES -->
-  <section class="max-w-4xl mx-auto px-4 py-16 border-t border-slate-200">
+  <!-- VALUE STATS -->
+  <section class="max-w-4xl mx-auto px-4 py-12 border-t border-slate-200">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-        <div class="text-3xl font-extrabold text-emerald-600 mb-1">90-Day Window</div>
-        <div class="text-xs text-slate-500 leading-relaxed font-medium">Head start before a venue opens its doors or posts "Coming Soon" banners.</div>
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+        <div class="text-3xl sm:text-4xl font-extrabold text-emerald-600 mb-1">90 Days Early</div>
+        <div class="text-sm text-slate-600 leading-relaxed">Reach business owners months before they post a "Coming Soon" banner.</div>
       </div>
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-        <div class="text-3xl font-extrabold text-slate-900 mb-1">$3,000+</div>
-        <div class="text-xs text-slate-500 leading-relaxed font-medium">Average sales commission earned by closing a single new commercial account.</div>
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+        <div class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-1">$3,000+</div>
+        <div class="text-sm text-slate-600 leading-relaxed">Average sales commission from closing a single new commercial account.</div>
       </div>
-      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-        <div class="text-3xl font-extrabold text-emerald-600 mb-1">1 Rep / City</div>
-        <div class="text-xs text-slate-500 leading-relaxed font-medium">Category exclusivity: competitors in your niche will never receive your assigned leads.</div>
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+        <div class="text-3xl sm:text-4xl font-extrabold text-emerald-600 mb-1">1 Rep Per City</div>
+        <div class="text-sm text-slate-600 leading-relaxed">Category exclusivity: competitors in your industry cannot buy your leads.</div>
       </div>
     </div>
   </section>
 
-  <!-- CHECKOUT CALL-TO-ACTION CARD -->
-  <section id="pricing" class="max-w-2xl mx-auto px-4 py-16">
-    <div class="bg-white border-2 border-emerald-600/30 rounded-3xl p-8 sm:p-10 shadow-lg relative overflow-hidden">
+  <!-- PRICING & TRIAL SECTION -->
+  <section id="pricing" class="max-w-2xl mx-auto px-4 py-12">
+    <div class="bg-white border-2 border-emerald-600/30 rounded-3xl p-8 sm:p-10 shadow-lg text-left">
+      
       <div class="flex items-center justify-between mb-4">
         <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
           Territory License
         </span>
-        <span class="text-xs text-slate-500">Available: <span class="text-emerald-700 font-bold">1 Exclusive Seat</span></span>
+        <span class="text-xs text-slate-500 font-semibold">Available: <span class="text-emerald-700">1 Exclusive Spot</span></span>
       </div>
 
-      <h3 class="text-3xl font-extrabold text-slate-900 mb-2">Reserve Your Territory</h3>
-      <p class="text-sm text-slate-600 mb-6">Receive daily pre-opening permits, verified owner mobile numbers, and detailed project scopes.</p>
+      <h3 class="text-3xl font-extrabold text-slate-900 mb-2">Get All Leads in Your City</h3>
+      <p class="text-sm text-slate-600 mb-6">Receive daily new business permits, verified owner mobile numbers, and project scopes.</p>
 
       <div class="flex items-baseline space-x-2 mb-6 pb-6 border-b border-slate-100">
         <span class="text-5xl font-extrabold text-slate-900">$1.00</span>
-        <span class="text-slate-500 text-sm font-medium">for 7 days, then $199/mo. Cancel anytime.</span>
+        <span class="text-slate-500 text-sm font-medium">for 7 days, then $199/month. Cancel anytime.</span>
       </div>
 
-      <ul class="space-y-3 text-sm text-slate-700 mb-8">
+      <ul class="space-y-3.5 text-sm text-slate-700 mb-8">
         <li class="flex items-center space-x-3">
           <svg class="w-5 h-5 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-          <span>Exclusive category lock for your chosen city (1 licensee per sector).</span>
+          <span><strong>1 Exclusive spot per industry:</strong> Competitors in your niche are locked out.</span>
         </li>
         <li class="flex items-center space-x-3">
           <svg class="w-5 h-5 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-          <span>Direct mobile cell phone numbers with 1-click tap-to-call.</span>
+          <span><strong>Direct owner cell phone numbers:</strong> Call owners directly on their personal mobile line.</span>
         </li>
         <li class="flex items-center space-x-3">
           <svg class="w-5 h-5 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-          <span>Verified project valuation, square footage, and permit scope.</span>
+          <span><strong>Daily updates:</strong> New business filings added automatically every morning.</span>
         </li>
         <li class="flex items-center space-x-3">
           <svg class="w-5 h-5 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-          <span>Automated daily background updates direct from municipal clerks.</span>
+          <span><strong>1-Click CSV Export:</strong> Download all leads directly into Excel or your CRM.</span>
         </li>
       </ul>
 
-      <button onclick="goToPersonalizedCheckout()" class="block w-full text-center bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-base py-4 rounded-xl transition shadow-md">
-        Activate 7-Day Trial for $1.00 ➔
+      <button onclick="goToPersonalizedCheckout()" class="block w-full text-center bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-base py-4 rounded-xl transition shadow-md cursor-pointer">
+        Start 7-Day Trial for $1.00 →
       </button>
 
-      <p class="text-center text-xs text-slate-500 mt-4">
-        100% money-back guarantee. Cancel anytime directly in your member portal in 1 click.
+      <p class="text-center text-xs text-slate-500 mt-4 font-medium">
+        100% money-back guarantee. You can cancel anytime inside your dashboard in 1 click.
       </p>
+
     </div>
   </section>
 
-  <!-- PROFESSIONAL LEGAL & COMPLIANCE FOOTER -->
-  <footer class="border-t border-slate-200 bg-white py-12 text-slate-500 text-xs">
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-200 bg-white py-12 text-slate-500 text-xs sm:text-sm">
     <div class="max-w-5xl mx-auto px-4 space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-6">
         <div class="flex items-center space-x-2">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
-          <span class="font-extrabold text-sm text-slate-900 tracking-tight">CIVIC<span class="text-emerald-600">INTEL</span></span>
-          <span class="text-[10px] text-slate-400 uppercase tracking-wider ml-2">Commercial Permitting Network</span>
+          <span class="font-extrabold text-base text-slate-900 tracking-tight">CIVIC<span class="text-emerald-600">INTEL</span></span>
+          <span class="text-xs text-slate-400 ml-2">New Business Leads</span>
         </div>
-        <div class="text-[11px] text-slate-500 flex items-center space-x-4">
-          <span>Enterprise Territory Feed</span>
+        <div class="text-xs text-slate-500 flex items-center space-x-4">
+          <span>Austin, TX</span>
           <span>•</span>
-          <span>Sanctioned Municipal APIs</span>
+          <span>Dallas, TX</span>
           <span>•</span>
-          <span>Encrypted Billing</span>
+          <span>Orlando, FL</span>
         </div>
       </div>
-      <p class="leading-relaxed text-[11px] text-slate-500">
-        CivicIntel provides pre-market commercial permitting intelligence aggregated directly from municipal records under the Texas Public Information Act and US Freedom of Information Act (FOIA). 100% compliant with commercial business-to-business prospecting regulations.
+      <p class="leading-relaxed text-xs text-slate-500">
+        CivicIntel gathers public commercial building permits filed with municipal city halls and connects them to business decision makers. 100% compliant with public records laws.
       </p>
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 text-[11px] text-slate-400">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 text-xs text-slate-400">
         <p>© 2026 CivicIntel Commercial Intelligence Systems. All rights reserved.</p>
         <p>Austin, TX • Dallas, TX • Orlando, FL</p>
       </div>
