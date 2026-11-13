@@ -79,38 +79,75 @@
         <span id="license-meta" class="mono text-[10px] text-slate-400"></span>
       </div>
 
-      <a href="index.html" class="mono text-[11px] text-slate-500 hover:text-slate-800 transition underline underline-offset-2">Sign out</a>
+      <a href="index.html" onclick="handleSignOut(event)" class="mono text-[11px] text-slate-500 hover:text-slate-800 transition underline underline-offset-2">Sign out</a>
     </div>
   </header>
 
   <!-- MAIN CONTENT -->
   <main class="max-w-7xl mx-auto px-4 py-6 space-y-4">
 
-    <!-- STATS STRIP -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-0 bg-white border border-slate-200 rounded-xl overflow-hidden">
-      <div class="px-5 py-4 border-r border-slate-100">
+    <!-- STATS STRIP (5 METRICS) -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-0 bg-white border border-slate-200 rounded-xl overflow-hidden">
+      <div class="px-5 py-4 border-r border-b sm:border-b-0 border-slate-100">
         <div class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Total Permits</div>
         <div id="stat-total" class="mono text-2xl font-bold text-slate-900">—</div>
       </div>
-      <div class="px-5 py-4 border-r border-slate-100">
-        <div class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">New (14 days)</div>
-        <div id="stat-new" class="mono text-2xl font-bold text-sky-600">—</div>
+      <div class="px-5 py-4 border-r border-b sm:border-b-0 border-slate-100">
+        <div class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Connected (Ticked)</div>
+        <div id="stat-connected" class="mono text-2xl font-bold text-emerald-600">—</div>
+      </div>
+      <div class="px-5 py-4 border-r border-b lg:border-b-0 border-slate-100">
+        <div class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Remaining to Call</div>
+        <div id="stat-remaining" class="mono text-2xl font-bold text-blue-700">—</div>
       </div>
       <div class="px-5 py-4 border-r border-slate-100">
         <div class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Avg Budget</div>
         <div id="stat-avg" class="mono text-2xl font-bold text-slate-900">—</div>
       </div>
-      <div class="px-5 py-4">
+      <div class="px-5 py-4 col-span-2 sm:col-span-1">
         <div class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Last Indexed</div>
         <div id="stat-updated" class="mono text-2xl font-bold text-slate-900">—</div>
       </div>
     </div>
 
     <!-- FILTER TOOLBAR -->
-    <div class="bg-white border border-slate-200 rounded-xl px-4 py-3 space-y-2.5">
-      <!-- Row 1: Category pills -->
+    <div class="bg-white border border-slate-200 rounded-xl px-4 py-3 space-y-3">
+      
+      <!-- Row 1: Pipeline Status Tabs (Ticked vs Unticked) -->
+      <div class="flex items-center justify-between flex-wrap gap-2 pb-2.5 border-b border-slate-100">
+        <div class="flex items-center gap-1.5">
+          <span class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mr-1 flex-shrink-0">Status:</span>
+          <button
+            id="status-tab-all"
+            onclick="setStatusFilter('all')"
+            class="status-tab mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition bg-slate-900 text-white border-slate-900"
+          >
+            All Leads <span id="status-count-all" class="opacity-60 ml-0.5"></span>
+          </button>
+          <button
+            id="status-tab-remaining"
+            onclick="setStatusFilter('remaining')"
+            class="status-tab mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+          >
+            Remaining to Call <span id="status-count-remaining" class="font-bold text-blue-700 ml-0.5"></span>
+          </button>
+          <button
+            id="status-tab-connected"
+            onclick="setStatusFilter('connected')"
+            class="status-tab mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+          >
+            Connected <span id="status-count-connected" class="font-bold text-emerald-600 ml-0.5"></span>
+          </button>
+        </div>
+
+        <div class="hidden sm:flex items-center gap-2 text-[11px] text-slate-400 mono">
+          <span>Click checkmark box on any row to tick/untick</span>
+        </div>
+      </div>
+
+      <!-- Row 2: Category pills -->
       <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar">
-        <span class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 flex-shrink-0">Filter:</span>
+        <span class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 flex-shrink-0">Category:</span>
         <div class="flex items-center gap-1.5 flex-shrink-0">
           <button
             class="filter-pill mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition"
@@ -156,8 +193,8 @@
         </div>
       </div>
 
-      <!-- Row 2: Results bar -->
-      <div class="flex items-center justify-between gap-3">
+      <!-- Row 3: Results bar -->
+      <div class="flex items-center justify-between gap-3 pt-1">
         <div class="flex items-center gap-2">
           <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 pulse-soft flex-shrink-0"></span>
           <span class="text-sm text-slate-600">Showing <strong id="visible-count" class="text-slate-900">0</strong> permits</span>
@@ -182,8 +219,9 @@
       <table class="w-full border-collapse">
         <thead class="sticky top-16 z-10">
           <tr class="bg-slate-50 border-b border-slate-200">
+            <th class="py-3 px-3 text-center text-[10px] font-bold uppercase tracking-wider text-slate-500 mono w-14" title="Tick when connected">Tick</th>
             <th class="py-3 px-4 text-left text-[10px] font-bold uppercase tracking-wider text-slate-500 mono w-28">Filed</th>
-            <th class="py-3 px-4 text-left text-[10px] font-bold uppercase tracking-wider text-slate-500 mono">Business</th>
+            <th class="py-3 px-4 text-left text-[10px] font-bold uppercase tracking-wider text-slate-500 mono">Business &amp; Address</th>
             <th class="py-3 px-4 text-left text-[10px] font-bold uppercase tracking-wider text-slate-500 mono w-32">Category</th>
             <th class="py-3 px-4 text-right text-[10px] font-bold uppercase tracking-wider text-slate-500 mono w-28">Budget</th>
             <th class="py-3 px-4 text-left text-[10px] font-bold uppercase tracking-wider text-slate-500 mono w-36">Pipeline</th>

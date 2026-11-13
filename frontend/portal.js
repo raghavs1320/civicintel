@@ -1,16 +1,17 @@
 /**
  * CivicIntel Member Intelligence Dashboard
- * Table-first rendering with expandable rows, 4-stage pipeline tracking,
- * real-time stats strip, CSV export, and search/filter logic.
+ * Table-first rendering with expandable rows, interactive 1-click lead ticking/unticking,
+ * connected vs. remaining pipeline tracking, 5-metric stats strip, CSV export, and search/filter.
  */
 
 /* ─── State ───────────────────────────────────────────────────────────────── */
-var allLeads          = [];
-var activeCategory    = 'all';
-var searchQuery       = '';
-var filterCurrentMonth = false;
-var userMetro         = null;
-var expandedRows      = {};
+var allLeads           = [];
+var activeCategory     = 'all';
+var activeStatusFilter = 'all'; // 'all' | 'remaining' | 'connected'
+var searchQuery        = '';
+var filterCurrentMonth  = false;
+var userMetro          = null;
+var expandedRows       = {};
 
 /* Pipeline: '' | 'contacted' | 'qualified' | 'closed' */
 var pipelineData = (function () {
@@ -24,6 +25,11 @@ var contactedLeads = (function () {
   catch (e) { return new Set(); }
 })();
 
+/* ─── Helper: Is Lead Connected ───────────────────────────────────────────── */
+function isLeadConnected(leadId) {
+  return contactedLeads.has(leadId) || (pipelineData[leadId] && pipelineData[leadId] !== '');
+}
+
 /* ─── Boot ─────────────────────────────────────────────────────────────────── */
 async function initPortal() {
   if (window.checkMemberAccess) {
@@ -31,14 +37,14 @@ async function initPortal() {
     if (!hasAccess) return;
   }
 
-  var regDate  = sessionStorage.getItem('civic_registered_at') || '';
+  var regDate  = localStorage.getItem('civic_registered_at') || sessionStorage.getItem('civic_registered_at') || 'Active License';
   var metaElem = document.getElementById('license-meta');
   if (metaElem && regDate) {
-    metaElem.textContent = 'License active · Registered ' + regDate;
+    metaElem.textContent = 'License active · ' + regDate;
   }
 
   var urlParams = new URLSearchParams(window.location.search);
-  userMetro = urlParams.get('metro') || sessionStorage.getItem('custom_pref_metro');
+  userMetro = urlParams.get('metro') || localStorage.getItem('custom_pref_metro') || sessionStorage.getItem('custom_pref_metro');
 
   /* Sync metro select to reflect session preference */
   var metroSelect = document.getElementById('portal-metro-switch');
@@ -60,35 +66,36 @@ async function initPortal() {
       allLeads = rawData;
     }
 
-    document.getElementById('portal-loading').style.display = 'none';
+    var loading = document.getElementById('portal-loading');
+    if (loading) loading.style.display = 'none';
+
     updateStats();
     updateCounts();
     renderFeed();
   } catch (err) {
-    var loading = document.getElementById('portal-loading');
-    if (loading) {
-      loading.textContent = 'Failed to load feed. Please refresh or contact your territory manager.';
+    var loadingElem = document.getElementById('portal-loading');
+    if (loadingElem) {
+      loadingElem.textContent = 'Failed to load feed. Please refresh or contact your territory manager.';
     }
   }
 }
 
-/* ─── Header hydration (called by auth.js via applySubscriberHeader) ───────── */
+/* ─── Header hydration ─────────────────────────────────────────────────────── */
 function updatePortalHeader(session) {
   if (!session) return;
   var userDisplay = document.getElementById('user-display');
   var licenseMeta = document.getElementById('license-meta');
 
   if (userDisplay && session.email) {
-    var domain   = session.email.split('@')[1] || session.email;
+    var domain   = session.email.indexOf('@') !== -1 ? session.email.split('@')[0] : session.email;
     var category = session.category || '';
-    userDisplay.textContent = domain + (category ? ' · ' + category : '');
+    userDisplay.textContent = domain + (category ? ' (' + category + ')' : '');
   }
   if (licenseMeta) {
-    var metro  = session.metro || '';
-    var regAt  = session.registered_at || session.created_at || '';
-    var parts  = [];
-    if (metro)  parts.push(metro + ' territory');
-    if (regAt)  parts.push('licensed ' + regAt.slice(0, 10));
+    var metro = session.metro || '';
+    var parts = [];
+    if (metro) parts.push(metro + ' territory');
+    parts.push('active license');
     licenseMeta.textContent = parts.join(' · ');
   }
 }
@@ -96,22 +103,24 @@ function updatePortalHeader(session) {
 /* ─── Metro switch ─────────────────────────────────────────────────────────── */
 function switchPortalMetro(newMetro) {
   userMetro = newMetro;
+  localStorage.setItem('custom_pref_metro', newMetro);
   initPortal();
 }
 
-/* ─── Stats strip ──────────────────────────────────────────────────────────── */
+/* ─── Stats strip (5 metrics) ──────────────────────────────────────────────── */
 function updateStats() {
   var total = allLeads.length;
-  var now   = Date.now();
-  var d14   = 14 * 24 * 60 * 60 * 1000;
 
-  var newCount = allLeads.filter(function (l) {
-    if (!l.filing_date || l.filing_date === 'Recent') return false;
-    return (now - new Date(l.filing_date).getTime()) <= d14;
-  }).length;
+  var connectedCount = 0;
+  for (var i = 0; i < allLeads.length; i++) {
+    if (isLeadConnected(allLeads[i].lead_id)) {
+      connectedCount++;
+    }
+  }
+  var remainingCount = total - connectedCount;
 
-  var withVal  = allLeads.filter(function (l) { return l.estimated_valuation; });
-  var avgVal   = withVal.length
+  var withVal = allLeads.filter(function (l) { return l.estimated_valuation; });
+  var avgVal  = withVal.length
     ? withVal.reduce(function (sum, l) { return sum + Number(l.estimated_valuation); }, 0) / withVal.length
     : 0;
 
@@ -126,8 +135,11 @@ function updateStats() {
   el = document.getElementById('stat-total');
   if (el) el.textContent = total;
 
-  el = document.getElementById('stat-new');
-  if (el) el.textContent = newCount;
+  el = document.getElementById('stat-connected');
+  if (el) el.textContent = connectedCount;
+
+  el = document.getElementById('stat-remaining');
+  if (el) el.textContent = remainingCount;
 
   el = document.getElementById('stat-avg');
   if (el) el.textContent = avgVal >= 1000000
@@ -138,6 +150,16 @@ function updateStats() {
 
   el = document.getElementById('stat-updated');
   if (el) el.textContent = lastDate ? formatDateShort(lastDate) : '—';
+
+  /* Status tab pill counters */
+  var cntAll = document.getElementById('status-count-all');
+  if (cntAll) cntAll.textContent = '(' + total + ')';
+
+  var cntRem = document.getElementById('status-count-remaining');
+  if (cntRem) cntRem.textContent = '(' + remainingCount + ')';
+
+  var cntCon = document.getElementById('status-count-connected');
+  if (cntCon) cntCon.textContent = '(' + connectedCount + ')';
 }
 
 /* ─── Filter pill counts ───────────────────────────────────────────────────── */
@@ -161,6 +183,24 @@ function updateCounts() {
   if (el) el.textContent = allLeads.filter(function (l) {
     return l.category === 'Retail & Commercial Buildout' || l.category === 'General Commercial';
   }).length;
+}
+
+/* ─── Filter: Status tabs (All vs Remaining vs Connected) ──────────────────── */
+function setStatusFilter(status) {
+  activeStatusFilter = status;
+  var tabs = ['all', 'remaining', 'connected'];
+  for (var i = 0; i < tabs.length; i++) {
+    var t = tabs[i];
+    var btn = document.getElementById('status-tab-' + t);
+    if (btn) {
+      if (t === status) {
+        btn.className = 'status-tab mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition bg-slate-900 text-white border-slate-900';
+      } else {
+        btn.className = 'status-tab mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition bg-white text-slate-700 border-slate-200 hover:bg-slate-50';
+      }
+    }
+  }
+  renderFeed();
 }
 
 /* ─── Filter: category pill ────────────────────────────────────────────────── */
@@ -197,19 +237,43 @@ function toggleCurrentMonth() {
   renderFeed();
 }
 
-/* ─── Pipeline ─────────────────────────────────────────────────────────────── */
+/* ─── 1-Click Interactive Tick / Untick ───────────────────────────────────── */
+function toggleConnected(leadId, e) {
+  if (e) {
+    e.stopPropagation();
+    if (e.preventDefault) e.preventDefault();
+  }
+
+  if (isLeadConnected(leadId)) {
+    // Untick -> Move to remaining
+    contactedLeads.delete(leadId);
+    delete pipelineData[leadId];
+  } else {
+    // Tick -> Move to connected
+    contactedLeads.add(leadId);
+    pipelineData[leadId] = 'contacted';
+  }
+
+  localStorage.setItem('contacted_leads', JSON.stringify(Array.from(contactedLeads)));
+  localStorage.setItem('pipeline_data', JSON.stringify(pipelineData));
+
+  updateStats();
+  renderFeed();
+}
+
+/* ─── Pipeline Stage Selection ─────────────────────────────────────────────── */
 function setPipelineStatus(leadId, status) {
   if (status === '') {
     delete pipelineData[leadId];
     contactedLeads.delete(leadId);
   } else {
     pipelineData[leadId] = status;
-    if (status === 'contacted' || status === 'qualified' || status === 'closed') {
-      contactedLeads.add(leadId);
-    }
+    contactedLeads.add(leadId);
   }
   localStorage.setItem('pipeline_data', JSON.stringify(pipelineData));
   localStorage.setItem('contacted_leads', JSON.stringify(Array.from(contactedLeads)));
+
+  updateStats();
   renderFeed();
 }
 
@@ -221,14 +285,16 @@ function getPipelineStatus(leadId) {
 
 function renderPipelineBadge(leadId) {
   var status = getPipelineStatus(leadId);
-  if (!status) return '<span class="mono text-[11px] text-slate-400">—</span>';
+  if (!status) {
+    return '<span class="mono text-[10px] font-semibold text-slate-400 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-md">New Lead</span>';
+  }
   var map = {
     contacted: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     qualified:  'bg-blue-50 text-blue-700 border-blue-200',
     closed:     'bg-amber-50 text-amber-700 border-amber-200'
   };
   var label = {
-    contacted: 'Contacted',
+    contacted: 'Connected',
     qualified:  'Qualified',
     closed:     'Converted'
   };
@@ -259,11 +325,15 @@ function renderFeed() {
   var now = Date.now();
   var d14 = 14 * 24 * 60 * 60 * 1000;
 
-  /* Current year-month for "this month" filter */
   var d       = new Date();
   var yearMon = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
 
   var filtered = allLeads.filter(function (lead) {
+    /* Status Filter: Remaining vs Connected */
+    var connected = isLeadConnected(lead.lead_id);
+    if (activeStatusFilter === 'connected' && !connected) return false;
+    if (activeStatusFilter === 'remaining' && connected) return false;
+
     /* Current month filter */
     if (filterCurrentMonth) {
       if (!lead.filing_date || lead.filing_date === 'Recent') return false;
@@ -336,6 +406,7 @@ function renderFeed() {
 }
 
 function buildRow(lead, now, d14) {
+  var connected  = isLeadConnected(lead.lead_id);
   var isNew      = lead.filing_date && lead.filing_date !== 'Recent' && (now - new Date(lead.filing_date).getTime()) <= d14;
   var hasPhone   = lead.display_phone && lead.display_phone.indexOf('Pending') === -1 && lead.has_direct_phone;
   var budget     = lead.estimated_valuation ? '$' + Number(lead.estimated_valuation).toLocaleString() : '—';
@@ -347,7 +418,7 @@ function buildRow(lead, now, d14) {
   var pitchText  = lead.pitch_angle ? escapeHtml(lead.pitch_angle) : '';
   var status     = getPipelineStatus(lead.lead_id);
 
-  /* Pipeline action buttons */
+  /* Pipeline action buttons inside detail card */
   var pipelineActions = buildPipelineActions(lead.lead_id, status);
 
   /* Contact + action buttons */
@@ -371,9 +442,20 @@ function buildRow(lead, now, d14) {
 
   var detailDisplayStyle = (expandedRows[lead.lead_id]) ? '' : 'display:none';
 
+  /* Tick / untick interactive square button */
+  var tickBtn = '<button type="button" onclick="toggleConnected(\'' + lead.lead_id + '\', event)" '
+    + 'title="' + (connected ? 'Connected (Click to untick)' : 'Click to tick as connected') + '" '
+    + 'class="w-7 h-7 mx-auto rounded-lg flex items-center justify-center border transition cursor-pointer '
+    + (connected ? 'bg-emerald-600 border-emerald-600 text-white shadow-xs' : 'bg-white border-slate-300 hover:border-blue-500 text-transparent') + '">'
+    + '<svg class="w-4 h-4 ' + (connected ? 'block' : 'hidden') + '" fill="none" stroke="currentColor" viewBox="0 0 24 24">'
+    + '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>'
+    + '</svg>'
+    + '</button>';
+
   return ''
     /* ── Main row ── */
     + '<tr class="lead-row border-b border-slate-100 hover:bg-slate-50/80 transition-colors" onclick="toggleRow(\'' + lead.lead_id + '\')">'
+    +   '<td class="py-3 px-3 text-center" onclick="event.stopPropagation()">' + tickBtn + '</td>'
     +   '<td class="py-3 px-4 mono text-xs text-slate-500 whitespace-nowrap">' + shortDate + newBadge + '</td>'
     +   '<td class="py-3 px-4">'
     +     '<div class="font-semibold text-sm text-slate-900 leading-tight">' + escapeHtml(lead.concept_name || 'Commercial Buildout') + '</div>'
@@ -391,7 +473,7 @@ function buildRow(lead, now, d14) {
 
     /* ── Detail row ── */
     + '<tr id="detail-' + lead.lead_id + '" class="detail-row border-b border-slate-100" style="' + detailDisplayStyle + '">'
-    +   '<td colspan="6" class="detail-content px-4 pb-5 pt-0">'
+    +   '<td colspan="7" class="detail-content px-4 pb-5 pt-0">'
     +     '<div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mt-0 space-y-4">'
 
     /* Permit scope */
@@ -413,7 +495,7 @@ function buildRow(lead, now, d14) {
 
     /* Pipeline status */
     +       '<div>'
-    +         '<div class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Pipeline Stage</div>'
+    +         '<div class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Detailed Pipeline Stage</div>'
     +         '<div class="flex flex-wrap gap-1.5">' + pipelineActions + '</div>'
     +       '</div>'
 
@@ -424,10 +506,10 @@ function buildRow(lead, now, d14) {
 
 function buildPipelineActions(leadId, currentStatus) {
   var stages = [
-    { key: '',           label: 'Clear'     },
-    { key: 'contacted',  label: 'Contacted' },
-    { key: 'qualified',  label: 'Qualified' },
-    { key: 'closed',     label: 'Converted' }
+    { key: '',           label: 'Unticked (New)' },
+    { key: 'contacted',  label: 'Connected'      },
+    { key: 'qualified',  label: 'Qualified'      },
+    { key: 'closed',     label: 'Converted'      }
   ];
   var html = '';
   for (var i = 0; i < stages.length; i++) {
@@ -435,7 +517,7 @@ function buildPipelineActions(leadId, currentStatus) {
     var active = s.key === currentStatus;
     var cls;
     if (active) {
-      if (s.key === '')          cls = 'bg-slate-200 text-slate-700 border-slate-300';
+      if (s.key === '')               cls = 'bg-slate-200 text-slate-700 border-slate-300';
       else if (s.key === 'contacted') cls = 'bg-emerald-600 text-white border-emerald-600';
       else if (s.key === 'qualified') cls = 'bg-blue-700 text-white border-blue-700';
       else                            cls = 'bg-amber-500 text-white border-amber-500';
@@ -456,16 +538,15 @@ function exportFilteredCSV() {
   var headers = [
     'Permit #', 'Business Name', 'Category', 'Filed Date', 'Budget ($)',
     'Street Address', 'City', 'State', 'Zip', 'Metro',
-    'Permit Scope', 'Pitch Angle', 'City Docket URL', 'Pipeline Status'
+    'Permit Scope', 'Pitch Angle', 'City Docket URL', 'Connected Status'
   ];
 
   var rows = [headers.join(',')];
-  var now  = Date.now();
-  var d14  = 14 * 24 * 60 * 60 * 1000;
 
   for (var i = 0; i < allLeads.length; i++) {
-    var l      = allLeads[i];
-    var status = getPipelineStatus(l.lead_id);
+    var l         = allLeads[i];
+    var connected = isLeadConnected(l.lead_id);
+    var status    = getPipelineStatus(l.lead_id);
     rows.push([
       csvCell(l.permit_number),
       csvCell(l.concept_name),
@@ -480,7 +561,7 @@ function exportFilteredCSV() {
       csvCell(formatScopeText(l)),
       csvCell(l.pitch_angle),
       csvCell(l.official_portal_url),
-      csvCell(status || 'New Lead')
+      csvCell(connected ? (status ? status.toUpperCase() : 'CONNECTED') : 'REMAINING')
     ].join(','));
   }
 
@@ -564,6 +645,17 @@ function escapeHtml(str) {
     .replace(/"/g,  '&quot;')
     .replace(/'/g,  '&#039;');
 }
+
+/* Attach helpers to window */
+window.toggleConnected   = toggleConnected;
+window.setStatusFilter   = setStatusFilter;
+window.setCategoryFilter = setCategoryFilter;
+window.switchPortalMetro = switchPortalMetro;
+window.exportFilteredCSV = exportFilteredCSV;
+window.handleSearch      = handleSearch;
+window.toggleCurrentMonth = toggleCurrentMonth;
+window.toggleRow         = toggleRow;
+window.setPipelineStatus = setPipelineStatus;
 
 /* ─── Init ─────────────────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', initPortal);
