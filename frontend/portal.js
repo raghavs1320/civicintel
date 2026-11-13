@@ -22,7 +22,7 @@ async function initPortal() {
   const regDate = sessionStorage.getItem('civic_registered_at') || 'Nov 10, 2026';
   const metaElem = document.getElementById('license-meta');
   if (metaElem) {
-    metaElem.textContent = `Category Lock: Active • Registered: ${regDate}`;
+    metaElem.textContent = `License active · Registered ${regDate}`;
   }
 
   // Read metro preference from URL or session
@@ -72,9 +72,9 @@ function setCategoryFilter(cat) {
   activeCategory = cat;
   document.querySelectorAll('.filter-pill').forEach(btn => {
     if (btn.getAttribute('data-cat') === cat) {
-      btn.className = 'filter-pill whitespace-nowrap text-xs font-bold px-4 py-2 rounded-xl transition bg-emerald-600 text-white shadow-sm';
+      btn.className = 'filter-pill whitespace-nowrap text-xs font-semibold px-4 py-2 rounded-lg transition bg-emerald-600 text-white';
     } else {
-      btn.className = 'filter-pill whitespace-nowrap text-xs font-bold px-4 py-2 rounded-xl transition bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm';
+      btn.className = 'filter-pill whitespace-nowrap text-xs font-semibold px-4 py-2 rounded-lg transition bg-white hover:bg-slate-50 text-slate-700 border border-slate-200';
     }
   });
   renderFeed();
@@ -218,98 +218,93 @@ function renderFeed() {
   }
 
   container.innerHTML = filtered.map(lead => {
-    const isContacted = contactedLeads.has(lead.lead_id);
-    const hasPhone = lead.display_phone && !lead.display_phone.includes('Pending');
+    const isContacted   = contactedLeads.has(lead.lead_id);
+    const hasPhone      = lead.display_phone && !lead.display_phone.includes('Pending');
     const formattedDate = formatDate(lead.filing_date);
-    const contactName = getCleanContactName(lead);
 
     return `
-      <div class="bg-white border ${isContacted ? 'border-emerald-300 bg-emerald-50/10' : 'border-slate-200'} hover:border-slate-300 rounded-xl p-5 sm:p-6 transition shadow-xs hover:shadow-sm">
-        
-        <!-- Header Metadata Row -->
-        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-100 text-xs">
-          <div class="flex items-center space-x-2 flex-wrap text-slate-500">
-            <span class="font-mono text-slate-400">#${escapeHtml(lead.permit_number || '2026-MUNI')}</span>
-            <span class="text-slate-300">•</span>
-            <span class="font-medium text-slate-700">${escapeHtml(lead.category)}</span>
-            <span class="text-slate-300">•</span>
+      <div class="lead-card bg-white border ${isContacted ? 'border-emerald-300' : 'border-slate-200'} rounded-2xl p-5 sm:p-6">
+
+        <!-- Header row -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-100">
+          <div class="flex items-center space-x-2.5 flex-wrap text-[11px] mono text-slate-400">
+            <span>#${escapeHtml(lead.permit_number || 'MUNI')}</span>
+            <span class="text-slate-200">|</span>
+            <span class="font-semibold text-slate-600 not-mono" style="font-family:inherit">${escapeHtml(lead.category)}</span>
+            <span class="text-slate-200">|</span>
             <span>${escapeHtml(lead.metro)}, ${escapeHtml(lead.state)}</span>
-            <span class="text-slate-300">•</span>
+            <span class="text-slate-200">|</span>
             <span>Filed ${escapeHtml(formattedDate)}</span>
           </div>
 
           <div class="flex items-center space-x-2">
             ${lead.estimated_valuation ? `
-              <span class="font-mono font-bold text-slate-900 text-xs">
-                $${Number(lead.estimated_valuation).toLocaleString()}
-              </span>
+              <span class="mono font-bold text-slate-900 text-xs">$${Number(lead.estimated_valuation).toLocaleString()}</span>
             ` : `
-              <span class="text-slate-400 text-xs font-medium">Commercial Finish-Out</span>
+              <span class="text-slate-400 text-xs">Undisclosed budget</span>
             `}
-            <button 
-              onclick="toggleContacted('${lead.lead_id}')" 
-              class="text-xs px-2.5 py-1 rounded-lg border transition font-medium ${
-                isContacted 
-                  ? 'bg-emerald-600 text-white border-emerald-600 font-bold' 
-                  : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
+            <button
+              onclick="toggleContacted('${lead.lead_id}')"
+              class="text-xs px-2.5 py-1 rounded-lg border transition font-semibold ${
+                isContacted
+                  ? 'bg-emerald-600 text-white border-emerald-600'
+                  : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
               }">
-              <span>${isContacted ? '✓ Contacted' : '○ Mark Contacted'}</span>
+              ${isContacted ? 'Contacted' : 'Mark Contacted'}
             </button>
           </div>
         </div>
 
-        <!-- Concept Name & Address -->
+        <!-- Business name + address -->
         <div class="mb-3">
-          <h3 class="text-base font-bold text-slate-900 leading-snug">
+          <h3 class="text-base font-bold text-slate-900 leading-snug mb-0.5">
             ${escapeHtml(lead.concept_name)}
           </h3>
-          <div class="flex items-center text-xs text-slate-500 mt-1 space-x-1">
-            <a 
-              href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.street_address + ', ' + lead.city + ', ' + lead.state)}" 
-              target="_blank" 
-              class="hover:text-emerald-700 transition underline underline-offset-2">
-              ${escapeHtml(lead.street_address)}, ${escapeHtml(lead.city)}, ${lead.state} ${lead.zip_code || ''} ↗
-            </a>
-          </div>
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((lead.street_address || '') + ', ' + (lead.city || '') + ', ' + (lead.state || ''))}"
+            target="_blank"
+            class="text-xs text-slate-500 hover:text-emerald-700 transition inline-flex items-center space-x-1">
+            <span>${escapeHtml(lead.street_address)}, ${escapeHtml(lead.city)}, ${lead.state} ${lead.zip_code || ''}</span>
+            <svg class="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </a>
         </div>
 
-        <!-- Contractor & Municipal Record Bar -->
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <!-- Contractor bar -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 mb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Filing / Contractor Entity</div>
-            <div class="text-sm font-bold text-slate-900 mt-0.5">
-              <span>${escapeHtml(lead.contractor_name || lead.owner_raw || 'Commercial Remodel Permit on File')}</span>
+            <div class="text-[10px] uppercase font-semibold text-slate-400 tracking-wider mono mb-0.5">Contractor on Record</div>
+            <div class="text-sm font-semibold text-slate-900">
+              ${escapeHtml(lead.contractor_name || lead.owner_raw || 'Commercial Permit on File')}
             </div>
-            ${lead.registered_address ? `
-              <div class="text-[11px] text-slate-500 mt-0.5">${escapeHtml(lead.registered_address)}</div>
-            ` : ''}
+            ${lead.registered_address ? `<div class="text-[11px] text-slate-500 mono mt-0.5">${escapeHtml(lead.registered_address)}</div>` : ''}
           </div>
 
           <div class="flex flex-wrap items-center gap-2">
             ${hasPhone ? `
-              <a 
-                href="tel:${lead.dial_phone || lead.display_phone}" 
-                class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3.5 py-2 rounded-lg transition flex items-center space-x-1.5 shadow-xs">
+              <a
+                href="tel:${lead.dial_phone || lead.display_phone}"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-3.5 py-2 rounded-lg transition flex items-center space-x-1.5">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                <span>Call Contractor: ${escapeHtml(lead.display_phone)}</span>
+                <span class="mono">${escapeHtml(lead.display_phone)}</span>
               </a>
             ` : ''}
 
             ${lead.official_portal_url ? `
-              <a 
-                href="${escapeHtml(lead.official_portal_url)}" 
-                target="_blank" 
-                class="bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs px-3 py-2 rounded-lg border border-slate-200 transition shadow-xs flex items-center space-x-1">
-                <span>City Hall Docket ↗</span>
+              <a
+                href="${escapeHtml(lead.official_portal_url)}"
+                target="_blank"
+                class="bg-white hover:bg-slate-50 text-slate-600 font-semibold text-xs px-3 py-2 rounded-lg border border-slate-200 transition flex items-center space-x-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                <span>City Hall Docket</span>
               </a>
             ` : ''}
           </div>
         </div>
 
-        <!-- Municipal Scope (Official Public Record) -->
-        <div class="text-xs text-slate-700 leading-relaxed bg-slate-50/70 border border-slate-100 rounded-xl p-3">
-          <span class="font-bold text-slate-500 uppercase tracking-wider text-[10px] block mb-0.5">Official Permit Scope</span>
-          ${escapeHtml(formatScopeText(lead))}
+        <!-- Permit scope -->
+        <div class="bg-slate-50 border border-slate-100 rounded-xl px-3.5 py-2.5">
+          <div class="text-[10px] uppercase font-semibold text-slate-400 tracking-wider mono mb-0.5">Official Permit Scope</div>
+          <div class="text-xs text-slate-700 leading-relaxed">${escapeHtml(formatScopeText(lead))}</div>
         </div>
 
       </div>

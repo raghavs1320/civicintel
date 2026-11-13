@@ -1,15 +1,13 @@
 /**
- * CivicIntel Commercial Intelligence Systems
- * Public Leads Explorer & Showcase Engine
- * Powers dynamic multi-metro filtering, live count aggregation,
- * dual view modes (Card View vs Table View), and $1 trial checkout conversion.
+ * CivicIntel — Public Leads Explorer
+ * Multi-metro filtering, card/table dual-view, gated overflow, checkout handoff.
  */
 
 let allPreviews = {};
 let selectedMetro = 'Austin';
 let selectedCategory = 'all';
 let selectedMinVal = 0;
-let currentViewMode = 'cards'; // 'cards' or 'table'
+let currentViewMode = 'cards';
 
 async function initShowcase() {
   try {
@@ -27,43 +25,35 @@ async function initShowcase() {
 function updateDynamicCounters() {
   if (!allPreviews) return;
 
-  const austinList = allPreviews['Austin'] || [];
-  const dallasList = allPreviews['Dallas'] || [];
+  const austinList  = allPreviews['Austin']  || [];
+  const dallasList  = allPreviews['Dallas']  || [];
   const orlandoList = allPreviews['Orlando'] || [];
 
-  // Update city buttons with dynamic counts
   const austinBtn = document.querySelector('.city-tab-btn[data-metro="Austin"]');
-  if (austinBtn) {
-    austinBtn.innerHTML = `<span>Austin, TX</span> <span class="opacity-80 font-mono text-xs">(${austinList.length} Leads)</span>`;
-  }
+  if (austinBtn) austinBtn.innerHTML = `<span>Austin, TX</span> <span class="opacity-70 font-mono text-xs">${austinList.length}</span>`;
 
   const dallasBtn = document.querySelector('.city-tab-btn[data-metro="Dallas"]');
-  if (dallasBtn) {
-    dallasBtn.innerHTML = `<span>Dallas, TX</span> <span class="opacity-80 font-mono text-xs">(${dallasList.length} Leads)</span>`;
-  }
+  if (dallasBtn) dallasBtn.innerHTML = `<span>Dallas, TX</span> <span class="opacity-70 font-mono text-xs">${dallasList.length}</span>`;
 
   const orlandoBtn = document.querySelector('.city-tab-btn[data-metro="Orlando"]');
-  if (orlandoBtn) {
-    orlandoBtn.innerHTML = `<span>Orlando, FL</span> <span class="opacity-80 font-mono text-xs">(${orlandoList.length} Leads)</span>`;
-  }
+  if (orlandoBtn) orlandoBtn.innerHTML = `<span>Orlando, FL</span> <span class="opacity-70 font-mono text-xs">${orlandoList.length}</span>`;
 
-  // Update category buttons for currently selected metro
   const currentList = allPreviews[selectedMetro] || [];
-  const foodCount = currentList.filter(l => l.category === 'Hospitality & Dining').length;
+  const foodCount   = currentList.filter(l => l.category === 'Hospitality & Dining').length;
   const retailCount = currentList.filter(l => l.category === 'Retail & Commercial Buildout' || l.category === 'General Commercial').length;
   const healthCount = currentList.filter(l => l.category === 'Healthcare & Wellness').length;
 
   const allCatBtn = document.querySelector('.cat-pill-btn[data-category="all"]');
-  if (allCatBtn) allCatBtn.innerHTML = `All Businesses <span class="text-xs opacity-75 font-mono">(${currentList.length})</span>`;
+  if (allCatBtn) allCatBtn.innerHTML = `All <span class="opacity-60 font-mono text-xs ml-1">${currentList.length}</span>`;
 
   const foodCatBtn = document.querySelector('.cat-pill-btn[data-category="Hospitality & Dining"]');
-  if (foodCatBtn) foodCatBtn.innerHTML = `Restaurants &amp; Bars <span class="text-xs opacity-75 font-mono">(${foodCount})</span>`;
+  if (foodCatBtn) foodCatBtn.innerHTML = `Restaurants &amp; Bars <span class="opacity-60 font-mono text-xs ml-1">${foodCount}</span>`;
 
   const retailCatBtn = document.querySelector('.cat-pill-btn[data-category="Retail & Commercial Buildout"]');
-  if (retailCatBtn) retailCatBtn.innerHTML = `Retail Stores <span class="text-xs opacity-75 font-mono">(${retailCount})</span>`;
+  if (retailCatBtn) retailCatBtn.innerHTML = `Retail <span class="opacity-60 font-mono text-xs ml-1">${retailCount}</span>`;
 
   const healthCatBtn = document.querySelector('.cat-pill-btn[data-category="Healthcare & Wellness"]');
-  if (healthCatBtn) healthCatBtn.innerHTML = `Clinics &amp; Gyms <span class="text-xs opacity-75 font-mono">(${healthCount})</span>`;
+  if (healthCatBtn) healthCatBtn.innerHTML = `Healthcare <span class="opacity-60 font-mono text-xs ml-1">${healthCount}</span>`;
 }
 
 function setViewMode(mode) {
@@ -71,313 +61,217 @@ function setViewMode(mode) {
   const cardsBtn = document.getElementById('view-cards-btn');
   const tableBtn = document.getElementById('view-table-btn');
 
-  if (mode === 'cards') {
-    if (cardsBtn) cardsBtn.className = "text-xs font-bold px-3 py-1.5 rounded-md transition bg-white text-slate-900 shadow-xs";
-    if (tableBtn) tableBtn.className = "text-xs font-semibold px-3 py-1.5 rounded-md transition text-slate-600 hover:text-slate-900";
-  } else {
-    if (cardsBtn) cardsBtn.className = "text-xs font-semibold px-3 py-1.5 rounded-md transition text-slate-600 hover:text-slate-900";
-    if (tableBtn) tableBtn.className = "text-xs font-bold px-3 py-1.5 rounded-md transition bg-white text-slate-900 shadow-xs";
-  }
+  const activeClass   = 'text-xs font-semibold px-3 py-1.5 rounded-md transition bg-white text-slate-900 shadow-sm border border-slate-200';
+  const inactiveClass = 'text-xs font-semibold px-3 py-1.5 rounded-md transition text-slate-500 hover:text-slate-800';
+
+  if (cardsBtn) cardsBtn.className = mode === 'cards' ? activeClass : inactiveClass;
+  if (tableBtn) tableBtn.className = mode === 'table' ? activeClass : inactiveClass;
 
   renderFilteredCards();
 }
 
 function applyUserPreferences() {
   const metroInput = document.getElementById('user-metro-input');
-  const catInput = document.getElementById('user-category-input');
+  const catInput   = document.getElementById('user-category-input');
 
-  if (metroInput) selectedMetro = metroInput.value;
-  if (catInput) selectedCategory = catInput.value;
+  if (metroInput) selectedMetro    = metroInput.value;
+  if (catInput)   selectedCategory = catInput.value;
 
-  // Sync city tabs styling
   document.querySelectorAll('.city-tab-btn').forEach(btn => {
     if (btn.dataset.metro === selectedMetro) {
-      btn.className = "city-tab-btn text-sm font-bold px-5 py-2.5 rounded-xl transition bg-slate-900 text-white shadow-xs flex items-center space-x-1.5";
+      btn.className = 'city-tab-btn text-sm font-semibold px-5 py-2 rounded-lg transition bg-slate-900 text-white flex items-center space-x-2';
     } else {
-      btn.className = "city-tab-btn text-sm font-bold px-5 py-2.5 rounded-xl transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-1.5";
+      btn.className = 'city-tab-btn text-sm font-semibold px-5 py-2 rounded-lg transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-2';
     }
   });
 
-  // Sync category pills styling
   document.querySelectorAll('.cat-pill-btn').forEach(btn => {
-    if (btn.dataset.category === selectedCategory) {
-      btn.className = "cat-pill-btn text-sm font-bold px-4 py-2 rounded-xl transition bg-emerald-600 text-white shadow-xs";
-    } else {
-      btn.className = "cat-pill-btn text-sm font-bold px-4 py-2 rounded-xl transition bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-xs";
-    }
+    const isActive = btn.dataset.category === selectedCategory;
+    btn.className = isActive
+      ? 'cat-pill-btn text-xs font-semibold px-3.5 py-1.5 rounded-lg transition bg-emerald-600 text-white'
+      : 'cat-pill-btn text-xs font-semibold px-3.5 py-1.5 rounded-lg transition bg-slate-100 hover:bg-slate-200 text-slate-700';
   });
-
-  updateDynamicCounters();
-
-  // Update showcase heading if present
-  const heading = document.getElementById('showcase-heading');
-  const catLabels = {
-    'all': 'All Businesses',
-    'Hospitality & Dining': 'Restaurants & Bars',
-    'Retail & Commercial Buildout': 'Retail Stores',
-    'Healthcare & Wellness': 'Clinics & Gyms'
-  };
-  if (heading) {
-    heading.textContent = `${catLabels[selectedCategory] || selectedCategory} in ${selectedMetro}`;
-  }
 
   renderFilteredCards();
 }
 
-function selectMetroTab(metro) {
+function setMetro(metro) {
+  selectedMetro = metro;
   const metroInput = document.getElementById('user-metro-input');
   if (metroInput) metroInput.value = metro;
-  applyUserPreferences();
+
+  document.querySelectorAll('.city-tab-btn').forEach(btn => {
+    if (btn.dataset.metro === metro) {
+      btn.className = 'city-tab-btn text-sm font-semibold px-5 py-2 rounded-lg transition bg-slate-900 text-white flex items-center space-x-2';
+    } else {
+      btn.className = 'city-tab-btn text-sm font-semibold px-5 py-2 rounded-lg transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-2';
+    }
+  });
+
+  updateDynamicCounters();
+  renderFilteredCards();
 }
 
-function selectCategoryPill(category) {
+function setCategory(category) {
+  selectedCategory = category;
   const catInput = document.getElementById('user-category-input');
   if (catInput) catInput.value = category;
-  applyUserPreferences();
+
+  document.querySelectorAll('.cat-pill-btn').forEach(btn => {
+    const isActive = btn.dataset.category === category;
+    btn.className = isActive
+      ? 'cat-pill-btn text-xs font-semibold px-3.5 py-1.5 rounded-lg transition bg-emerald-600 text-white'
+      : 'cat-pill-btn text-xs font-semibold px-3.5 py-1.5 rounded-lg transition bg-slate-100 hover:bg-slate-200 text-slate-700';
+  });
+
+  renderFilteredCards();
+}
+
+function setMinVal(minVal) {
+  selectedMinVal = parseInt(minVal) || 0;
+  renderFilteredCards();
 }
 
 function renderFilteredCards() {
   const container = document.getElementById('leads-container');
-  const rawList = allPreviews[selectedMetro] || [];
+  if (!container || !allPreviews) return;
 
-  // Filter based on preferences
-  const matched = rawList.filter(lead => {
-    if (selectedCategory !== 'all') {
-      if (selectedCategory === 'Retail & Commercial Buildout') {
-        if (lead.category !== 'Retail & Commercial Buildout' && lead.category !== 'General Commercial') {
-          return false;
-        }
-      } else if (lead.category !== selectedCategory) {
-        return false;
-      }
-    }
+  let leads = (allPreviews[selectedMetro] || []).filter(lead => {
+    if (selectedCategory !== 'all' && lead.category !== selectedCategory) return false;
+    if (selectedMinVal > 0 && lead.estimated_valuation < selectedMinVal) return false;
     return true;
   });
 
-  // Sort by newest filing first, handling 'Recent' gracefully
-  matched.sort((a, b) => {
-    const scoreDiff = (b.priority_score || 0) - (a.priority_score || 0);
-    if (scoreDiff !== 0) return scoreDiff;
-    const dateA = a.filing_date && a.filing_date !== 'Recent' ? a.filing_date : '0000-00-00';
-    const dateB = b.filing_date && b.filing_date !== 'Recent' ? b.filing_date : '0000-00-00';
-    return dateB.localeCompare(dateA);
-  });
+  const totalCount  = leads.length;
+  const displayLeads = leads.slice(0, 10);
 
-  // Update count badge & notification box
-  const countBadge = document.getElementById('matched-lead-count');
-  if (countBadge) countBadge.textContent = matched.length;
-
-  const notifText = document.getElementById('filter-notif-text');
-  if (notifText) {
-    const stateCode = selectedMetro === 'Orlando' ? 'FL' : 'TX';
-    const catLabel = selectedCategory === 'all' ? 'businesses' : selectedCategory.toLowerCase();
-    const countDisplay = Math.min(10, matched.length);
-    notifText.innerHTML = `Showing ${countDisplay} of <strong class="text-slate-900 font-bold">${matched.length}</strong> ${escapeHtml(catLabel)} opening soon in <strong class="text-slate-900 font-bold">${selectedMetro}, ${stateCode}</strong>`;
-  }
-
-  if (matched.length === 0) {
+  if (displayLeads.length === 0) {
     container.innerHTML = `
-      <div class="bg-white border border-slate-200 rounded-2xl p-12 text-center text-slate-500 shadow-xs">
-        <h4 class="text-base font-bold text-slate-900 mb-1">No Businesses Matched This Category</h4>
-        <p class="text-sm text-slate-500 max-w-md mx-auto">
-          We found businesses in ${selectedMetro}, but none matching "${selectedCategory}". 
-          Try selecting "All Businesses" or switching cities above.
-        </p>
+      <div class="bg-white border border-slate-200 rounded-2xl p-10 text-center text-slate-500 text-sm">
+        No commercial buildouts match the current filters.
       </div>
     `;
     return;
   }
 
-  // Display top 10 verified leads for a clean executive preview
-  const displayList = matched.slice(0, 10);
-
   if (currentViewMode === 'table') {
-    container.innerHTML = renderTableView(displayList, matched.length);
+    container.innerHTML = renderTableView(displayLeads, totalCount);
   } else {
-    container.innerHTML = renderDossierCards(displayList, matched.length);
+    container.innerHTML = renderDossierCards(displayLeads, totalCount);
   }
 }
 
-function formatDate(dateStr) {
-  if (!dateStr || dateStr === 'Recent') return 'Recent';
-  const parts = String(dateStr).trim().split('-');
-  if (parts.length === 3) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const m = parseInt(parts[1], 10) - 1;
-    if (m >= 0 && m < 12) {
-      return `${months[m]} ${parseInt(parts[2], 10)}, ${parts[0]}`;
-    }
-  }
-  return dateStr;
-}
-
-function getCleanContactName(lead) {
-  const name = (lead.decision_maker_name || '').trim();
-  const concept = (lead.concept_name || '').trim().toLowerCase();
-  const lower = name.toLowerCase();
-  if (!name || lower === concept || name.length > 35 || /remodel|finish|tenant|condo|interior|commercial|building|suite|scope|install|restroom|kitchen|addition|alteration|renovation|repair|permit|project|storefront|warehouse/i.test(name)) {
-    return 'Business Owner';
-  }
-  return name;
-}
-
-function cleanConceptName(text) {
-  if (!text) return 'Commercial Buildout';
-  let t = String(text).trim();
-  t = t.replace(/^(ePlan:\s*)?(Commercial\s+)?Expedited\s+Review\s*[-–:]\s*/i, '');
-  t = t.replace(/^(QTEAM\s+INHOUSE|QTEAM|NSFAA|DSST|BU\s+ZO|MCR\s+W\/BATTERY|PEXP)[\s\-_/:]*/i, '');
-  t = t.replace(/^(THIS PROJECT CONSISTS OF A|SCOPE CONSISTS OF)\s+/i, '');
-  t = t.replace(/^(NEW CONSTRUCTION OF A|CONSTRUCTION OF)\s+/i, 'New ');
-  t = t.replace(/\s+/g, ' ').trim();
-
-  // If ALL CAPS, convert to readable Title Case without losing words
-  if (t === t.toUpperCase() && t.length > 4) {
-    t = t.toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase());
-    t = t.replace(/\b(Llc|Inc|Co|Hvac|Ada|Sf|Pos|Us|Tx|Fl)\b/g, m => m.toUpperCase());
-  }
-  return t;
-}
-
-function cleanScopeDescription(lead) {
-  // Use raw official filing description
-  let raw = lead.concept_name || lead.concept_snapshot || lead.work_description || '';
-  let text = String(raw).trim();
-
-  // Remove administrative tracking prefixes
-  text = text.replace(/^(ePlan:\s*)?(Commercial\s+)?Expedited\s+Review\s*[-–:]\s*/i, '');
-  text = text.replace(/^(QTEAM\s+INHOUSE|QTEAM|NSFAA|DSST|BU\s+ZO|MCR\s+W\/BATTERY|PEXP)[\s\-_/:]*/i, '');
-  text = text.replace(/^(THIS PROJECT CONSISTS OF A|SCOPE CONSISTS OF)\s+/i, '');
-  text = text.replace(/\s+/g, ' ').trim();
-
-  // If ALL CAPS, convert to clean, readable sentence case (preserving all words)
-  if (text.length > 5 && text === text.toUpperCase()) {
-    text = text.toLowerCase();
-    text = text.charAt(0).toUpperCase() + text.slice(1);
-    text = text.replace(/([.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
-    text = text.replace(/\b(sf|sqft|hvac|ada|pos|led|co|llc|inc|apt|bldg)\b/gi, m => m.toUpperCase());
-  }
-
-  // Ensure clean ending punctuation
-  if (text && !/[.!?]$/.test(text)) {
-    text += '.';
-  }
-
-  if (!text || text.length < 5) {
-    return 'Commercial interior buildout, mechanical installation, and finish-out.';
-  }
-
-  return text;
+function cleanConceptName(name) {
+  if (!name) return 'Commercial Buildout';
+  return name
+    .replace(/\s*\(.*?\)\s*/g, '')
+    .replace(/LLC\.?$/i, '')
+    .replace(/Inc\.?$/i, '')
+    .replace(/Corp\.?$/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function formatCategory(cat) {
-  if (cat === 'Hospitality & Dining') return 'Restaurant & Bar';
-  if (cat === 'Retail & Commercial Buildout' || cat === 'General Commercial') return 'Retail Store';
-  if (cat === 'Healthcare & Wellness') return 'Clinic & Wellness';
-  return 'Commercial Buildout';
+  const map = {
+    'Hospitality & Dining': 'Hospitality',
+    'Retail & Commercial Buildout': 'Retail',
+    'Healthcare & Wellness': 'Healthcare',
+    'General Commercial': 'Commercial',
+    'Office & Professional Services': 'Office',
+    'Industrial & Warehouse': 'Industrial',
+  };
+  return map[cat] || cat || 'Commercial';
 }
 
-function formatValuation(val) {
-  if (val && Number(val) > 0) {
-    return `$${Number(val).toLocaleString()} project`;
-  }
-  return 'Commercial Buildout';
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  try {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  } catch(e) { return dateStr; }
 }
 
-function renderDossierCards(displayList, totalCount) {
-  const cardsHtml = displayList.map((lead) => {
+function renderDossierCards(leads, totalCount) {
+  const stateCode = selectedMetro === 'Orlando' ? 'FL' : 'TX';
+
+  const cards = leads.map(lead => {
+    const valText    = lead.estimated_valuation
+      ? '$' + Number(lead.estimated_valuation).toLocaleString()
+      : 'Undisclosed';
     const formattedDate = formatDate(lead.filing_date);
-    const contactName = getCleanContactName(lead);
-    const titleClean = cleanConceptName(lead.concept_name);
-    const scopeClean = cleanScopeDescription(lead);
+    const titleClean    = cleanConceptName(lead.concept_name);
+    const catLabel      = formatCategory(lead.category);
+    const scope         = lead.project_description || lead.scope_of_work || '';
 
     return `
-      <article class="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-6 sm:p-7 transition shadow-xs hover:shadow-md text-left">
-        
-        <!-- Header Line: Category, Date, Budget -->
-        <div class="flex flex-wrap items-center justify-between gap-2 pb-3.5 border-b border-slate-100 text-sm">
-          <div class="flex items-center space-x-2 text-slate-500">
-            <span class="font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full text-xs">
-              ${formatCategory(lead.category)}
-            </span>
-            <span class="text-slate-300">•</span>
-            <span class="font-medium text-slate-600">Filed on ${escapeHtml(formattedDate)}</span>
+      <div class="lead-card bg-white border border-slate-200 rounded-2xl p-5">
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <div class="flex-1 min-w-0">
+            <div class="font-bold text-slate-900 text-base leading-snug truncate">${escapeHtml(titleClean)}</div>
+            <div class="text-xs text-slate-500 mt-0.5 truncate">${escapeHtml(lead.street_address || '')}, ${stateCode}</div>
           </div>
-
-          <div class="font-bold text-slate-900 text-sm">
-            ${formatValuation(lead.estimated_valuation)}
-          </div>
-        </div>
-
-        <!-- Business Name & Location -->
-        <div class="mt-4">
-          <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-snug">
-            ${escapeHtml(titleClean)}
-          </h3>
-          <p class="text-sm sm:text-base text-slate-500 mt-1 font-medium">
-            ${escapeHtml(lead.street_address)}, ${escapeHtml(lead.city)}, ${lead.state} ${lead.zip_code || ''}
-          </p>
-        </div>
-
-        <!-- Official Permit Description (Raw Government Data, Cleanly Formatted) -->
-        <div class="mt-4 bg-slate-50/80 border border-slate-100 rounded-xl p-3.5">
-          <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-            Official Permit Scope
+          <span class="font-mono text-[10px] font-semibold text-slate-500 bg-slate-50 border border-slate-200 px-2 py-1 rounded-md whitespace-nowrap flex-shrink-0">
+            ${escapeHtml(catLabel)}
           </span>
-          <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
-            ${escapeHtml(scopeClean)}
-          </p>
         </div>
 
-        <!-- Municipal Tracking Bar & CTA -->
-        <div class="mt-5 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
-          <div class="flex items-center space-x-2 text-xs text-slate-500">
-            <span class="font-mono bg-slate-100 border border-slate-200 text-slate-700 px-2.5 py-1 rounded-md font-semibold">
-              Permit #${escapeHtml(lead.permit_number || '2026-MUNI')}
-            </span>
-            <span class="text-slate-300">•</span>
-            <span>Official Public Record</span>
-          </div>
+        ${scope ? `
+        <div class="bg-slate-50 rounded-xl px-3.5 py-2.5 mb-3">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">Permit Scope</div>
+          <div class="text-xs text-slate-700 leading-relaxed">${escapeHtml(scope)}</div>
+        </div>` : ''}
 
-          <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition shadow-xs flex items-center space-x-1.5 cursor-pointer">
-            <span>Unlock Full Territory Feed</span>
-            <span>→</span>
+        <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+          <div class="flex items-center space-x-3 text-[11px] text-slate-500 font-mono">
+            ${valText !== 'Undisclosed' ? `<span class="font-bold text-slate-800">${valText}</span>` : ''}
+            <span>#${escapeHtml(lead.permit_number || 'MUNI')}</span>
+            ${formattedDate ? `<span class="hidden sm:inline">${formattedDate}</span>` : ''}
+          </div>
+          <button
+            onclick="goToPersonalizedCheckout()"
+            class="text-xs font-semibold text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-lg transition cursor-pointer whitespace-nowrap">
+            View Territory
           </button>
         </div>
-
-      </article>
+      </div>
     `;
   }).join('');
 
-  return cardsHtml + renderOverflowNotice(totalCount);
+  return `<div class="space-y-3">${cards}</div>` + renderOverflowNotice(totalCount);
 }
 
-function renderTableView(displayList, totalCount) {
-  const tableRows = displayList.map(lead => {
-    const valText = lead.estimated_valuation ? `$${Number(lead.estimated_valuation).toLocaleString()}` : 'Buildout';
+function renderTableView(leads, totalCount) {
+  const stateCode = selectedMetro === 'Orlando' ? 'FL' : 'TX';
+
+  const tableRows = leads.map(lead => {
+    const valText       = lead.estimated_valuation
+      ? '$' + Number(lead.estimated_valuation).toLocaleString()
+      : '—';
     const formattedDate = formatDate(lead.filing_date);
-    const titleClean = cleanConceptName(lead.concept_name);
+    const titleClean    = cleanConceptName(lead.concept_name);
 
     return `
-      <tr class="hover:bg-slate-50/75 transition border-b border-slate-100 text-sm">
-        <td class="py-4 px-4 text-slate-500 whitespace-nowrap font-medium text-xs">
+      <tr class="hover:bg-slate-50/60 transition border-b border-slate-100 text-sm">
+        <td class="py-3.5 px-4 text-slate-500 whitespace-nowrap font-mono text-[11px]">
           ${escapeHtml(formattedDate)}
         </td>
-        <td class="py-4 px-4">
-          <div class="font-bold text-slate-900 leading-snug">${escapeHtml(titleClean)}</div>
-          <div class="text-xs text-slate-500 mt-0.5">${escapeHtml(lead.street_address)}, ${lead.state}</div>
+        <td class="py-3.5 px-4">
+          <div class="font-semibold text-slate-900 leading-snug">${escapeHtml(titleClean)}</div>
+          <div class="text-xs text-slate-500 mt-0.5">${escapeHtml(lead.street_address || '')}, ${stateCode}</div>
         </td>
-        <td class="py-4 px-4 text-slate-700 whitespace-nowrap text-xs font-semibold">
-          ${formatCategory(lead.category)}
+        <td class="py-3.5 px-4 whitespace-nowrap">
+          <span class="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">${formatCategory(lead.category)}</span>
         </td>
-        <td class="py-4 px-4 font-mono font-bold text-slate-900 text-xs whitespace-nowrap">
+        <td class="py-3.5 px-4 font-mono font-bold text-slate-900 text-xs whitespace-nowrap">
           ${valText}
         </td>
-        <td class="py-4 px-4 whitespace-nowrap font-mono text-slate-600 text-xs font-medium">
-          #${escapeHtml(lead.permit_number || '2026-MUNI')}
+        <td class="py-3.5 px-4 whitespace-nowrap font-mono text-slate-500 text-[11px]">
+          #${escapeHtml(lead.permit_number || 'MUNI')}
         </td>
-        <td class="py-4 px-4 text-right whitespace-nowrap">
-          <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition shadow-xs cursor-pointer">
-            Unlock Feed →
+        <td class="py-3.5 px-4 text-right whitespace-nowrap">
+          <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-3.5 py-1.5 rounded-lg transition cursor-pointer">
+            Unlock Feed
           </button>
         </td>
       </tr>
@@ -385,16 +279,16 @@ function renderTableView(displayList, totalCount) {
   }).join('');
 
   const tableHtml = `
-    <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+    <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold uppercase tracking-wider text-slate-500">
-              <th class="py-3 px-4">Date</th>
-              <th class="py-3 px-4">Business &amp; Address</th>
+            <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+              <th class="py-3 px-4">Filed</th>
+              <th class="py-3 px-4">Business</th>
               <th class="py-3 px-4">Type</th>
               <th class="py-3 px-4">Budget</th>
-              <th class="py-3 px-4">Permit #</th>
+              <th class="py-3 px-4">Permit</th>
               <th class="py-3 px-4 text-right">Action</th>
             </tr>
           </thead>
@@ -412,25 +306,28 @@ function renderTableView(displayList, totalCount) {
 function renderOverflowNotice(totalCount) {
   if (totalCount <= 10) return '';
   const stateCode = selectedMetro === 'Orlando' ? 'FL' : 'TX';
+  const hidden = totalCount - 10;
   return `
-    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-8 text-center my-6">
-      <div class="max-w-xl mx-auto">
-        <h3 class="text-xl font-bold text-slate-900">
-          Showing 10 of ${totalCount} active commercial buildouts in ${selectedMetro}, ${stateCode}
+    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-8 text-center mt-4">
+      <div class="max-w-lg mx-auto">
+        <div class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Preview Limited to 10 Records</div>
+        <h3 class="text-xl font-bold text-slate-900 mb-2">
+          ${hidden} additional buildouts in ${selectedMetro}, ${stateCode} not shown
         </h3>
-        <p class="text-sm text-slate-600 mt-2 mb-5 leading-relaxed">
-          New commercial permits are indexed every morning from official city hall dockets. Start your 7-day trial for $1.00 to access all ${totalCount} active buildouts, jobsite addresses, and export to CSV.
+        <p class="text-sm text-slate-600 leading-relaxed mb-5">
+          Full access includes all ${totalCount} active permit records with jobsite addresses, contractor names, project budgets, and CSV export. New permits are indexed every morning from official city hall dockets.
         </p>
-        <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm px-7 py-3.5 rounded-xl transition shadow-md cursor-pointer inline-flex items-center space-x-1.5">
-          <span>Access All ${totalCount} Leads for $1.00</span>
-          <span>→</span>
+        <button
+          onclick="goToPersonalizedCheckout()"
+          class="bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm px-6 py-3 rounded-lg transition cursor-pointer">
+          Check Territory Availability
         </button>
-        <div class="mt-4 flex items-center justify-center space-x-3 text-xs text-slate-500">
-          <span>Official municipal dockets</span>
-          <span>•</span>
-          <span>1 rep per industry lock</span>
-          <span>•</span>
-          <span>Cancel anytime in 1 click</span>
+        <div class="mt-4 flex items-center justify-center space-x-4 text-[11px] text-slate-400">
+          <span>Official municipal records</span>
+          <span>·</span>
+          <span>One licensee per industry</span>
+          <span>·</span>
+          <span>7-day trial for $1</span>
         </div>
       </div>
     </div>
@@ -439,12 +336,12 @@ function renderOverflowNotice(totalCount) {
 
 function goToPersonalizedCheckout() {
   const metroInput = document.getElementById('user-metro-input');
-  const catInput = document.getElementById('user-category-input');
+  const catInput   = document.getElementById('user-category-input');
 
-  const metro = metroInput ? metroInput.value : selectedMetro;
-  const category = catInput ? catInput.value : selectedCategory;
+  const metro    = metroInput ? metroInput.value : selectedMetro;
+  const category = catInput   ? catInput.value   : selectedCategory;
 
-  sessionStorage.setItem('custom_pref_metro', metro);
+  sessionStorage.setItem('custom_pref_metro',    metro);
   sessionStorage.setItem('custom_pref_category', category);
 
   window.location.href = `checkout.html?metro=${encodeURIComponent(metro)}&category=${encodeURIComponent(category)}`;
@@ -452,15 +349,20 @@ function goToPersonalizedCheckout() {
 
 function escapeHtml(str) {
   if (!str) return '';
-  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 function renderFallbackCards() {
   const container = document.getElementById('leads-container');
   if (container) {
     container.innerHTML = `
-      <div class="bg-white border border-slate-200 rounded-2xl p-8 text-center text-slate-500">
-        Loading live leads from city records...
+      <div class="bg-white border border-slate-200 rounded-2xl p-8 text-center text-sm text-slate-400">
+        Loading permit records from city dockets...
       </div>
     `;
   }
