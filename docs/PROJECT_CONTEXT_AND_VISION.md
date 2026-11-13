@@ -89,13 +89,13 @@ CivicIntel sells to 10 non-competing B2B territory vendor categories in each met
   1. `leads`: Primary repository of verified commercial projects.
   2. `subscribers`: Active territory license holders, tokens, assigned metros, and billing status.
 
-### Current Verified Data Inventory (448 Commercial Leads):
-* **Austin Metro, TX:** 71 verified projects (13 Hospitality/Dining, 52 Retail/Commercial, 6 Healthcare).
-* **Dallas–Fort Worth, TX:** 187 verified projects ($199.18M pipeline, 9 verified direct mobile numbers, 10 Hospitality, 46 Retail, 7 Healthcare, 124 General Commercial).
-* **Orlando Metro, FL:** 190 verified projects ($284.28M pipeline, 6 Hospitality, 3 Retail, 8 Healthcare, 173 General Commercial).
-* **Total Master Pipeline Valuation:** **$483,471,248.11** across all 3 metros.
-* **Current Month Filings (Nov 2026):** 189 filings.
-* **Rolling 90-Day Pipeline (Aug–Nov 2026):** 261 filings.
+### Current Verified Data Inventory (535 Commercial Leads):
+* **Austin Metro, TX:** 121 verified projects (21 Hospitality/Dining, 89 Retail/Commercial, 11 Healthcare).
+* **Dallas–Fort Worth, TX:** 187 verified projects ($199.18M pipeline, 9 verified direct mobile numbers, 10 Hospitality, 170 Retail/Commercial, 7 Healthcare).
+* **Orlando Metro, FL:** 227 verified projects ($312.32M pipeline, 9 Hospitality, 210 Retail/Commercial, 8 Healthcare).
+* **Total Master Pipeline Valuation:** **$511,499,582.61** across all 3 metros.
+* **Current Month Filings (Nov 2026):** 276 filings.
+* **Rolling 90-Day Pipeline (Aug–Nov 2026):** 348 filings.
 
 ### `leads` Table Schema:
 ```sql

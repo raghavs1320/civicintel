@@ -11,7 +11,7 @@
 * **Product:** Pre-market commercial permitting Data-as-a-Service (DaaS) for B2B sales reps.
 * **Production URL:** [https://civicintel-daas.vercel.app](https://civicintel-daas.vercel.app)
 * **GitHub Repository:** [https://github.com/raghavs1320/civicintel](https://github.com/raghavs1320/civicintel)
-* **Current Database:** **448 verified commercial leads** across **$483.47 Million** in active buildouts in Austin, TX, Dallas, TX, and Orlando, FL.
+* **Current Database:** **535 verified commercial leads** across **$511.50 Million** in active buildouts in Austin, TX, Dallas, TX, and Orlando, FL.
 * **Autonomous Ingestion:** Runs every Monday–Friday at 06:00 UTC via GitHub Actions, pulls from municipal government APIs, unmasks LLCs, writes AI dossiers, updates SQLite, exports JSON feeds, commits to git, and auto-deploys to Vercel in 7 seconds.
 * **Infrastructure Cost:** $0.00 upfront (100% free-tier: Socrata Open Data, SQLite, GitHub Actions, Vercel).
 

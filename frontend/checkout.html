@@ -101,10 +101,10 @@
               <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
               <span>LIVE TERRITORY PIPELINE</span>
             </span>
-            <span class="text-[11px] font-mono text-emerald-800 font-bold" id="metro-live-count">71 Active Venues</span>
+            <span class="text-[11px] font-mono text-emerald-800 font-bold" id="metro-live-count">121 Active Venues</span>
           </div>
           <p class="text-slate-700 leading-snug" id="metro-motivation-text">
-            <strong>Austin, TX:</strong> 71 commercial buildouts actively filing permits (including 13 new restaurants and bars).
+            <strong>Austin, TX:</strong> 121 commercial buildouts actively filing permits (including 21 new restaurants and bars).
           </p>
           <div class="pt-2 border-t border-emerald-200/60 flex items-center justify-between text-[11px] text-slate-600">
             <span>Average Closed Deal Value:</span>
@@ -316,18 +316,18 @@
 
       if (metro === 'Austin') {
         if (catId.includes('Food') || catId.includes('Point-of-Sale') || catId.includes('Kitchen')) {
-          countElem.textContent = '13 New Food & Dining';
-          motivElem.innerHTML = `<strong>Austin, TX:</strong> 13 restaurants & bars currently in active buildouts. Official city records synchronized daily at 6:00 AM UTC.`;
+          countElem.textContent = '21 New Food & Dining';
+          motivElem.innerHTML = `<strong>Austin, TX:</strong> 21 restaurants & bars currently in active buildouts. Official city records synchronized daily at 6:00 AM UTC.`;
         } else {
-          countElem.textContent = '71 Active Buildouts';
-          motivElem.innerHTML = `<strong>Austin, TX:</strong> 71 commercial buildouts filed across retail, dining, and healthcare. Updated daily from municipal clerk dockets.`;
+          countElem.textContent = '121 Active Buildouts';
+          motivElem.innerHTML = `<strong>Austin, TX:</strong> 121 commercial buildouts filed across retail, dining, and healthcare. Updated daily from municipal clerk dockets.`;
         }
       } else if (metro === 'Dallas') {
-        countElem.textContent = '187 Active Buildouts ($199M)';
+        countElem.textContent = '187 Active Buildouts ($199.2M)';
         motivElem.innerHTML = `<strong>Dallas, TX:</strong> 187 commercial buildouts filed with verified contractor mobile numbers. Synchronized daily at 6:00 AM UTC.`;
       } else if (metro === 'Orlando') {
-        countElem.textContent = '190 Active Buildouts ($284M)';
-        motivElem.innerHTML = `<strong>Orlando, FL:</strong> 190 commercial filings across tourism and medical corridors. Synchronized daily at 6:00 AM UTC.`;
+        countElem.textContent = '227 Active Buildouts ($312.3M)';
+        motivElem.innerHTML = `<strong>Orlando, FL:</strong> 227 commercial filings across tourism and medical corridors. Synchronized daily at 6:00 AM UTC.`;
       }
 
       availBox.className = "bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-xs flex items-center justify-between";

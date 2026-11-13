@@ -66,16 +66,25 @@
 
       <!-- 1. CITY TABS -->
       <div class="mb-4">
-        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">1. Select Target Metro Territory</label>
-        <div class="flex flex-wrap gap-2">
-          <button onclick="selectMetroTab('Austin')" class="city-tab-btn text-xs font-bold px-4 py-2 rounded-xl transition bg-slate-900 text-white shadow-sm" data-metro="Austin">
-            Austin, TX (71 Projects)
+        <div class="flex items-center justify-between mb-2">
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500">1. Select Target Metro Territory</label>
+          <span class="text-[10px] text-emerald-700 font-bold uppercase tracking-wider flex items-center space-x-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+            <span>Live Data Sync</span>
+          </span>
+        </div>
+        <div class="flex flex-wrap gap-2" id="city-tabs-container">
+          <button onclick="selectMetroTab('Austin')" class="city-tab-btn text-xs font-bold px-4 py-2.5 rounded-xl transition bg-slate-900 text-white shadow-sm flex items-center space-x-1.5" data-metro="Austin">
+            <span>Austin, TX</span>
+            <span class="opacity-80 font-mono text-[11px]">(121 Filings)</span>
           </button>
-          <button onclick="selectMetroTab('Dallas')" class="city-tab-btn text-xs font-bold px-4 py-2 rounded-xl transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200" data-metro="Dallas">
-            Dallas, TX (187 Projects • $199M)
+          <button onclick="selectMetroTab('Dallas')" class="city-tab-btn text-xs font-bold px-4 py-2.5 rounded-xl transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-1.5" data-metro="Dallas">
+            <span>Dallas, TX</span>
+            <span class="opacity-80 font-mono text-[11px]">(187 • $199.2M)</span>
           </button>
-          <button onclick="selectMetroTab('Orlando')" class="city-tab-btn text-xs font-bold px-4 py-2 rounded-xl transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200" data-metro="Orlando">
-            Orlando, FL (190 Projects • $284M)
+          <button onclick="selectMetroTab('Orlando')" class="city-tab-btn text-xs font-bold px-4 py-2.5 rounded-xl transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-1.5" data-metro="Orlando">
+            <span>Orlando, FL</span>
+            <span class="opacity-80 font-mono text-[11px]">(227 • $312.3M)</span>
           </button>
         </div>
         <select id="user-metro-input" onchange="applyUserPreferences()" class="hidden">
@@ -88,7 +97,7 @@
       <!-- 2. CATEGORY PILLS -->
       <div class="mb-5">
         <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">2. Industry Vertical Filter</label>
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-2" id="category-pills-container">
           <button onclick="selectCategoryPill('all')" class="cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-emerald-600 text-white shadow-sm" data-category="all">
             All Commercial
           </button>
@@ -115,7 +124,7 @@
       <div id="filter-status-box" class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
         <div class="flex items-center space-x-2 text-slate-700">
           <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-          <span id="filter-notif-text">Showing <strong class="text-slate-900 font-bold" id="matched-lead-count">71</strong> verified pre-opening projects in Austin.</span>
+          <span id="filter-notif-text">Showing <strong class="text-slate-900 font-bold" id="matched-lead-count">121</strong> verified pre-opening projects in Austin.</span>
         </div>
         <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg transition shadow-sm whitespace-nowrap">
           Reserve This Territory for $1.00 ➔
@@ -135,9 +144,21 @@
         <h2 class="text-2xl font-bold text-slate-900 tracking-tight" id="showcase-heading">Tailored Leads Preview (Top 10 Active Projects)</h2>
         <p class="text-xs text-slate-500 mt-0.5">Commercial building permits filed with municipal clerks across your territory. New records added daily.</p>
       </div>
-      <div class="text-left sm:text-right">
-        <span class="text-[11px] font-bold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg font-mono">
-          FOIA Certified Pipeline
+
+      <!-- VIEW MODE SWITCHER & PIPELINE BADGE -->
+      <div class="flex items-center space-x-2.5">
+        <div class="bg-slate-100 p-1 rounded-xl border border-slate-200 flex items-center space-x-1">
+          <button id="view-cards-btn" onclick="setViewMode('cards')" class="text-xs font-bold px-3 py-1.5 rounded-lg transition bg-white text-slate-900 shadow-sm flex items-center space-x-1.5">
+            <svg class="w-3.5 h-3.5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            <span>Dossier View</span>
+          </button>
+          <button id="view-table-btn" onclick="setViewMode('table')" class="text-xs font-semibold px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center space-x-1.5">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            <span>Terminal Table</span>
+          </button>
+        </div>
+        <span class="text-[11px] font-bold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg font-mono hidden md:inline-block">
+          FOIA Certified
         </span>
       </div>
     </div>

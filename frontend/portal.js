@@ -66,7 +66,7 @@ function updateCounts() {
   document.getElementById('count-all').textContent = allLeads.length;
   document.getElementById('count-hosp').textContent = allLeads.filter(l => l.category === 'Hospitality & Dining').length;
   document.getElementById('count-health').textContent = allLeads.filter(l => l.category === 'Healthcare & Wellness').length;
-  document.getElementById('count-retail').textContent = allLeads.filter(l => l.category === 'Retail & Commercial Buildout').length;
+  document.getElementById('count-retail').textContent = allLeads.filter(l => l.category === 'Retail & Commercial Buildout' || l.category === 'General Commercial').length;
 }
 
 function setCategoryFilter(cat) {
@@ -131,6 +131,8 @@ function renderFeed() {
       } else if (activeCategory === 'subtype_cafe') {
         const text = `${lead.concept_name} ${lead.work_description} ${lead.concept_snapshot}`.toLowerCase();
         if (!text.includes('cafe') && !text.includes('coffee') && !text.includes('bakery') && !text.includes('pastry') && !text.includes('tea') && !text.includes('boba')) return false;
+      } else if (activeCategory === 'Retail & Commercial Buildout') {
+        if (lead.category !== 'Retail & Commercial Buildout' && lead.category !== 'General Commercial') return false;
       } else if (lead.category !== activeCategory) {
         return false;
       }
