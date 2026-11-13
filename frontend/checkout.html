@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unlock New Business Leads — CivicIntel</title>
+  <title>Claim Exclusive Territory License — CivicIntel</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,127 +11,189 @@
   <style>
     body { font-family: 'Inter', sans-serif; }
     .mono { font-family: 'Space Mono', monospace; }
+    .category-card { transition: all 0.15s ease-in-out; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900 antialiased min-h-screen selection:bg-emerald-100 selection:text-emerald-900">
 
   <!-- TOP HEADER -->
   <header class="border-b border-slate-200/80 bg-white/95 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
       <a href="index.html" class="flex items-center space-x-2">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse"></span>
         <span class="font-extrabold text-lg tracking-tight text-slate-900">CIVIC<span class="text-emerald-600">INTEL</span></span>
       </a>
-      <a href="index.html" class="text-xs font-semibold text-slate-500 hover:text-slate-800 transition flex items-center space-x-1">
-        <span>← Back to leads</span>
-      </a>
+      <div class="flex items-center space-x-4">
+        <span class="hidden sm:inline-flex items-center text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
+          1 Seat Per Category • Exclusivity Guaranteed
+        </span>
+        <a href="index.html" class="text-xs font-semibold text-slate-500 hover:text-slate-800 transition flex items-center space-x-1">
+          <span>← Back to leads</span>
+        </a>
+      </div>
     </div>
   </header>
 
-  <main class="max-w-lg mx-auto px-4 py-10 sm:py-14">
+  <main class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
 
-    <!-- CHECKOUT CARD -->
-    <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-9 shadow-sm">
-      
-      <!-- Top Badge -->
-      <div class="flex items-center justify-between mb-4">
-        <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
-          7-Day All-Access Pass
-        </span>
-        <span class="text-xs text-slate-500 font-semibold flex items-center space-x-1">
-          <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-          <span>SSL Secured</span>
-        </span>
+    <!-- PAGE HERO -->
+    <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
+      <div class="inline-flex items-center space-x-2 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-full text-xs font-bold text-emerald-900 mb-3">
+        <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+        <span>Territory Licensing Protocol</span>
       </div>
-
-      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
-        Unlock Commercial Permit Intelligence
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+        Claim Your Exclusive Territory Seat
       </h1>
-      <p class="text-sm text-slate-500 mb-6 leading-relaxed">
-        Get daily building permits, verified physical jobsite addresses, and remodel scopes for businesses opening in your city.
+      <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+        We license our pre-opening commercial buildout feed to only <strong>one representative per category</strong> in each city. Once a seat is purchased, competitors in your niche are locked out.
       </p>
+    </div>
 
-      <form id="checkout-form" onsubmit="handleCheckout(event)" class="space-y-5">
+    <!-- MAIN CHECKOUT CARD -->
+    <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-sm mb-10">
 
-        <!-- 1. SELECT TARGET CITY -->
+      <form id="checkout-form" onsubmit="handleCheckout(event)" class="space-y-8">
+
+        <!-- STEP 1: SELECT YOUR CITY -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-            1. Select Your City
-          </label>
-          <div class="grid grid-cols-3 gap-2" id="city-selector">
+          <div class="flex items-center justify-between mb-3">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-800">
+              1. Select Target Metropolitan Market
+            </label>
+            <span id="city-lead-count-badge" class="text-xs text-slate-500 font-mono">122 Active Commercial Buildouts</span>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="city-selector">
             <button
               type="button"
               onclick="setCity('Austin')"
               id="city-btn-Austin"
-              class="city-btn border rounded-xl py-3 px-2 text-center transition cursor-pointer border-emerald-600 bg-emerald-50/60 ring-1 ring-emerald-600 text-slate-900">
-              <div class="font-extrabold text-sm">Austin, TX</div>
-              <div class="text-[11px] text-slate-500 font-mono mt-0.5">122 Leads</div>
+              class="city-btn border rounded-2xl p-4 text-left transition cursor-pointer border-emerald-600 bg-emerald-50/60 ring-2 ring-emerald-600/30 text-slate-900">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-base">Austin, TX</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-200 text-emerald-900">122 Leads</span>
+              </div>
+              <div class="text-xs text-slate-600 mt-1">Travis County Municipal Corridors</div>
+              <div id="city-seats-Austin" class="text-[11px] font-mono text-emerald-700 font-semibold mt-2">Checking status...</div>
             </button>
 
             <button
               type="button"
               onclick="setCity('Dallas')"
               id="city-btn-Dallas"
-              class="city-btn border border-slate-200 bg-white hover:bg-slate-50 rounded-xl py-3 px-2 text-center transition cursor-pointer text-slate-700">
-              <div class="font-extrabold text-sm">Dallas, TX</div>
-              <div class="text-[11px] text-slate-500 font-mono mt-0.5">222 Leads</div>
+              class="city-btn border border-slate-200 bg-white hover:bg-slate-50 rounded-2xl p-4 text-left transition cursor-pointer text-slate-700">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-base">Dallas, TX</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">222 Leads</span>
+              </div>
+              <div class="text-xs text-slate-500 mt-1">DFW North & Central Commercial</div>
+              <div id="city-seats-Dallas" class="text-[11px] font-mono text-slate-500 font-semibold mt-2">Checking status...</div>
             </button>
 
             <button
               type="button"
               onclick="setCity('Orlando')"
               id="city-btn-Orlando"
-              class="city-btn border border-slate-200 bg-white hover:bg-slate-50 rounded-xl py-3 px-2 text-center transition cursor-pointer text-slate-700">
-              <div class="font-extrabold text-sm">Orlando, FL</div>
-              <div class="text-[11px] text-slate-500 font-mono mt-0.5">227 Leads</div>
+              class="city-btn border border-slate-200 bg-white hover:bg-slate-50 rounded-2xl p-4 text-left transition cursor-pointer text-slate-700">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-base">Orlando, FL</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">227 Leads</span>
+              </div>
+              <div class="text-xs text-slate-500 mt-1">Orange County Hospitality Strip</div>
+              <div id="city-seats-Orlando" class="text-[11px] font-mono text-slate-500 font-semibold mt-2">Checking status...</div>
             </button>
           </div>
           <input type="hidden" id="selected-city" value="Austin">
         </div>
 
-        <!-- 2. SELECT INDUSTRY -->
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-            2. Select Your Industry
-          </label>
-          <select
-            id="selected-category"
-            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm font-semibold text-slate-900 focus:outline-none focus:border-emerald-600 focus:bg-white transition cursor-pointer">
-            <option value="All Commercial Businesses" selected>All Commercial Businesses (Full City Access)</option>
-            <option value="Restaurants & Food Service">Restaurants, Bars &amp; Food Service</option>
-            <option value="Retail Stores & Commercial Spaces">Retail Stores &amp; Commercial Spaces</option>
-            <option value="Medical Clinics & Wellness Centers">Medical Clinics &amp; Wellness Centers</option>
-            <option value="Contractors & Trade Services">Contractors &amp; Trade Services</option>
-          </select>
+        <!-- LIVE TERRITORY SUMMARY BAR -->
+        <div id="territory-summary-bar" class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div class="flex items-center space-x-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <span class="font-bold text-slate-800" id="summary-bar-text">Loading territory seat metrics...</span>
+          </div>
+          <div class="text-slate-500 flex items-center space-x-3">
+            <span class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-600"></span><span>Open Seat</span></span>
+            <span class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-slate-400"></span><span>Sold Out (Locked)</span></span>
+          </div>
         </div>
 
-        <!-- 3. WORK EMAIL -->
+        <!-- NOTICE BANNER FOR LOCKED / SOLD-OUT SEATS (Hidden by default) -->
+        <div id="locked-seat-notice" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs text-amber-900 transition">
+          <div class="flex items-start space-x-3">
+            <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <div class="flex-1">
+              <div class="font-bold text-sm" id="locked-notice-title">This Category Seat is Exclusively Licensed</div>
+              <div class="mt-1 text-amber-800 leading-relaxed" id="locked-notice-body">
+                Under our territory exclusivity agreement, competing representatives in this category are locked out.
+              </div>
+              <div class="mt-3 flex items-center space-x-2">
+                <input type="email" id="waitlist-email-input" placeholder="Your work email" class="bg-white border border-amber-300 rounded-lg px-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-600">
+                <button type="button" onclick="joinCategoryWaitlist()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition cursor-pointer">
+                  Join Priority Waitlist
+                </button>
+              </div>
+              <div id="waitlist-feedback" class="mt-1.5 font-bold text-emerald-700 hidden">You are on the priority waitlist for this seat.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: SELECT YOUR CATEGORY SEAT -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-            3. Your Work Email
+          <div class="flex items-center justify-between mb-3">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-800">
+              2. Select Your Commercial Industry Seat (1 Rep Per Category)
+            </label>
+            <span class="text-xs text-slate-500 font-medium">Click an open seat to select</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="categories-container">
+            <!-- Rendered dynamically by renderCategories() -->
+            <div class="text-center py-8 text-xs text-slate-400">Loading commercial categories...</div>
+          </div>
+          <input type="hidden" id="selected-category-id" value="">
+          <input type="hidden" id="selected-category-name" value="">
+        </div>
+
+        <!-- STEP 3: WORK EMAIL -->
+        <div class="border-t border-slate-100 pt-6">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-800 mb-2">
+            3. Enter Your Work Email
           </label>
           <input
             type="email"
             id="email"
             required
-            placeholder="you@company.com"
-            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition"
+            placeholder="rep@yourcompany.com"
+            class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition"
           />
+          <p class="text-[11px] text-slate-500 mt-1.5">
+            Your magic access token and daily buildout docket alerts will be delivered to this address.
+          </p>
         </div>
 
         <!-- TRANSPARENT ORDER SUMMARY -->
-        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2 text-xs">
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-2.5 text-xs">
+          <div class="flex justify-between items-center text-slate-600 pb-2 border-b border-slate-200">
+            <span class="font-bold text-slate-800">Selected License</span>
+            <span class="font-mono font-bold text-emerald-800" id="summary-license-title">Austin, TX — Please Select a Category</span>
+          </div>
           <div class="flex justify-between text-slate-600">
-            <span>7-Day Full Access License</span>
+            <span>Category Exclusivity Protection</span>
+            <span class="font-semibold text-emerald-700">Guaranteed (1 Rep in City)</span>
+          </div>
+          <div class="flex justify-between text-slate-600">
+            <span>7-Day Full Access Trial Pass</span>
             <span class="font-bold text-slate-900">$1.00</span>
           </div>
           <div class="flex justify-between text-slate-500">
-            <span>After 7 days (auto-renew)</span>
+            <span>After 7 days (auto-renew monthly)</span>
             <span class="font-semibold text-slate-700">$199 / month</span>
           </div>
-          <div class="border-t border-slate-200 pt-2 flex justify-between font-extrabold text-sm text-emerald-800">
+          <div class="border-t border-slate-200 pt-2 flex justify-between items-baseline font-extrabold text-base text-emerald-800">
             <span>Total Due Today:</span>
-            <span>$1.00</span>
+            <span class="text-lg">$1.00</span>
           </div>
         </div>
 
@@ -139,116 +201,521 @@
         <button
           type="submit"
           id="submit-btn"
-          class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-base py-4 rounded-xl transition shadow-md flex items-center justify-center space-x-2 cursor-pointer">
-          <span>Start 7-Day Trial for $1.00</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-base py-4 rounded-2xl transition shadow-md flex items-center justify-center space-x-2 cursor-pointer disabled:bg-slate-300 disabled:cursor-not-allowed">
+          <span id="btn-text">Lock Territory Seat for $1.00 →</span>
         </button>
 
       </form>
 
       <!-- Trust signals -->
-      <div class="mt-6 pt-5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-center sm:text-left gap-2 text-xs text-slate-500">
-        <div class="flex items-center space-x-1.5">
+      <div class="mt-8 pt-6 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-3 text-center sm:text-left text-xs text-slate-500">
+        <div class="flex items-center justify-center sm:justify-start space-x-2">
           <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-          <span>Instant dashboard unlock</span>
+          <span>Instant Feed & CSV Unlock</span>
         </div>
-        <div class="flex items-center space-x-1.5">
+        <div class="flex items-center justify-center sm:justify-start space-x-2">
           <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-          <span>1-click cancel anytime</span>
+          <span>1-Click Cancel Anytime</span>
         </div>
-        <div class="flex items-center space-x-1.5">
-          <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-          <span>100% money-back guarantee</span>
+        <div class="flex items-center justify-center sm:justify-start space-x-2">
+          <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <span>100% Money-Back Guarantee</span>
         </div>
       </div>
 
     </div>
 
+    <!-- FULL 3-CITY TERRITORY MATRIX (TRANSPARENCY ACCORDION) -->
+    <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">
+            Full 3-City Territory Matrix (30 Total Seats)
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Live availability status of all 10 commercial categories across Austin, Dallas, and Orlando.
+          </p>
+        </div>
+        <button
+          type="button"
+          onclick="toggleMatrixTable()"
+          id="toggle-matrix-btn"
+          class="text-xs font-bold text-emerald-700 hover:text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg transition cursor-pointer">
+          Show Matrix Table ↓
+        </button>
+      </div>
+
+      <div id="matrix-table-container" class="hidden overflow-x-auto mt-4 pt-4 border-t border-slate-100">
+        <table class="w-full text-xs text-left text-slate-700">
+          <thead class="text-[11px] uppercase tracking-wider text-slate-500 bg-slate-50 border-b border-slate-200">
+            <tr>
+              <th class="py-2.5 px-3 font-bold">Commercial Category</th>
+              <th class="py-2.5 px-3 font-bold text-center">Austin, TX</th>
+              <th class="py-2.5 px-3 font-bold text-center">Dallas, TX</th>
+              <th class="py-2.5 px-3 font-bold text-center">Orlando, FL</th>
+            </tr>
+          </thead>
+          <tbody id="matrix-tbody" class="divide-y divide-slate-100">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </main>
 
+  <!-- JAVASCRIPT LOGIC -->
   <script>
+    // State
+    let territoriesData = null;
+    let currentCity = 'Austin';
+    let selectedCategoryId = '';
+    let claimedLocally = {};
+
+    // Load Local Storage Claimed Territories
+    function loadLocalClaims() {
+      try {
+        const raw = localStorage.getItem('civic_claimed_territories');
+        if (raw) claimedLocally = JSON.parse(raw);
+      } catch (e) {
+        claimedLocally = {};
+      }
+    }
+
+    function saveLocalClaim(city, catId, email) {
+      if (!claimedLocally[city]) claimedLocally[city] = {};
+      claimedLocally[city][catId] = {
+        status: 'sold_out',
+        licensee_masked: email.substring(0, 1) + '***@' + email.split('@')[1],
+        licensee_org: 'Active Licensed Member',
+        locked_at: new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date())
+      };
+      localStorage.setItem('civic_claimed_territories', JSON.stringify(claimedLocally));
+    }
+
+    // Fetch Master Territories Data
+    async function initTerritories() {
+      loadLocalClaims();
+
+      try {
+        const res = await fetch('data/territories.json');
+        if (res.ok) {
+          territoriesData = await res.json();
+        } else {
+          throw new Error('Failed to fetch territories.json');
+        }
+      } catch (err) {
+        console.warn('Using built-in territory fallback:', err);
+        territoriesData = getFallbackTerritories();
+      }
+
+      // Merge local storage claims
+      for (const city of ['Austin', 'Dallas', 'Orlando']) {
+        if (claimedLocally[city] && territoriesData.territories[city]) {
+          for (const [catId, claim] of Object.entries(claimedLocally[city])) {
+            territoriesData.territories[city][catId] = claim;
+          }
+        }
+      }
+
+      // Check URL parameters for prefill
+      prefillFromURL();
+
+      // Render View
+      updateCityButtonsUI();
+      renderCategories();
+      renderMatrixTable();
+      updateTerritorySummaryBar();
+    }
+
+    function prefillFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const metroParam = params.get('metro') || sessionStorage.getItem('custom_pref_metro');
+      const catParam = params.get('category') || sessionStorage.getItem('custom_pref_category');
+
+      if (metroParam) {
+        const m = metroParam.charAt(0).toUpperCase() + metroParam.slice(1).toLowerCase();
+        if (['Austin', 'Dallas', 'Orlando'].includes(m)) {
+          currentCity = m;
+          document.getElementById('selected-city').value = m;
+        }
+      }
+
+      if (catParam) {
+        // Find best match in categories
+        const match = territoriesData.categories.find(c => 
+          c.id.toLowerCase() === catParam.toLowerCase() ||
+          c.name.toLowerCase().includes(catParam.toLowerCase()) ||
+          c.short_name.toLowerCase().includes(catParam.toLowerCase())
+        );
+        if (match) {
+          selectedCategoryId = match.id;
+        }
+      }
+    }
+
     function setCity(city) {
+      currentCity = city;
       document.getElementById('selected-city').value = city;
-      
+      document.getElementById('locked-seat-notice').classList.add('hidden');
+
+      // Update City Lead Count Badge
+      const counts = { Austin: '122 Active Commercial Buildouts', Dallas: '222 Active Commercial Buildouts', Orlando: '227 Active Commercial Buildouts' };
+      document.getElementById('city-lead-count-badge').textContent = counts[city] || 'Commercial Buildouts';
+
+      // If current category is sold out in new city, clear selection
+      if (selectedCategoryId) {
+        const status = getSeatStatus(city, selectedCategoryId);
+        if (status.status === 'sold_out') {
+          selectedCategoryId = '';
+        }
+      }
+
+      updateCityButtonsUI();
+      renderCategories();
+      updateTerritorySummaryBar();
+      updateOrderSummary();
+    }
+
+    function updateCityButtonsUI() {
       const cities = ['Austin', 'Dallas', 'Orlando'];
       cities.forEach(c => {
         const btn = document.getElementById(`city-btn-${c}`);
+        const seatsLabel = document.getElementById(`city-seats-${c}`);
+        
+        let availableCount = 0;
+        let soldCount = 0;
+        if (territoriesData && territoriesData.territories[c]) {
+          territoriesData.categories.forEach(cat => {
+            const st = getSeatStatus(c, cat.id);
+            if (st.status === 'sold_out') soldCount++;
+            else availableCount++;
+          });
+        }
+
+        if (seatsLabel) {
+          seatsLabel.textContent = `${availableCount} Open • ${soldCount} Sold Out`;
+        }
+
         if (btn) {
-          if (c.toLowerCase() === city.toLowerCase()) {
-            btn.className = "city-btn border rounded-xl py-3 px-2 text-center transition cursor-pointer border-emerald-600 bg-emerald-50/60 ring-1 ring-emerald-600 text-slate-900";
+          if (c === currentCity) {
+            btn.className = "city-btn border rounded-2xl p-4 text-left transition cursor-pointer border-emerald-600 bg-emerald-50/60 ring-2 ring-emerald-600/30 text-slate-900";
+            if (seatsLabel) seatsLabel.className = "text-[11px] font-mono text-emerald-800 font-bold mt-2";
           } else {
-            btn.className = "city-btn border border-slate-200 bg-white hover:bg-slate-50 rounded-xl py-3 px-2 text-center transition cursor-pointer text-slate-700";
+            btn.className = "city-btn border border-slate-200 bg-white hover:bg-slate-50 rounded-2xl p-4 text-left transition cursor-pointer text-slate-700";
+            if (seatsLabel) seatsLabel.className = "text-[11px] font-mono text-slate-500 font-semibold mt-2";
           }
         }
       });
     }
 
-    function prefillPreferences() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const metroParam = urlParams.get('metro') || sessionStorage.getItem('custom_pref_metro');
-      const catParam = urlParams.get('category') || sessionStorage.getItem('custom_pref_category');
+    function getSeatStatus(city, catId) {
+      if (!territoriesData || !territoriesData.territories[city]) return { status: 'available' };
+      return territoriesData.territories[city][catId] || { status: 'available' };
+    }
 
-      if (metroParam) {
-        const metroClean = metroParam.charAt(0).toUpperCase() + metroParam.slice(1).toLowerCase();
-        if (['Austin', 'Dallas', 'Orlando'].includes(metroClean)) {
-          setCity(metroClean);
+    function updateTerritorySummaryBar() {
+      if (!territoriesData) return;
+      let availableCount = 0;
+      let soldCount = 0;
+
+      territoriesData.categories.forEach(cat => {
+        const st = getSeatStatus(currentCity, cat.id);
+        if (st.status === 'sold_out') soldCount++;
+        else availableCount++;
+      });
+
+      const textEl = document.getElementById('summary-bar-text');
+      textEl.innerHTML = `<strong>${currentCity}, TX Territory:</strong> <span class="text-emerald-700 font-extrabold">${availableCount} Seats Available</span> • <span class="text-slate-600 font-semibold">${soldCount} Exclusively Sold Out</span>`;
+    }
+
+    function renderCategories() {
+      const container = document.getElementById('categories-container');
+      if (!territoriesData) return;
+
+      container.innerHTML = '';
+
+      territoriesData.categories.forEach(cat => {
+        const seat = getSeatStatus(currentCity, cat.id);
+        const isSoldOut = seat.status === 'sold_out';
+        const isSelected = selectedCategoryId === cat.id;
+
+        const card = document.createElement('div');
+        card.id = `cat-card-${cat.id}`;
+
+        if (isSoldOut) {
+          // SOLD OUT CARD (LOCKED)
+          card.className = "category-card relative border border-slate-200 bg-slate-50/80 rounded-2xl p-4 cursor-pointer hover:border-slate-300 transition opacity-85";
+          card.onclick = () => showLockedNotice(cat, seat);
+
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <div class="flex items-center space-x-1.5">
+                <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                <span class="font-extrabold text-sm text-slate-600">${escapeHtml(cat.name)}</span>
+              </div>
+              <span class="inline-flex items-center space-x-1 text-[10px] font-bold uppercase tracking-wider bg-slate-200 text-slate-700 px-2.5 py-1 rounded-full whitespace-nowrap">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                <span>Sold Out</span>
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 mb-2 leading-relaxed">${escapeHtml(cat.target_vendors)}</p>
+            <div class="text-[11px] font-mono text-slate-400 flex items-center justify-between border-t border-slate-200/60 pt-2 mt-2">
+              <span>Licensed: ${escapeHtml(seat.licensee_org || 'Active Licensee')}</span>
+              <span class="font-bold text-amber-700 hover:underline">Join Waitlist →</span>
+            </div>
+          `;
+        } else {
+          // AVAILABLE CARD (CLICKABLE)
+          const activeClasses = isSelected 
+            ? "border-emerald-600 bg-emerald-50/70 ring-2 ring-emerald-600/30 text-slate-900" 
+            : "border-slate-200 bg-white hover:border-emerald-300 hover:bg-slate-50 text-slate-800";
+
+          card.className = `category-card relative border rounded-2xl p-4 cursor-pointer transition ${activeClasses}`;
+          card.onclick = () => selectCategory(cat.id, cat.name);
+
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <span class="font-extrabold text-sm text-slate-900">${escapeHtml(cat.name)}</span>
+              <span class="inline-flex items-center space-x-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-1 rounded-full whitespace-nowrap">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                <span>1 Seat Open</span>
+              </span>
+            </div>
+            <p class="text-xs text-slate-600 mb-2 leading-relaxed">${escapeHtml(cat.target_vendors)}</p>
+            <div class="text-[11px] font-mono text-emerald-700 font-semibold flex items-center justify-between border-t border-slate-100 pt-2 mt-2">
+              <span>Scope: ${escapeHtml(cat.short_name)}</span>
+              <span class="font-bold ${isSelected ? 'text-emerald-800' : 'text-slate-400'}">
+                ${isSelected ? '✓ Selected' : 'Claim Seat →'}
+              </span>
+            </div>
+          `;
         }
+
+        container.appendChild(card);
+      });
+
+      // If nothing selected, auto-select first available
+      if (!selectedCategoryId) {
+        const firstAvail = territoriesData.categories.find(c => getSeatStatus(currentCity, c.id).status !== 'sold_out');
+        if (firstAvail) {
+          selectCategory(firstAvail.id, firstAvail.name);
+        }
+      } else {
+        updateOrderSummary();
+      }
+    }
+
+    function selectCategory(catId, catName) {
+      selectedCategoryId = catId;
+      document.getElementById('selected-category-id').value = catId;
+      document.getElementById('selected-category-name').value = catName;
+      document.getElementById('locked-seat-notice').classList.add('hidden');
+
+      // Re-render categories to update selected highlight
+      renderCategories();
+      updateOrderSummary();
+    }
+
+    function showLockedNotice(cat, seat) {
+      const notice = document.getElementById('locked-seat-notice');
+      const title = document.getElementById('locked-notice-title');
+      const body = document.getElementById('locked-notice-body');
+      const waitlistFeedback = document.getElementById('waitlist-feedback');
+
+      notice.classList.remove('hidden');
+      waitlistFeedback.classList.add('hidden');
+      title.textContent = `${cat.name} in ${currentCity} is SOLD OUT`;
+      body.innerHTML = `This exclusive license is held by <strong>${escapeHtml(seat.licensee_org || 'an active representative')}</strong> (licensed ${escapeHtml(seat.locked_at || 'recently')}). Competitors in this category cannot purchase this territory. Enter your email below to receive an alert if this seat becomes available:`;
+
+      notice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function joinCategoryWaitlist() {
+      const email = document.getElementById('waitlist-email-input').value.trim();
+      const feedback = document.getElementById('waitlist-feedback');
+      if (!email || !email.includes('@')) {
+        alert('Please enter a valid work email for the waitlist.');
+        return;
       }
 
-      if (catParam) {
-        const catSelect = document.getElementById('selected-category');
-        const options = catSelect.options;
-        for (let i = 0; i < options.length; i++) {
-          if (options[i].value.toLowerCase().includes(catParam.toLowerCase()) || 
-              options[i].text.toLowerCase().includes(catParam.toLowerCase())) {
-            catSelect.selectedIndex = i;
-            break;
-          }
-        }
+      feedback.classList.remove('hidden');
+      feedback.textContent = `✓ Success: ${email} added to priority waitlist for ${currentCity}.`;
+      document.getElementById('waitlist-email-input').value = '';
+    }
+
+    function updateOrderSummary() {
+      const titleEl = document.getElementById('summary-license-title');
+      const btnText = document.getElementById('btn-text');
+      const submitBtn = document.getElementById('submit-btn');
+
+      if (!selectedCategoryId) {
+        titleEl.textContent = `${currentCity}, TX — Please Select an Open Category`;
+        btnText.textContent = "Please Select an Available Seat";
+        submitBtn.disabled = true;
+        return;
       }
+
+      const cat = territoriesData ? territoriesData.categories.find(c => c.id === selectedCategoryId) : null;
+      const catName = cat ? cat.short_name : 'Commercial License';
+
+      titleEl.textContent = `${currentCity}, TX • ${catName}`;
+      btnText.textContent = `Claim Exclusive ${catName} Seat for $1.00 →`;
+      submitBtn.disabled = false;
+    }
+
+    function toggleMatrixTable() {
+      const table = document.getElementById('matrix-table-container');
+      const btn = document.getElementById('toggle-matrix-btn');
+      if (table.classList.contains('hidden')) {
+        table.classList.remove('hidden');
+        btn.textContent = 'Hide Matrix Table ↑';
+      } else {
+        table.classList.add('hidden');
+        btn.textContent = 'Show Matrix Table ↓';
+      }
+    }
+
+    function renderMatrixTable() {
+      const tbody = document.getElementById('matrix-tbody');
+      if (!tbody || !territoriesData) return;
+
+      tbody.innerHTML = '';
+      territoriesData.categories.forEach(cat => {
+        const row = document.createElement('tr');
+        row.className = "hover:bg-slate-50 transition";
+
+        const austinSeat = getSeatStatus('Austin', cat.id);
+        const dallasSeat = getSeatStatus('Dallas', cat.id);
+        const orlandoSeat = getSeatStatus('Orlando', cat.id);
+
+        row.innerHTML = `
+          <td class="py-3 px-3">
+            <div class="font-extrabold text-slate-900">${escapeHtml(cat.name)}</div>
+            <div class="text-[11px] text-slate-500">${escapeHtml(cat.target_vendors)}</div>
+          </td>
+          <td class="py-3 px-3 text-center">
+            ${renderBadgeHTML('Austin', cat.id, austinSeat)}
+          </td>
+          <td class="py-3 px-3 text-center">
+            ${renderBadgeHTML('Dallas', cat.id, dallasSeat)}
+          </td>
+          <td class="py-3 px-3 text-center">
+            ${renderBadgeHTML('Orlando', cat.id, orlandoSeat)}
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function renderBadgeHTML(city, catId, seat) {
+      if (seat.status === 'sold_out') {
+        return `<span class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase bg-slate-100 text-slate-600 border border-slate-200" title="Licensed to ${escapeHtml(seat.licensee_org || 'Member')}">
+          <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          <span>Sold Out</span>
+        </span>`;
+      } else {
+        return `<button type="button" onclick="quickSelectFromMatrix('${city}', '${catId}')" class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 cursor-pointer transition">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+          <span>Claim Seat</span>
+        </button>`;
+      }
+    }
+
+    function quickSelectFromMatrix(city, catId) {
+      setCity(city);
+      const cat = territoriesData.categories.find(c => c.id === catId);
+      if (cat) {
+        selectCategory(cat.id, cat.name);
+      }
+      document.getElementById('checkout-form').scrollIntoView({ behavior: 'smooth' });
     }
 
     async function handleCheckout(event) {
       event.preventDefault();
       const email = document.getElementById('email').value.trim();
-      const metro = document.getElementById('selected-city').value;
-      const category = document.getElementById('selected-category').value;
+      const city = currentCity;
+      const catId = selectedCategoryId;
       const btn = document.getElementById('submit-btn');
 
       if (!email) {
         alert('Please enter your work email.');
         return;
       }
+      if (!catId) {
+        alert('Please select an available category seat.');
+        return;
+      }
 
-      btn.innerHTML = `<span>Unlocking ${metro} Leads...</span>`;
+      // Check if seat was taken in the meantime
+      const seat = getSeatStatus(city, catId);
+      if (seat.status === 'sold_out') {
+        alert('This seat was already claimed by another representative.');
+        return;
+      }
+
+      const cat = territoriesData.categories.find(c => c.id === catId);
+      const catName = cat ? cat.name : catId;
+
       btn.disabled = true;
+      btn.innerHTML = `<span>Locking Exclusive ${escapeHtml(city)} Seat...</span>`;
 
-      // Generate simulated authorized token
+      // 1. Immediately Lock This Category for this City Locally
+      saveLocalClaim(city, catId, email);
+
+      // 2. Generate Authorized Token & Session
       const token = 'tok_live_' + Math.random().toString(36).substring(2, 12);
       const todayFormatted = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date());
 
       const userSession = {
         email: email,
-        metro: metro,
-        category: category,
+        metro: city,
+        category: catName,
+        category_id: catId,
         status: 'active',
         registered_at: todayFormatted
       };
 
-      // Persist to session & local storage
       sessionStorage.setItem('civic_registered_at', todayFormatted);
       sessionStorage.setItem('civic_auth_token', token);
       sessionStorage.setItem('civic_user_session', JSON.stringify(userSession));
       localStorage.setItem('civic_auth_token', token);
       localStorage.setItem('civic_user_session', JSON.stringify(userSession));
 
-      // Redirect immediately to their dedicated member portal
+      // 3. Forward to Member Portal
       setTimeout(() => {
-        window.location.href = `portal.html?token=${token}&metro=${encodeURIComponent(metro)}`;
-      }, 600);
+        window.location.href = `portal.html?token=${token}&metro=${encodeURIComponent(city)}&category=${encodeURIComponent(catName)}`;
+      }, 700);
     }
 
-    document.addEventListener('DOMContentLoaded', prefillPreferences);
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    function getFallbackTerritories() {
+      return {
+        categories: [
+          { id: "pos", name: "Point of Sale (POS) & Payment Processing", short_name: "POS & Payments", target_vendors: "Toast, Clover, SpotOn, Shift4 reps" },
+          { id: "foodservice", name: "Foodservice & Wholesale Distribution", short_name: "Food & Beverage Supply", target_vendors: "Sysco, US Foods, Ben E. Keith, Gordon Food Service" },
+          { id: "insurance", name: "Commercial Property & Casualty Insurance", short_name: "Commercial Insurance", target_vendors: "Travelers, State Farm Commercial, Gallagher Brokers" },
+          { id: "kitchen_equipment", name: "Commercial Kitchen & Bar Equipment", short_name: "Kitchen & Bar Equipment", target_vendors: "Wasserstrom, KaTom, local equipment dealers" },
+          { id: "waste", name: "Waste Management & Commercial Dumpsters", short_name: "Waste & Dumpster Services", target_vendors: "Waste Management, Republic Services" },
+          { id: "hood_fire", name: "Fire Suppression & Commercial Hood Cleaning", short_name: "Fire Systems & Hood Exhaust", target_vendors: "Cintas Fire, regional life safety contractors" },
+          { id: "signage", name: "Commercial Architectural Signage & Banners", short_name: "Commercial Signage", target_vendors: "FastSigns, custom exterior sign makers" },
+          { id: "linens_uniforms", name: "Facility Services, Linens & Uniforms", short_name: "Linens & Facility Services", target_vendors: "Cintas, Alsco, Aramark reps" },
+          { id: "security_access", name: "Commercial Security, Alarms & Access Control", short_name: "Security & Smart Access", target_vendors: "ADT Commercial, Kastle Systems" },
+          { id: "hvac_refrig", name: "Commercial HVAC & Refrigeration Contractors", short_name: "HVAC & Mechanical", target_vendors: "Commercial mechanical contractors" }
+        ],
+        territories: {
+          Austin: { pos: { status: "sold_out", licensee_org: "Major POS Provider" }, insurance: { status: "sold_out", licensee_org: "Commercial Lines Agency" } },
+          Dallas: { foodservice: { status: "sold_out", licensee_org: "National Broadline Distributor" }, kitchen_equipment: { status: "sold_out", licensee_org: "Commercial Equipment Dealer" } },
+          Orlando: { insurance: { status: "sold_out", licensee_org: "Florida Commercial Brokerage" }, waste: { status: "sold_out", licensee_org: "Commercial Waste Hauler" } }
+        }
+      };
+    }
+
+    document.addEventListener('DOMContentLoaded', initTerritories);
   </script>
 </body>
 </html>

@@ -1,0 +1,142 @@
+{
+  "categories": [
+    {
+      "id": "pos",
+      "name": "Point of Sale (POS) & Payment Processing",
+      "short_name": "POS & Payments",
+      "target_vendors": "Toast, Clover, SpotOn, Shift4, Square reps",
+      "description": "Essential for new restaurants, cafes, bars, and retail spaces during interior buildout."
+    },
+    {
+      "id": "foodservice",
+      "name": "Foodservice & Wholesale Distribution",
+      "short_name": "Food & Beverage Supply",
+      "target_vendors": "Sysco, US Foods, Ben E. Keith, Gordon Food Service",
+      "description": "Lock in high-volume weekly pantry, meat, produce, and paper goods contracts before opening."
+    },
+    {
+      "id": "insurance",
+      "name": "Commercial Property & Casualty Insurance",
+      "short_name": "Commercial Insurance",
+      "target_vendors": "Travelers, State Farm Commercial, Gallagher, Independent Brokers",
+      "description": "Legally required for Certificate of Occupancy (General Liability, Workers' Comp, Builder's Risk)."
+    },
+    {
+      "id": "kitchen_equipment",
+      "name": "Commercial Kitchen & Bar Equipment",
+      "short_name": "Kitchen & Bar Equipment",
+      "target_vendors": "Wasserstrom, KaTom, local commercial restaurant equipment dealers",
+      "description": "Commercial refrigeration, walk-in coolers, fryers, ranges, and draft beer systems."
+    },
+    {
+      "id": "waste",
+      "name": "Waste Management & Commercial Dumpsters",
+      "short_name": "Waste & Dumpster Services",
+      "target_vendors": "Waste Management, Republic Services, regional waste haulers",
+      "description": "Construction roll-off dumpsters and permanent commercial grease/refuse contracts."
+    },
+    {
+      "id": "hood_fire",
+      "name": "Fire Suppression & Commercial Hood Cleaning",
+      "short_name": "Fire Systems & Hood Exhaust",
+      "target_vendors": "Cintas Fire, regional kitchen exhaust cleaning & life safety contractors",
+      "description": "Mandatory municipal fire marshal compliance, Ansul suppression, and hood ventilation."
+    },
+    {
+      "id": "signage",
+      "name": "Commercial Architectural Signage & Banners",
+      "short_name": "Commercial Signage",
+      "target_vendors": "FastSigns, regional custom sign and illuminated channel letter makers",
+      "description": "Exterior storefront illuminated signs, neon, ADA compliant interior signage, and vinyl."
+    },
+    {
+      "id": "linens_uniforms",
+      "name": "Facility Services, Linens & Uniforms",
+      "short_name": "Linens & Facility Services",
+      "target_vendors": "Cintas, Alsco, Aramark, UniFirst",
+      "description": "Chef coats, aprons, dining linen, commercial floor mats, and restroom sanitation."
+    },
+    {
+      "id": "security_access",
+      "name": "Commercial Security, Alarms & Access Control",
+      "short_name": "Security & Smart Access",
+      "target_vendors": "ADT Commercial, Kastle Systems, regional security contractors",
+      "description": "CCTV surveillance, magnetic door locks, alarm monitoring, and keycard systems."
+    },
+    {
+      "id": "hvac_refrig",
+      "name": "Commercial HVAC & Refrigeration Contractors",
+      "short_name": "HVAC & Mechanical",
+      "target_vendors": "Commercial mechanical contractors and refrigeration technicians",
+      "description": "Rooftop commercial HVAC units, grease ducting, and walk-in compressor maintenance."
+    }
+  ],
+  "territories": {
+    "Austin": {
+      "pos": {
+        "status": "sold_out",
+        "licensee_masked": "t***@***tab.com",
+        "licensee_org": "Major POS Provider",
+        "locked_at": "Nov 02, 2026"
+      },
+      "insurance": {
+        "status": "sold_out",
+        "licensee_masked": "s***@***coverage.com",
+        "licensee_org": "Commercial Lines Agency",
+        "locked_at": "Nov 05, 2026"
+      },
+      "foodservice": { "status": "available" },
+      "kitchen_equipment": { "status": "available" },
+      "waste": { "status": "available" },
+      "hood_fire": { "status": "available" },
+      "signage": { "status": "available" },
+      "linens_uniforms": { "status": "available" },
+      "security_access": { "status": "available" },
+      "hvac_refrig": { "status": "available" }
+    },
+    "Dallas": {
+      "foodservice": {
+        "status": "sold_out",
+        "licensee_masked": "d***@***distributor.com",
+        "licensee_org": "National Broadline Distributor",
+        "locked_at": "Oct 28, 2026"
+      },
+      "kitchen_equipment": {
+        "status": "sold_out",
+        "licensee_masked": "k***@***supplies.com",
+        "licensee_org": "Commercial Equipment Dealer",
+        "locked_at": "Nov 08, 2026"
+      },
+      "pos": { "status": "available" },
+      "insurance": { "status": "available" },
+      "waste": { "status": "available" },
+      "hood_fire": { "status": "available" },
+      "signage": { "status": "available" },
+      "linens_uniforms": { "status": "available" },
+      "security_access": { "status": "available" },
+      "hvac_refrig": { "status": "available" }
+    },
+    "Orlando": {
+      "insurance": {
+        "status": "sold_out",
+        "licensee_masked": "j***@***brokerage.com",
+        "licensee_org": "Florida Commercial Brokerage",
+        "locked_at": "Nov 06, 2026"
+      },
+      "waste": {
+        "status": "sold_out",
+        "licensee_masked": "r***@***environmental.com",
+        "licensee_org": "Commercial Waste Hauler",
+        "locked_at": "Nov 09, 2026"
+      },
+      "pos": { "status": "available" },
+      "foodservice": { "status": "available" },
+      "kitchen_equipment": { "status": "available" },
+      "hood_fire": { "status": "available" },
+      "signage": { "status": "available" },
+      "linens_uniforms": { "status": "available" },
+      "security_access": { "status": "available" },
+      "hvac_refrig": { "status": "available" }
+    }
+  }
+}

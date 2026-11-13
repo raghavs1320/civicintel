@@ -37,7 +37,7 @@ async function checkMemberAccess() {
         subscriber = {
           email: 'licensee@territory.internal',
           metro: urlParams.get('metro') || 'Austin',
-          category: 'Territory License',
+          category: urlParams.get('category') || 'Commercial Territory License',
           status: 'active',
           registered_at: sessionStorage.getItem('civic_registered_at') || 'Today'
         };
