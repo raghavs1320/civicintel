@@ -10,6 +10,8 @@ jobs:
   run-harvester:
     name: Harvest, Enrich & Update Master Database
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Repository
