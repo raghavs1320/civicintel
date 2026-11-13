@@ -328,27 +328,20 @@ function renderDossierCards(displayList, totalCount) {
           </p>
         </div>
 
-        <!-- Decision Maker & Phone Number Bar -->
+        <!-- Municipal Tracking Bar & CTA -->
         <div class="mt-5 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
-          <div class="flex items-center space-x-2.5">
-            <div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center">
-              <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            </div>
-            <div>
-              <span class="font-bold text-slate-900 text-sm sm:text-base">${escapeHtml(contactName)}</span>
-              <span class="text-slate-500 text-xs sm:text-sm ml-1">• Business Owner</span>
-            </div>
+          <div class="flex items-center space-x-2 text-xs text-slate-500">
+            <span class="font-mono bg-slate-100 border border-slate-200 text-slate-700 px-2.5 py-1 rounded-md font-semibold">
+              Permit #${escapeHtml(lead.permit_number || '2026-MUNI')}
+            </span>
+            <span class="text-slate-300">•</span>
+            <span>Official Public Record</span>
           </div>
 
-          <div class="flex items-center space-x-3">
-            <span class="font-mono text-sm font-bold text-slate-800 bg-slate-100 border border-slate-200 px-3.5 py-1.5 rounded-xl">
-              ${lead.display_phone}
-            </span>
-            <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-xl transition shadow-xs flex items-center space-x-1 cursor-pointer">
-              <span>Unlock Phone Number</span>
-              <span>→</span>
-            </button>
-          </div>
+          <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition shadow-xs flex items-center space-x-1.5 cursor-pointer">
+            <span>Unlock Full Territory Feed</span>
+            <span>→</span>
+          </button>
         </div>
 
       </article>
@@ -362,7 +355,6 @@ function renderTableView(displayList, totalCount) {
   const tableRows = displayList.map(lead => {
     const valText = lead.estimated_valuation ? `$${Number(lead.estimated_valuation).toLocaleString()}` : 'Buildout';
     const formattedDate = formatDate(lead.filing_date);
-    const contactName = getCleanContactName(lead);
     const titleClean = cleanConceptName(lead.concept_name);
 
     return `
@@ -380,15 +372,12 @@ function renderTableView(displayList, totalCount) {
         <td class="py-4 px-4 font-mono font-bold text-slate-900 text-xs whitespace-nowrap">
           ${valText}
         </td>
-        <td class="py-4 px-4 whitespace-nowrap font-medium text-slate-800 text-xs">
-          ${escapeHtml(contactName)}
-        </td>
-        <td class="py-4 px-4 whitespace-nowrap font-mono text-slate-800 font-bold text-xs">
-          ${lead.display_phone}
+        <td class="py-4 px-4 whitespace-nowrap font-mono text-slate-600 text-xs font-medium">
+          #${escapeHtml(lead.permit_number || '2026-MUNI')}
         </td>
         <td class="py-4 px-4 text-right whitespace-nowrap">
           <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition shadow-xs cursor-pointer">
-            Unlock Phone →
+            Unlock Feed →
           </button>
         </td>
       </tr>
@@ -405,8 +394,7 @@ function renderTableView(displayList, totalCount) {
               <th class="py-3 px-4">Business &amp; Address</th>
               <th class="py-3 px-4">Type</th>
               <th class="py-3 px-4">Budget</th>
-              <th class="py-3 px-4">Owner</th>
-              <th class="py-3 px-4">Phone</th>
+              <th class="py-3 px-4">Permit #</th>
               <th class="py-3 px-4 text-right">Action</th>
             </tr>
           </thead>
@@ -428,17 +416,17 @@ function renderOverflowNotice(totalCount) {
     <div class="bg-slate-50 border border-slate-200 rounded-2xl p-8 text-center my-6">
       <div class="max-w-xl mx-auto">
         <h3 class="text-xl font-bold text-slate-900">
-          Showing 10 of ${totalCount} new businesses opening in ${selectedMetro}, ${stateCode}
+          Showing 10 of ${totalCount} active commercial buildouts in ${selectedMetro}, ${stateCode}
         </h3>
         <p class="text-sm text-slate-600 mt-2 mb-5 leading-relaxed">
-          New businesses are added every morning. Start your 7-day trial for $1.00 to unlock direct cell phone numbers for all ${totalCount} businesses and receive automated daily lead alerts.
+          New commercial permits are indexed every morning from official city hall dockets. Start your 7-day trial for $1.00 to access all ${totalCount} active buildouts, jobsite addresses, and export to CSV.
         </p>
-        <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm px-6 py-3 rounded-xl transition shadow-xs cursor-pointer inline-flex items-center space-x-1.5">
-          <span>Unlock All ${totalCount} Leads for $1.00</span>
+        <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm px-7 py-3.5 rounded-xl transition shadow-md cursor-pointer inline-flex items-center space-x-1.5">
+          <span>Access All ${totalCount} Leads for $1.00</span>
           <span>→</span>
         </button>
         <div class="mt-4 flex items-center justify-center space-x-3 text-xs text-slate-500">
-          <span>Daily morning updates</span>
+          <span>Official municipal dockets</span>
           <span>•</span>
           <span>1 rep per industry lock</span>
           <span>•</span>

@@ -87,7 +87,7 @@ function handleUnauthorized(reason) {
         </div>
         <h2 class="text-xl font-bold text-slate-900 mb-2">Member License Required</h2>
         <p class="text-xs text-slate-600 mb-6 leading-relaxed">
-          This portal feed is licensed exclusively to verified territory sales representatives. Start your 7-day trial to unlock full unmasked direct cell phone numbers.
+          This portal feed is licensed exclusively to verified territory sales representatives. Start your 7-day trial to access daily commercial buildout permits, jobsite addresses, and project scopes.
         </p>
         <div class="space-y-3">
           <a href="checkout.html" class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-3.5 rounded-xl transition shadow-sm">
