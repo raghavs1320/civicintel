@@ -8,6 +8,8 @@ import urllib.parse
 import ssl
 import json
 import logging
+import re
+from datetime import datetime, timezone
 from typing import List, Dict, Any
 from src.config import StandardLead, load_data_sources
 
@@ -31,6 +33,10 @@ def query_socrata_source(source: Dict[str, Any], limit: int = 10) -> List[Dict[s
     endpoint = source["endpoint"]
     query = source.get("filter_query", "")
     
+    # Dynamically inject current 2-digit year (e.g. '26') for municipal endpoints with text MM/DD/YY dates
+    current_yy = datetime.now(timezone.utc).strftime("%y")
+    query = query.replace("{current_yy}", current_yy)
+    
     # URL encode query parameters
     encoded_url = f"{endpoint}?$query=" + urllib.parse.quote(query)
     logging.info(f"Connecting to official source: {source['name']} ({source['metro']}, {source['state']})")
@@ -44,6 +50,22 @@ def query_socrata_source(source: Dict[str, Any], limit: int = 10) -> List[Dict[s
     except Exception as e:
         logging.error(f"Error querying {source['name']}: {e}")
         return []
+
+
+def normalize_date(date_str: str) -> str:
+    """Standardizes municipal date strings into unified ISO YYYY-MM-DD format."""
+    if not date_str or str(date_str).lower() == "none":
+        return "Recent"
+    date_str = str(date_str).strip()
+    m = re.match(r"^(\d{1,2})/(\d{1,2})/(\d{2,4})$", date_str)
+    if m:
+        month, day, year = m.groups()
+        if len(year) == 2:
+            year = "20" + year
+        return f"{year}-{int(month):02d}-{int(day):02d}"
+    if len(date_str) >= 10 and date_str[4] == '-' and date_str[7] == '-':
+        return date_str[:10]
+    return date_str[:10]
 
 
 def normalize_record(raw: Dict[str, Any], source: Dict[str, Any]) -> StandardLead:
@@ -96,7 +118,7 @@ def normalize_record(raw: Dict[str, Any], source: Dict[str, Any]) -> StandardLea
         street_address=str(address).strip(),
         city=str(city).strip(),
         zip_code=zip_code,
-        filing_date=issue_date[:10] if issue_date else "Recent",
+        filing_date=normalize_date(issue_date),
         estimated_valuation=valuation,
         status=str(status).strip(),
         owner_raw=str(owner).strip() if owner else None,

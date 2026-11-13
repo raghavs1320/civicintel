@@ -36,8 +36,8 @@
   <section class="max-w-4xl mx-auto px-4 pt-16 pb-10 text-center">
     <div class="flex flex-wrap items-center justify-center gap-2 mb-6">
       <div class="inline-flex items-center space-x-2 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold px-3.5 py-1.5 rounded-full">
-        <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-        <span>OFFICIAL MUNICIPAL RECORDS • INGESTED DAILY AT 6:00 AM UTC</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+        <span>MUNICIPAL RECORDS • SYNCHRONIZED DAILY</span>
       </div>
       <div class="inline-flex items-center space-x-1.5 bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-full">
         <span>1 EXCLUSIVE REP PER CATEGORY</span>
@@ -53,119 +53,97 @@
     </p>
   </section>
 
-  <!-- INTERACTIVE PIPELINE FILTER & INTAKE BOX -->
-  <section id="customize" class="max-w-4xl mx-auto px-4 pb-12">
-    <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm">
-      <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
-        <div class="flex items-center space-x-2">
-          <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Filter Pipeline by City &amp; Industry</span>
+  <!-- UNIFIED PIPELINE & FILINGS EXPLORER -->
+  <section id="leads" class="max-w-5xl mx-auto px-4 pb-16">
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-7 shadow-sm">
+      
+      <!-- Territory & Vertical Selection Toolbar -->
+      <div class="space-y-4">
+        
+        <!-- Metro Territory Tabs -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Target Territory</span>
+            <span class="text-xs text-slate-400 font-mono">Live Municipal Feed</span>
+          </div>
+          <div class="flex flex-wrap gap-2" id="city-tabs-container">
+            <button onclick="selectMetroTab('Austin')" class="city-tab-btn text-xs font-bold px-4 py-2 rounded-lg transition bg-slate-900 text-white shadow-sm flex items-center space-x-1" data-metro="Austin">
+              <span>Austin, TX</span>
+              <span class="opacity-80 font-mono text-[11px] ml-1">(121 Filings)</span>
+            </button>
+            <button onclick="selectMetroTab('Dallas')" class="city-tab-btn text-xs font-bold px-4 py-2 rounded-lg transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-1" data-metro="Dallas">
+              <span>Dallas, TX</span>
+              <span class="opacity-80 font-mono text-[11px] ml-1">(213 • $199.2M)</span>
+            </button>
+            <button onclick="selectMetroTab('Orlando')" class="city-tab-btn text-xs font-bold px-4 py-2 rounded-lg transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-1" data-metro="Orlando">
+              <span>Orlando, FL</span>
+              <span class="opacity-80 font-mono text-[11px] ml-1">(227 • $312.3M)</span>
+            </button>
+          </div>
+          <select id="user-metro-input" onchange="applyUserPreferences()" class="hidden">
+            <option value="Austin" selected>Austin</option>
+            <option value="Dallas">Dallas</option>
+            <option value="Orlando">Orlando</option>
+          </select>
         </div>
-        <span class="text-[11px] text-slate-400 font-mono">Live Municipal Feed</span>
+
+        <!-- Industry Vertical Pills -->
+        <div class="pt-1">
+          <span class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Industry Vertical</span>
+          <div class="flex flex-wrap gap-2" id="category-pills-container">
+            <button onclick="selectCategoryPill('all')" class="cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-emerald-600 text-white shadow-sm" data-category="all">
+              All Commercial
+            </button>
+            <button onclick="selectCategoryPill('Hospitality & Dining')" class="cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-white hover:bg-slate-50 text-slate-600 border border-slate-200" data-category="Hospitality & Dining">
+              Restaurants &amp; Bars
+            </button>
+            <button onclick="selectCategoryPill('Retail & Commercial Buildout')" class="cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-white hover:bg-slate-50 text-slate-600 border border-slate-200" data-category="Retail & Commercial Buildout">
+              Retail &amp; Commercial
+            </button>
+            <button onclick="selectCategoryPill('Healthcare & Wellness')" class="cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-white hover:bg-slate-50 text-slate-600 border border-slate-200" data-category="Healthcare & Wellness">
+              Healthcare &amp; Clinics
+            </button>
+          </div>
+          <select id="user-category-input" onchange="applyUserPreferences()" class="hidden">
+            <option value="all" selected>All</option>
+            <option value="Hospitality & Dining">Food</option>
+            <option value="Retail & Commercial Buildout">Retail</option>
+            <option value="Healthcare & Wellness">Health</option>
+          </select>
+          <input type="hidden" id="user-valuation-input" value="0">
+        </div>
+
       </div>
 
-      <!-- 1. CITY TABS -->
-      <div class="mb-4">
-        <div class="flex items-center justify-between mb-2">
-          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500">1. Select Target Metro Territory</label>
-          <span class="text-[10px] text-emerald-700 font-bold uppercase tracking-wider flex items-center space-x-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-            <span>Live Data Sync</span>
-          </span>
+      <!-- Live Pipeline Summary & View Switcher Bar -->
+      <div class="mt-6 pt-5 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div class="text-slate-600 font-medium" id="filter-notif-text">
+          Showing top 10 filings in <strong class="text-slate-900 font-bold" id="summary-metro-name">Austin, TX</strong> (<span id="matched-lead-count">121</span> total in pipeline)
         </div>
-        <div class="flex flex-wrap gap-2" id="city-tabs-container">
-          <button onclick="selectMetroTab('Austin')" class="city-tab-btn text-xs font-bold px-4 py-2.5 rounded-xl transition bg-slate-900 text-white shadow-sm flex items-center space-x-1.5" data-metro="Austin">
-            <span>Austin, TX</span>
-            <span class="opacity-80 font-mono text-[11px]">(121 Filings)</span>
-          </button>
-          <button onclick="selectMetroTab('Dallas')" class="city-tab-btn text-xs font-bold px-4 py-2.5 rounded-xl transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-1.5" data-metro="Dallas">
-            <span>Dallas, TX</span>
-            <span class="opacity-80 font-mono text-[11px]">(187 • $199.2M)</span>
-          </button>
-          <button onclick="selectMetroTab('Orlando')" class="city-tab-btn text-xs font-bold px-4 py-2.5 rounded-xl transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-1.5" data-metro="Orlando">
-            <span>Orlando, FL</span>
-            <span class="opacity-80 font-mono text-[11px]">(227 • $312.3M)</span>
+
+        <div class="flex items-center space-x-2.5">
+          <div class="bg-slate-100 p-0.5 rounded-lg border border-slate-200 flex items-center">
+            <button id="view-cards-btn" onclick="setViewMode('cards')" class="text-xs font-bold px-3 py-1 rounded-md transition bg-white text-slate-900 shadow-sm">
+              Feed View
+            </button>
+            <button id="view-table-btn" onclick="setViewMode('table')" class="text-xs font-semibold px-3 py-1 rounded-md transition text-slate-600 hover:text-slate-900">
+              Table View
+            </button>
+          </div>
+          <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap">
+            Reserve Territory ($1.00) →
           </button>
         </div>
-        <select id="user-metro-input" onchange="applyUserPreferences()" class="hidden">
-          <option value="Austin" selected>Austin</option>
-          <option value="Dallas">Dallas</option>
-          <option value="Orlando">Orlando</option>
-        </select>
       </div>
 
-      <!-- 2. CATEGORY PILLS -->
-      <div class="mb-5">
-        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">2. Industry Vertical Filter</label>
-        <div class="flex flex-wrap gap-2" id="category-pills-container">
-          <button onclick="selectCategoryPill('all')" class="cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-emerald-600 text-white shadow-sm" data-category="all">
-            All Commercial
-          </button>
-          <button onclick="selectCategoryPill('Hospitality & Dining')" class="cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-white hover:bg-slate-50 text-slate-600 border border-slate-200" data-category="Hospitality & Dining">
-            Restaurants &amp; Bars
-          </button>
-          <button onclick="selectCategoryPill('Retail & Commercial Buildout')" class="cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-white hover:bg-slate-50 text-slate-600 border border-slate-200" data-category="Retail & Commercial Buildout">
-            Retail &amp; Commercial
-          </button>
-          <button onclick="selectCategoryPill('Healthcare & Wellness')" class="cat-pill-btn text-xs font-bold px-3.5 py-1.5 rounded-lg transition bg-white hover:bg-slate-50 text-slate-600 border border-slate-200" data-category="Healthcare & Wellness">
-            Healthcare &amp; Clinics
-          </button>
-        </div>
-        <select id="user-category-input" onchange="applyUserPreferences()" class="hidden">
-          <option value="all" selected>All</option>
-          <option value="Hospitality & Dining">Food</option>
-          <option value="Retail & Commercial Buildout">Retail</option>
-          <option value="Healthcare & Wellness">Health</option>
-        </select>
-        <input type="hidden" id="user-valuation-input" value="0">
+      <!-- Hidden Heading for accessibility/DOM sync -->
+      <h2 class="sr-only" id="showcase-heading">All Commercial Filings</h2>
+
+      <!-- Dynamic Filings Container -->
+      <div id="leads-container" class="mt-5 space-y-3">
+        <!-- Loaded dynamically via app.js -->
       </div>
 
-      <!-- DYNAMIC STATUS NOTIFICATION -->
-      <div id="filter-status-box" class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-        <div class="flex items-center space-x-2 text-slate-700">
-          <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-          <span id="filter-notif-text">Showing <strong class="text-slate-900 font-bold" id="matched-lead-count">121</strong> verified pre-opening projects in Austin.</span>
-        </div>
-        <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg transition shadow-sm whitespace-nowrap">
-          Reserve This Territory for $1.00 ➔
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- LIVE SHOWCASE PREVIEW SECTION -->
-  <section id="leads" class="max-w-5xl mx-auto px-4 py-8">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-200">
-      <div>
-        <div class="inline-flex items-center space-x-2 text-[10px] font-extrabold uppercase tracking-widest text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full mb-2">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-          <span>Live Municipal Registry • Synchronized Daily at 6:00 AM UTC</span>
-        </div>
-        <h2 class="text-2xl font-bold text-slate-900 tracking-tight" id="showcase-heading">Tailored Leads Preview (Top 10 Active Projects)</h2>
-        <p class="text-xs text-slate-500 mt-0.5">Commercial building permits filed with municipal clerks across your territory. New records added daily.</p>
-      </div>
-
-      <!-- VIEW MODE SWITCHER & PIPELINE BADGE -->
-      <div class="flex items-center space-x-2.5">
-        <div class="bg-slate-100 p-1 rounded-xl border border-slate-200 flex items-center space-x-1">
-          <button id="view-cards-btn" onclick="setViewMode('cards')" class="text-xs font-bold px-3 py-1.5 rounded-lg transition bg-white text-slate-900 shadow-sm flex items-center space-x-1.5">
-            <svg class="w-3.5 h-3.5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-            <span>Dossier View</span>
-          </button>
-          <button id="view-table-btn" onclick="setViewMode('table')" class="text-xs font-semibold px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900 flex items-center space-x-1.5">
-            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-            <span>Terminal Table</span>
-          </button>
-        </div>
-        <span class="text-[11px] font-bold text-slate-700 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg font-mono hidden md:inline-block">
-          FOIA Certified
-        </span>
-      </div>
-    </div>
-
-    <!-- DYNAMIC CARDS CONTAINER -->
-    <div id="leads-container" class="space-y-4">
-      <!-- Loaded dynamically via app.js -->
     </div>
   </section>
 

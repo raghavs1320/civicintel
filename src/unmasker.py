@@ -160,7 +160,7 @@ def unmask_lead(lead: Dict[str, Any], query_sos: bool = False) -> Dict[str, Any]
             title = "Project Principal"
 
     # Step 4: If still an LLC, resolve clean entity name
-    clean_name = clean_entity_name(corporate_entity or owner_raw or concept)
+    clean_name = clean_entity_name(corporate_entity or owner_raw)
     
     # Step 5: Optional live SOS lookup for top priority leads without direct human
     if not decision_maker and query_sos and lead.get("state") == "TX" and clean_name:
@@ -169,8 +169,8 @@ def unmask_lead(lead: Dict[str, Any], query_sos: bool = False) -> Dict[str, Any]
     is_unmasked = decision_maker is not None or sos_data is not None
 
     enriched_lead = dict(lead)
-    enriched_lead["decision_maker_name"] = decision_maker or (sos_data.get("registered_name") if sos_data else (clean_name or owner_raw))
-    enriched_lead["decision_maker_title"] = title if decision_maker else "Authorized Representative"
+    enriched_lead["decision_maker_name"] = decision_maker or (sos_data.get("registered_name") if sos_data else (clean_name if clean_name else "Managing Principal"))
+    enriched_lead["decision_maker_title"] = title if decision_maker else "Operating Principal"
     enriched_lead["corporate_entity_clean"] = clean_name
     enriched_lead["sos_file_number"] = sos_data.get("sos_file_number") if sos_data else None
     enriched_lead["registered_address"] = sos_data.get("registered_address") if sos_data else None

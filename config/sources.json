@@ -52,7 +52,7 @@
       "metro": "Dallas",
       "endpoint": "https://www.dallasopendata.com/resource/e7gq-4sah.json",
       "type": "socrata_json",
-      "filter_query": "SELECT * WHERE value > 25000 ORDER BY issued_date DESC LIMIT 200",
+      "filter_query": "SELECT * WHERE permit_type LIKE '%Commercial%' AND (issued_date LIKE '%/{current_yy}' OR issued_date LIKE '%/26') ORDER BY issued_date DESC LIMIT 200",
       "field_mappings": {
         "permit_id": "permit_number",
         "description": "work_description",
