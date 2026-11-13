@@ -101,6 +101,8 @@ def upsert_leads_batch(leads: List[Dict[str, Any]]) -> int:
     ON CONFLICT(lead_id) DO UPDATE SET
         concept_name = excluded.concept_name,
         category = excluded.category,
+        filing_date = excluded.filing_date,
+        estimated_valuation = excluded.estimated_valuation,
         priority_score = excluded.priority_score,
         decision_maker_name = excluded.decision_maker_name,
         decision_maker_title = excluded.decision_maker_title,

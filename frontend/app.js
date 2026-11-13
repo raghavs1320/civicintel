@@ -163,7 +163,9 @@ function renderFilteredCards() {
   matched.sort((a, b) => {
     const scoreDiff = (b.priority_score || 0) - (a.priority_score || 0);
     if (scoreDiff !== 0) return scoreDiff;
-    return (b.filing_date || '').localeCompare(a.filing_date || '');
+    const dateA = a.filing_date && a.filing_date !== 'Recent' ? a.filing_date : '0000-00-00';
+    const dateB = b.filing_date && b.filing_date !== 'Recent' ? b.filing_date : '0000-00-00';
+    return dateB.localeCompare(dateA);
   });
 
   // Calculate pipeline valuation
