@@ -113,7 +113,7 @@ def normalize_record(raw: Dict[str, Any], source: Dict[str, Any]) -> StandardLea
         state=state,
         metro=metro,
         permit_number=str(permit_id),
-        concept_name=str(description).strip()[:150],
+        concept_name=str(description).strip(),
         work_type=str(work_class).strip(),
         street_address=str(address).strip(),
         city=str(city).strip(),

@@ -325,15 +325,40 @@ function renderFeed() {
           </div>
         </div>
 
-        <!-- Municipal Scope -->
-        <div class="text-xs text-slate-600 leading-relaxed">
-          <span class="font-semibold text-slate-700">Scope:</span>
-          ${escapeHtml(lead.concept_snapshot || lead.work_description || 'Commercial interior buildout and equipment installation.')}
+        <!-- Municipal Scope (Official Public Record) -->
+        <div class="text-xs text-slate-700 leading-relaxed bg-slate-50/70 border border-slate-100 rounded-xl p-3">
+          <span class="font-bold text-slate-500 uppercase tracking-wider text-[10px] block mb-0.5">Official Permit Scope</span>
+          ${escapeHtml(formatScopeText(lead))}
         </div>
 
       </div>
     `;
   }).join('');
+}
+
+function formatScopeText(lead) {
+  let raw = lead.concept_name || lead.concept_snapshot || lead.work_description || '';
+  let text = String(raw).trim();
+
+  // Remove administrative tracking prefixes
+  text = text.replace(/^(ePlan:\s*)?(Commercial\s+)?Expedited\s+Review\s*[-–:]\s*/i, '');
+  text = text.replace(/^(QTEAM\s+INHOUSE|QTEAM|NSFAA|DSST|BU\s+ZO|MCR\s+W\/BATTERY|PEXP)[\s\-_/:]*/i, '');
+  text = text.replace(/^(THIS PROJECT CONSISTS OF A|SCOPE CONSISTS OF)\s+/i, '');
+  text = text.replace(/\s+/g, ' ').trim();
+
+  // If ALL CAPS, convert to clean sentence case preserving all words
+  if (text.length > 5 && text === text.toUpperCase()) {
+    text = text.toLowerCase();
+    text = text.charAt(0).toUpperCase() + text.slice(1);
+    text = text.replace(/([.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+    text = text.replace(/\b(sf|sqft|hvac|ada|pos|led|co|llc|inc|apt|bldg)\b/gi, m => m.toUpperCase());
+  }
+
+  if (text && !/[.!?]$/.test(text)) {
+    text += '.';
+  }
+
+  return text || 'Commercial interior buildout and equipment installation.';
 }
 
 function escapeHtml(str) {

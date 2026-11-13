@@ -80,27 +80,26 @@ def synthesize_heuristic_dossier(lead: Dict[str, Any]) -> Dict[str, str]:
     val = lead.get("estimated_valuation")
     val_str = f"${val:,.0f}" if val else "substantial"
 
+    # Preserve authentic municipal project description without artificial truncation
+    snapshot = concept
+
     # Category 1: Hospitality & Dining
     if category == "Hospitality & Dining" or any(w in concept.lower() for w in ["food", "restaurant", "bar", "brew", "pizza", "cafe", "grill"]):
-        snapshot = f"New food & beverage hospitality concept undergoing commercial buildout ({concept[:80]})."
         signals = f"Permit reflects active mechanical, plumbing, and interior alterations ({val_str} valuation) requiring commercial equipment installation."
         pitch = f"Prime target for Point-of-Sale (Toast/Clover), commercial kitchen refrigeration, and food broadline distributors (Sysco/US Foods). Opening angle: 'Noticed your commercial buildout permit in {city}—we supply local commercial equipment with fast jobsite installation.'"
 
     # Category 2: Healthcare & Wellness
     elif category == "Healthcare & Wellness" or any(w in concept.lower() for w in ["dental", "medical", "clinic", "gym", "spa", "fitness"]):
-        snapshot = f"New healthcare, medical clinic, or wellness center expanding footprint in {city}."
         signals = f"Specialized commercial tenant improvement ({val_str} valuation) involving utility lines, private exam suites, and facility infrastructure."
         pitch = f"Ideal target for commercial liability insurance brokers, healthcare IT systems, and specialized waste/facility services. Opening angle: 'Saw your facility buildout registered in {city}—we provide commercial coverage specifically tailored for healthcare & wellness practices.'"
 
     # Category 3: Retail & Commercial Remodel
     elif category == "Retail & Commercial Buildout" or any(w in concept.lower() for w in ["remodel", "tenant improvement", "retail", "store"]):
-        snapshot = f"Commercial retail store or tenant improvement buildout underway in {city}."
         signals = f"Interior commercial renovation ({val_str} valuation) focusing on space remodeling, electrical fixtures, and storefront finishes."
         pitch = f"High-probability target for commercial signage, uniform/linen services (Cintas), and commercial property insurance. Opening angle: 'Noticed your tenant improvement project underway in {city}—we specialize in exterior signage and commercial finishings for new retail spaces.'"
 
     # Category 4: General Commercial
     else:
-        snapshot = f"Commercial development and facilities upgrade in {city}."
         signals = f"Commercial infrastructure work ({val_str} valuation) under active municipal permit review."
         pitch = f"High-value opportunity for commercial waste disposal, security systems, and electrical maintenance contractors. Opening angle: 'Reaching out regarding your active commercial permit in {city}—we provide commercial facilities maintenance and priority service.'"
 

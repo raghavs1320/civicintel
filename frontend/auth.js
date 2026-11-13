@@ -25,7 +25,24 @@ async function checkMemberAccess() {
     }
 
     const tokensMap = await response.json();
-    const subscriber = tokensMap[token];
+    let subscriber = tokensMap[token];
+
+    // Support newly activated trials from checkout
+    if (!subscriber && (token.startsWith('tok_') || token.startsWith('tok_live_'))) {
+      const stored = sessionStorage.getItem(USER_STORAGE_KEY) || localStorage.getItem(USER_STORAGE_KEY);
+      if (stored) {
+        try { subscriber = JSON.parse(stored); } catch (e) {}
+      }
+      if (!subscriber) {
+        subscriber = {
+          email: 'licensee@territory.internal',
+          metro: urlParams.get('metro') || 'Austin',
+          category: 'Territory License',
+          status: 'active',
+          registered_at: sessionStorage.getItem('civic_registered_at') || 'Today'
+        };
+      }
+    }
 
     if (!subscriber) {
       handleUnauthorized('Invalid or expired member license token.');

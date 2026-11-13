@@ -222,7 +222,7 @@ function getCleanContactName(lead) {
 }
 
 function cleanConceptName(text) {
-  if (!text) return 'New Commercial Business';
+  if (!text) return 'Commercial Buildout';
   let t = String(text).trim();
   t = t.replace(/^(ePlan:\s*)?(Commercial\s+)?Expedited\s+Review\s*[-–:]\s*/i, '');
   t = t.replace(/^(QTEAM\s+INHOUSE|QTEAM|NSFAA|DSST|BU\s+ZO|MCR\s+W\/BATTERY|PEXP)[\s\-_/:]*/i, '');
@@ -230,34 +230,43 @@ function cleanConceptName(text) {
   t = t.replace(/^(NEW CONSTRUCTION OF A|CONSTRUCTION OF)\s+/i, 'New ');
   t = t.replace(/\s+/g, ' ').trim();
 
-  // If ALL CAPS and longer than 5 chars, convert to readable Title Case
-  if (t === t.toUpperCase() && t.length > 5) {
+  // If ALL CAPS, convert to readable Title Case without losing words
+  if (t === t.toUpperCase() && t.length > 4) {
     t = t.toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase());
+    t = t.replace(/\b(Llc|Inc|Co|Hvac|Ada|Sf|Pos|Us|Tx|Fl)\b/g, m => m.toUpperCase());
   }
-  return t.length > 95 ? t.slice(0, 95) + '…' : t;
+  return t;
 }
 
 function cleanScopeDescription(lead) {
-  let text = (lead.concept_snapshot || lead.work_description || '').trim();
-  const match = text.match(/undergoing commercial buildout \((.*?)\)\.?$/i);
-  if (match && match[1]) {
-    text = match[1].trim();
-  }
+  // Use raw official filing description
+  let raw = lead.concept_name || lead.concept_snapshot || lead.work_description || '';
+  let text = String(raw).trim();
+
+  // Remove administrative tracking prefixes
   text = text.replace(/^(ePlan:\s*)?(Commercial\s+)?Expedited\s+Review\s*[-–:]\s*/i, '');
-  text = text.replace(/^(QTEAM\s+INHOUSE|QTEAM|NSFAA|DSST|BU\s+ZO|PEXP)[\s\-_/:]*/i, '');
+  text = text.replace(/^(QTEAM\s+INHOUSE|QTEAM|NSFAA|DSST|BU\s+ZO|MCR\s+W\/BATTERY|PEXP)[\s\-_/:]*/i, '');
   text = text.replace(/^(THIS PROJECT CONSISTS OF A|SCOPE CONSISTS OF)\s+/i, '');
   text = text.replace(/\s+/g, ' ').trim();
 
-  if (!text || text.toLowerCase() === (lead.concept_name || '').toLowerCase() || text.length < 10) {
-    if (lead.category === 'Hospitality & Dining') {
-      return 'Opening a new restaurant or bar with commercial kitchen and dining buildout.';
-    } else if (lead.category === 'Healthcare & Wellness') {
-      return 'Opening a new clinic, medical office, or fitness facility with interior remodel.';
-    } else {
-      return 'Commercial store remodel, interior finish-out, and tenant improvement.';
-    }
+  // If ALL CAPS, convert to clean, readable sentence case (preserving all words)
+  if (text.length > 5 && text === text.toUpperCase()) {
+    text = text.toLowerCase();
+    text = text.charAt(0).toUpperCase() + text.slice(1);
+    text = text.replace(/([.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+    text = text.replace(/\b(sf|sqft|hvac|ada|pos|led|co|llc|inc|apt|bldg)\b/gi, m => m.toUpperCase());
   }
-  return text.length > 180 ? text.slice(0, 180) + '…' : text;
+
+  // Ensure clean ending punctuation
+  if (text && !/[.!?]$/.test(text)) {
+    text += '.';
+  }
+
+  if (!text || text.length < 5) {
+    return 'Commercial interior buildout, mechanical installation, and finish-out.';
+  }
+
+  return text;
 }
 
 function formatCategory(cat) {
@@ -271,7 +280,7 @@ function formatValuation(val) {
   if (val && Number(val) > 0) {
     return `$${Number(val).toLocaleString()} project`;
   }
-  return 'Complete Buildout';
+  return 'Commercial Buildout';
 }
 
 function renderDossierCards(displayList, totalCount) {
@@ -309,16 +318,21 @@ function renderDossierCards(displayList, totalCount) {
           </p>
         </div>
 
-        <!-- What they are opening (Plain English) -->
-        <p class="text-sm sm:text-base text-slate-700 mt-3.5 leading-relaxed">
-          ${escapeHtml(scopeClean)}
-        </p>
+        <!-- Official Permit Description (Raw Government Data, Cleanly Formatted) -->
+        <div class="mt-4 bg-slate-50/80 border border-slate-100 rounded-xl p-3.5">
+          <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+            Official Permit Scope
+          </span>
+          <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
+            ${escapeHtml(scopeClean)}
+          </p>
+        </div>
 
         <!-- Decision Maker & Phone Number Bar -->
         <div class="mt-5 pt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
           <div class="flex items-center space-x-2.5">
-            <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center">
-              👤
+            <div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center">
+              <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             </div>
             <div>
               <span class="font-bold text-slate-900 text-sm sm:text-base">${escapeHtml(contactName)}</span>
