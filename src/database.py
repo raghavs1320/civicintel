@@ -217,6 +217,14 @@ def export_frontend_feeds():
         json.dump(previews_by_metro, f, indent=2)
     logging.info(f"Exported preview leads for {len(previews_by_metro)} metros to {previews_path}")
 
+    # 3. Synchronize pre-rendered static HTML files (0ms instant first paint)
+    try:
+        from src.static_sync import sync_static_site
+        sync_result = sync_static_site()
+        logging.info(f"Static site synchronized: {sync_result.get('total_leads')} leads, latest filing {sync_result.get('latest_filing_date')}")
+    except Exception as e:
+        logging.warning(f"Could not synchronize static HTML pages: {e}")
+
 
 def load_dossier_data_into_db() -> int:
     """Helper to populate the database with the latest generated dossier leads and export feeds."""
