@@ -30,13 +30,13 @@ function updateDynamicCounters() {
   const orlandoList = allPreviews['Orlando'] || [];
 
   const austinBtn = document.querySelector('.city-tab-btn[data-metro="Austin"]');
-  if (austinBtn) austinBtn.innerHTML = `<span>Austin, TX</span> <span class="opacity-70 font-mono text-xs">${austinList.length}</span>`;
+  if (austinBtn) austinBtn.innerHTML = `Austin, TX <span class="opacity-60 ml-1">(${austinList.length})</span>`;
 
   const dallasBtn = document.querySelector('.city-tab-btn[data-metro="Dallas"]');
-  if (dallasBtn) dallasBtn.innerHTML = `<span>Dallas, TX</span> <span class="opacity-70 font-mono text-xs">${dallasList.length}</span>`;
+  if (dallasBtn) dallasBtn.innerHTML = `Dallas, TX <span class="opacity-60 ml-1">(${dallasList.length})</span>`;
 
   const orlandoBtn = document.querySelector('.city-tab-btn[data-metro="Orlando"]');
-  if (orlandoBtn) orlandoBtn.innerHTML = `<span>Orlando, FL</span> <span class="opacity-70 font-mono text-xs">${orlandoList.length}</span>`;
+  if (orlandoBtn) orlandoBtn.innerHTML = `Orlando, FL <span class="opacity-60 ml-1">(${orlandoList.length})</span>`;
 
   const currentList = allPreviews[selectedMetro] || [];
   const foodCount   = currentList.filter(l => l.category === 'Hospitality & Dining').length;
@@ -44,16 +44,16 @@ function updateDynamicCounters() {
   const healthCount = currentList.filter(l => l.category === 'Healthcare & Wellness').length;
 
   const allCatBtn = document.querySelector('.cat-pill-btn[data-category="all"]');
-  if (allCatBtn) allCatBtn.innerHTML = `All <span class="opacity-60 font-mono text-xs ml-1">${currentList.length}</span>`;
+  if (allCatBtn) allCatBtn.innerHTML = `All Categories <span class="opacity-60 ml-1">(${currentList.length})</span>`;
 
   const foodCatBtn = document.querySelector('.cat-pill-btn[data-category="Hospitality & Dining"]');
-  if (foodCatBtn) foodCatBtn.innerHTML = `Restaurants &amp; Bars <span class="opacity-60 font-mono text-xs ml-1">${foodCount}</span>`;
+  if (foodCatBtn) foodCatBtn.innerHTML = `Restaurants &amp; Bars <span class="opacity-60 ml-1">(${foodCount})</span>`;
 
   const retailCatBtn = document.querySelector('.cat-pill-btn[data-category="Retail & Commercial Buildout"]');
-  if (retailCatBtn) retailCatBtn.innerHTML = `Retail <span class="opacity-60 font-mono text-xs ml-1">${retailCount}</span>`;
+  if (retailCatBtn) retailCatBtn.innerHTML = `Retail &amp; Buildouts <span class="opacity-60 ml-1">(${retailCount})</span>`;
 
   const healthCatBtn = document.querySelector('.cat-pill-btn[data-category="Healthcare & Wellness"]');
-  if (healthCatBtn) healthCatBtn.innerHTML = `Healthcare <span class="opacity-60 font-mono text-xs ml-1">${healthCount}</span>`;
+  if (healthCatBtn) healthCatBtn.innerHTML = `Clinics &amp; Wellness <span class="opacity-60 ml-1">(${healthCount})</span>`;
 }
 
 function setViewMode(mode) {
@@ -79,17 +79,17 @@ function applyUserPreferences() {
 
   document.querySelectorAll('.city-tab-btn').forEach(btn => {
     if (btn.dataset.metro === selectedMetro) {
-      btn.className = 'city-tab-btn text-sm font-semibold px-5 py-2 rounded-lg transition bg-slate-900 text-white flex items-center space-x-2';
+      btn.className = 'city-tab-btn mono text-xs font-semibold px-4 py-2 rounded-lg transition bg-slate-900 text-white';
     } else {
-      btn.className = 'city-tab-btn text-sm font-semibold px-5 py-2 rounded-lg transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-2';
+      btn.className = 'city-tab-btn mono text-xs font-semibold px-4 py-2 rounded-lg transition bg-white hover:bg-slate-100 text-slate-600 border border-slate-200';
     }
   });
 
   document.querySelectorAll('.cat-pill-btn').forEach(btn => {
     const isActive = btn.dataset.category === selectedCategory;
     btn.className = isActive
-      ? 'cat-pill-btn text-xs font-semibold px-3.5 py-1.5 rounded-lg transition bg-emerald-600 text-white'
-      : 'cat-pill-btn text-xs font-semibold px-3.5 py-1.5 rounded-lg transition bg-slate-100 hover:bg-slate-200 text-slate-700';
+      ? 'cat-pill-btn text-xs font-semibold px-3.5 py-1.5 rounded-lg transition bg-slate-900 text-white'
+      : 'cat-pill-btn text-xs font-semibold px-3.5 py-1.5 rounded-lg transition bg-white hover:bg-slate-100 text-slate-600 border border-slate-200';
   });
 
   renderFilteredCards();
@@ -102,14 +102,18 @@ function setMetro(metro) {
 
   document.querySelectorAll('.city-tab-btn').forEach(btn => {
     if (btn.dataset.metro === metro) {
-      btn.className = 'city-tab-btn text-sm font-semibold px-5 py-2 rounded-lg transition bg-slate-900 text-white flex items-center space-x-2';
+      btn.className = 'city-tab-btn mono text-xs font-semibold px-4 py-2 rounded-lg transition bg-slate-900 text-white';
     } else {
-      btn.className = 'city-tab-btn text-sm font-semibold px-5 py-2 rounded-lg transition bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 flex items-center space-x-2';
+      btn.className = 'city-tab-btn mono text-xs font-semibold px-4 py-2 rounded-lg transition bg-white hover:bg-slate-100 text-slate-600 border border-slate-200';
     }
   });
 
   updateDynamicCounters();
   renderFilteredCards();
+}
+
+function selectMetroTab(metro) {
+  setMetro(metro);
 }
 
 function setCategory(category) {
@@ -120,11 +124,15 @@ function setCategory(category) {
   document.querySelectorAll('.cat-pill-btn').forEach(btn => {
     const isActive = btn.dataset.category === category;
     btn.className = isActive
-      ? 'cat-pill-btn text-xs font-semibold px-3.5 py-1.5 rounded-lg transition bg-emerald-600 text-white'
-      : 'cat-pill-btn text-xs font-semibold px-3.5 py-1.5 rounded-lg transition bg-slate-100 hover:bg-slate-200 text-slate-700';
+      ? 'cat-pill-btn text-xs font-semibold px-3.5 py-1.5 rounded-lg transition bg-slate-900 text-white'
+      : 'cat-pill-btn text-xs font-semibold px-3.5 py-1.5 rounded-lg transition bg-white hover:bg-slate-100 text-slate-600 border border-slate-200';
   });
 
   renderFilteredCards();
+}
+
+function selectCategoryPill(category) {
+  setCategory(category);
 }
 
 function setMinVal(minVal) {
@@ -142,8 +150,15 @@ function renderFilteredCards() {
     return true;
   });
 
-  const totalCount  = leads.length;
+  const totalCount   = leads.length;
   const displayLeads = leads.slice(0, 10);
+
+  // Update dynamic status strip in index.html
+  const matchedEl = document.getElementById('matched-lead-count');
+  if (matchedEl) matchedEl.textContent = totalCount;
+  const metroEl = document.getElementById('summary-metro-name');
+  const stateCode = selectedMetro === 'Orlando' ? 'FL' : 'TX';
+  if (metroEl) metroEl.textContent = `${selectedMetro}, ${stateCode}`;
 
   if (displayLeads.length === 0) {
     container.innerHTML = `
