@@ -245,7 +245,7 @@ function renderDossierCards(leads, totalCount) {
           </div>
           <button
             onclick="goToPersonalizedCheckout()"
-            class="text-xs font-semibold text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-lg transition cursor-pointer whitespace-nowrap">
+            class="text-xs font-semibold text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-1.5 rounded-lg transition cursor-pointer whitespace-nowrap">
             View Territory
           </button>
         </div>
@@ -285,7 +285,7 @@ function renderTableView(leads, totalCount) {
           #${escapeHtml(lead.permit_number || 'MUNI')}
         </td>
         <td class="py-3.5 px-4 text-right whitespace-nowrap">
-          <button onclick="goToPersonalizedCheckout()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-3.5 py-1.5 rounded-lg transition cursor-pointer">
+          <button onclick="goToPersonalizedCheckout()" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs px-3.5 py-1.5 rounded-lg transition cursor-pointer">
             Unlock Feed
           </button>
         </td>

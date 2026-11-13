@@ -90,7 +90,7 @@ function handleUnauthorized(reason) {
           This portal feed is licensed exclusively to verified territory sales representatives. Start your 7-day trial to access daily commercial buildout permits, jobsite addresses, and project scopes.
         </p>
         <div class="space-y-3">
-          <a href="checkout.html" class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-3.5 rounded-xl transition shadow-sm">
+          <a href="checkout.html" class="block w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs py-3.5 rounded-xl transition shadow-sm">
             Activate Territory License — $1.00
           </a>
           <button onclick="activateDemoAccess()" class="block w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs py-2.5 rounded-xl border border-slate-200 transition cursor-pointer">

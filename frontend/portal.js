@@ -1,188 +1,286 @@
 /**
- * CivicIntel Member Dashboard Logic
- * Powers live unmasked intelligence, search, filtering, and local pipeline tracking.
+ * CivicIntel Member Intelligence Dashboard
+ * Table-first rendering with expandable rows, 4-stage pipeline tracking,
+ * real-time stats strip, CSV export, and search/filter logic.
  */
 
-let allLeads = [];
-let activeCategory = 'all';
-let searchQuery = '';
-let filterCurrentMonth = false;
-let userMetro = null;
+/* ─── State ───────────────────────────────────────────────────────────────── */
+var allLeads          = [];
+var activeCategory    = 'all';
+var searchQuery       = '';
+var filterCurrentMonth = false;
+var userMetro         = null;
+var expandedRows      = {};
 
-// Pipeline status tracked locally in browser storage
-let contactedLeads = new Set(JSON.parse(localStorage.getItem('contacted_leads') || '[]'));
+/* Pipeline: '' | 'contacted' | 'qualified' | 'closed' */
+var pipelineData = (function () {
+  try { return JSON.parse(localStorage.getItem('pipeline_data') || '{}'); }
+  catch (e) { return {}; }
+})();
 
+/* Legacy compat: also read contacted_leads set */
+var contactedLeads = (function () {
+  try { return new Set(JSON.parse(localStorage.getItem('contacted_leads') || '[]')); }
+  catch (e) { return new Set(); }
+})();
+
+/* ─── Boot ─────────────────────────────────────────────────────────────────── */
 async function initPortal() {
   if (window.checkMemberAccess) {
-    const hasAccess = await window.checkMemberAccess();
+    var hasAccess = await window.checkMemberAccess();
     if (!hasAccess) return;
   }
 
-  // Display user registration date & license status
-  const regDate = sessionStorage.getItem('civic_registered_at') || 'Nov 10, 2026';
-  const metaElem = document.getElementById('license-meta');
-  if (metaElem) {
-    metaElem.textContent = `License active · Registered ${regDate}`;
+  var regDate  = sessionStorage.getItem('civic_registered_at') || '';
+  var metaElem = document.getElementById('license-meta');
+  if (metaElem && regDate) {
+    metaElem.textContent = 'License active · Registered ' + regDate;
   }
 
-  // Read metro preference from URL or session
-  const urlParams = new URLSearchParams(window.location.search);
+  var urlParams = new URLSearchParams(window.location.search);
   userMetro = urlParams.get('metro') || sessionStorage.getItem('custom_pref_metro');
 
+  /* Sync metro select to reflect session preference */
+  var metroSelect = document.getElementById('portal-metro-switch');
+  if (metroSelect && userMetro) {
+    metroSelect.value = userMetro;
+  }
+
   try {
-    const response = await fetch('data/members_feed.json');
-    if (!response.ok) throw new Error('Failed to load member feed');
-    const rawData = await response.json();
-    
-    // Filter to user's assigned metro if specified
+    var response = await fetch('data/members_feed.json');
+    if (!response.ok) throw new Error('Feed unavailable');
+    var rawData = await response.json();
+
     if (userMetro && userMetro.toLowerCase() !== 'all') {
-      allLeads = rawData.filter(l => l.metro && l.metro.toLowerCase() === userMetro.toLowerCase());
-      if (allLeads.length === 0) allLeads = rawData; // Fallback to all if zero matches
+      var filtered = rawData.filter(function (l) {
+        return l.metro && l.metro.toLowerCase() === userMetro.toLowerCase();
+      });
+      allLeads = filtered.length > 0 ? filtered : rawData;
     } else {
       allLeads = rawData;
     }
 
+    document.getElementById('portal-loading').style.display = 'none';
+    updateStats();
     updateCounts();
     renderFeed();
   } catch (err) {
-    console.error('Portal init error:', err);
-    document.getElementById('portal-feed').innerHTML = `
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center text-slate-400">
-        Failed to load feed. Please refresh or contact your territory manager.
-      </div>
-    `;
+    var loading = document.getElementById('portal-loading');
+    if (loading) {
+      loading.textContent = 'Failed to load feed. Please refresh or contact your territory manager.';
+    }
   }
 }
 
+/* ─── Header hydration (called by auth.js via applySubscriberHeader) ───────── */
+function updatePortalHeader(session) {
+  if (!session) return;
+  var userDisplay = document.getElementById('user-display');
+  var licenseMeta = document.getElementById('license-meta');
+
+  if (userDisplay && session.email) {
+    var domain   = session.email.split('@')[1] || session.email;
+    var category = session.category || '';
+    userDisplay.textContent = domain + (category ? ' · ' + category : '');
+  }
+  if (licenseMeta) {
+    var metro  = session.metro || '';
+    var regAt  = session.registered_at || session.created_at || '';
+    var parts  = [];
+    if (metro)  parts.push(metro + ' territory');
+    if (regAt)  parts.push('licensed ' + regAt.slice(0, 10));
+    licenseMeta.textContent = parts.join(' · ');
+  }
+}
+
+/* ─── Metro switch ─────────────────────────────────────────────────────────── */
 function switchPortalMetro(newMetro) {
   userMetro = newMetro;
-  const selectElem = document.getElementById('portal-metro-switch');
-  if (selectElem) selectElem.value = newMetro;
   initPortal();
 }
 
-function updateCounts() {
-  document.getElementById('count-all').textContent = allLeads.length;
-  document.getElementById('count-hosp').textContent = allLeads.filter(l => l.category === 'Hospitality & Dining').length;
-  document.getElementById('count-health').textContent = allLeads.filter(l => l.category === 'Healthcare & Wellness').length;
-  document.getElementById('count-retail').textContent = allLeads.filter(l => l.category === 'Retail & Commercial Buildout' || l.category === 'General Commercial').length;
+/* ─── Stats strip ──────────────────────────────────────────────────────────── */
+function updateStats() {
+  var total = allLeads.length;
+  var now   = Date.now();
+  var d14   = 14 * 24 * 60 * 60 * 1000;
+
+  var newCount = allLeads.filter(function (l) {
+    if (!l.filing_date || l.filing_date === 'Recent') return false;
+    return (now - new Date(l.filing_date).getTime()) <= d14;
+  }).length;
+
+  var withVal  = allLeads.filter(function (l) { return l.estimated_valuation; });
+  var avgVal   = withVal.length
+    ? withVal.reduce(function (sum, l) { return sum + Number(l.estimated_valuation); }, 0) / withVal.length
+    : 0;
+
+  /* Most recent filing date */
+  var dates = allLeads
+    .filter(function (l) { return l.filing_date && l.filing_date !== 'Recent'; })
+    .map(function (l) { return l.filing_date; })
+    .sort();
+  var lastDate = dates.length ? dates[dates.length - 1] : '';
+
+  var el;
+  el = document.getElementById('stat-total');
+  if (el) el.textContent = total;
+
+  el = document.getElementById('stat-new');
+  if (el) el.textContent = newCount;
+
+  el = document.getElementById('stat-avg');
+  if (el) el.textContent = avgVal >= 1000000
+    ? '$' + (avgVal / 1000000).toFixed(1) + 'M'
+    : avgVal >= 1000
+      ? '$' + Math.round(avgVal / 1000) + 'K'
+      : avgVal ? '$' + Math.round(avgVal) : '—';
+
+  el = document.getElementById('stat-updated');
+  if (el) el.textContent = lastDate ? formatDateShort(lastDate) : '—';
 }
 
+/* ─── Filter pill counts ───────────────────────────────────────────────────── */
+function updateCounts() {
+  var el;
+
+  el = document.getElementById('count-all');
+  if (el) el.textContent = allLeads.length;
+
+  el = document.getElementById('count-hosp');
+  if (el) el.textContent = allLeads.filter(function (l) {
+    return l.category === 'Hospitality & Dining';
+  }).length;
+
+  el = document.getElementById('count-health');
+  if (el) el.textContent = allLeads.filter(function (l) {
+    return l.category === 'Healthcare & Wellness';
+  }).length;
+
+  el = document.getElementById('count-retail');
+  if (el) el.textContent = allLeads.filter(function (l) {
+    return l.category === 'Retail & Commercial Buildout' || l.category === 'General Commercial';
+  }).length;
+}
+
+/* ─── Filter: category pill ────────────────────────────────────────────────── */
 function setCategoryFilter(cat) {
   activeCategory = cat;
-  document.querySelectorAll('.filter-pill').forEach(btn => {
+  document.querySelectorAll('.filter-pill').forEach(function (btn) {
     if (btn.getAttribute('data-cat') === cat) {
-      btn.className = 'filter-pill whitespace-nowrap text-xs font-semibold px-4 py-2 rounded-lg transition bg-emerald-600 text-white';
+      btn.className = 'filter-pill mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition bg-slate-900 text-white border-slate-900';
     } else {
-      btn.className = 'filter-pill whitespace-nowrap text-xs font-semibold px-4 py-2 rounded-lg transition bg-white hover:bg-slate-50 text-slate-700 border border-slate-200';
+      btn.className = 'filter-pill mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition bg-white hover:bg-slate-50 text-slate-700 border-slate-200';
     }
   });
   renderFeed();
 }
 
+/* ─── Filter: search ───────────────────────────────────────────────────────── */
 function handleSearch() {
-  searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+  var inp = document.getElementById('search-input');
+  searchQuery = inp ? inp.value.toLowerCase().trim() : '';
   renderFeed();
 }
 
+/* ─── Filter: current month toggle ────────────────────────────────────────── */
 function toggleCurrentMonth() {
-  filterCurrentMonth = document.getElementById('toggle-current-month').checked;
+  filterCurrentMonth = !filterCurrentMonth;
+  var btn = document.getElementById('toggle-current-month');
+  if (btn) {
+    if (filterCurrentMonth) {
+      btn.className = 'mono text-xs font-semibold px-3 py-1.5 rounded-lg border border-blue-700 bg-blue-700 text-white transition';
+    } else {
+      btn.className = 'mono text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition';
+    }
+  }
   renderFeed();
 }
 
-function toggleContacted(leadId) {
-  if (contactedLeads.has(leadId)) {
+/* ─── Pipeline ─────────────────────────────────────────────────────────────── */
+function setPipelineStatus(leadId, status) {
+  if (status === '') {
+    delete pipelineData[leadId];
     contactedLeads.delete(leadId);
   } else {
-    contactedLeads.add(leadId);
+    pipelineData[leadId] = status;
+    if (status === 'contacted' || status === 'qualified' || status === 'closed') {
+      contactedLeads.add(leadId);
+    }
   }
-  localStorage.setItem('contacted_leads', JSON.stringify([...contactedLeads]));
+  localStorage.setItem('pipeline_data', JSON.stringify(pipelineData));
+  localStorage.setItem('contacted_leads', JSON.stringify(Array.from(contactedLeads)));
   renderFeed();
 }
 
-function formatDate(dateStr) {
-  if (!dateStr || dateStr === 'Recent') return 'Recent Filing';
-  const parts = String(dateStr).trim().split('-');
-  if (parts.length === 3) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const m = parseInt(parts[1], 10) - 1;
-    if (m >= 0 && m < 12) {
-      return `${months[m]} ${parseInt(parts[2], 10)}, ${parts[0]}`;
-    }
+function getPipelineStatus(leadId) {
+  if (pipelineData[leadId]) return pipelineData[leadId];
+  if (contactedLeads.has(leadId)) return 'contacted';
+  return '';
+}
+
+function renderPipelineBadge(leadId) {
+  var status = getPipelineStatus(leadId);
+  if (!status) return '<span class="mono text-[11px] text-slate-400">—</span>';
+  var map = {
+    contacted: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    qualified:  'bg-blue-50 text-blue-700 border-blue-200',
+    closed:     'bg-amber-50 text-amber-700 border-amber-200'
+  };
+  var label = {
+    contacted: 'Contacted',
+    qualified:  'Qualified',
+    closed:     'Converted'
+  };
+  var cls = map[status] || 'bg-slate-50 text-slate-600 border-slate-200';
+  return '<span class="mono text-[10px] font-bold uppercase tracking-wider border px-2 py-0.5 rounded-md ' + cls + '">' + (label[status] || status) + '</span>';
+}
+
+/* ─── Row expand / collapse ────────────────────────────────────────────────── */
+function toggleRow(leadId) {
+  expandedRows[leadId] = !expandedRows[leadId];
+  var detailRow = document.getElementById('detail-' + leadId);
+  var chevron   = document.getElementById('chev-'   + leadId);
+  if (!detailRow) return;
+  if (expandedRows[leadId]) {
+    detailRow.style.display = '';
+    if (chevron) chevron.classList.add('open');
+  } else {
+    detailRow.style.display = 'none';
+    if (chevron) chevron.classList.remove('open');
   }
-  return dateStr;
 }
 
-function getCleanContactName(lead) {
-  const name = (lead.decision_maker_name || '').trim();
-  const concept = (lead.concept_name || '').trim().toLowerCase();
-  const lower = name.toLowerCase();
-  if (!name || lower === concept || name.length > 35 || /remodel|finish|tenant|condo|interior|commercial|building|suite|scope|install|restroom|kitchen|addition|alteration|renovation|repair|permit|project|storefront|warehouse/i.test(name)) {
-    return 'Managing Principal';
-  }
-  return name;
-}
-
-function exportFilteredCSV() {
-  if (!allLeads || allLeads.length === 0) return;
-
-  const headers = ['Permit #', 'Project / Business Name', 'Category', 'Filing Date', 'Budget ($)', 'Street Address', 'City', 'State', 'Zip Code', 'Contractor of Record', 'Contractor Phone', 'Official Scope', 'City Docket Link', 'Pipeline Status'];
-  const rows = [headers.join(',')];
-
-  allLeads.forEach(l => {
-    rows.push([
-      `"${(l.permit_number || '').replace(/"/g, '""')}"`,
-      `"${(l.concept_name || '').replace(/"/g, '""')}"`,
-      `"${(l.category || '').replace(/"/g, '""')}"`,
-      `"${(l.filing_date || '').replace(/"/g, '""')}"`,
-      `"${l.estimated_valuation || ''}"`,
-      `"${(l.street_address || '').replace(/"/g, '""')}"`,
-      `"${(l.city || '').replace(/"/g, '""')}"`,
-      `"${(l.state || '').replace(/"/g, '""')}"`,
-      `"${(l.zip_code || '').replace(/"/g, '""')}"`,
-      `"${(l.contractor_name || l.owner_raw || '').replace(/"/g, '""')}"`,
-      `"${(l.has_direct_phone ? l.display_phone : '').replace(/"/g, '""')}"`,
-      `"${(formatScopeText(l)).replace(/"/g, '""')}"`,
-      `"${(l.official_portal_url || '').replace(/"/g, '""')}"`,
-      `"${contactedLeads.has(l.lead_id) ? 'Contacted' : 'New'}"`
-    ].join(','));
-  });
-
-  const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.setAttribute('href', url);
-  link.setAttribute('download', `CivicIntel_Leads_${userMetro || 'All'}_${new Date().toISOString().slice(0, 10)}.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
+/* ─── Main render ───────────────────────────────────────────────────────────── */
 function renderFeed() {
-  const container = document.getElementById('portal-feed');
+  var container = document.getElementById('portal-feed');
+  if (!container) return;
 
-  const now = new Date();
-  const currentYearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  var now = Date.now();
+  var d14 = 14 * 24 * 60 * 60 * 1000;
 
-  const filtered = allLeads.filter(lead => {
-    // 0. Current Month filter
+  /* Current year-month for "this month" filter */
+  var d       = new Date();
+  var yearMon = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+
+  var filtered = allLeads.filter(function (lead) {
+    /* Current month filter */
     if (filterCurrentMonth) {
-      if (!lead.filing_date || (!lead.filing_date.startsWith('2026-11') && !lead.filing_date.startsWith(currentYearMonth))) {
-        return false;
-      }
+      if (!lead.filing_date || lead.filing_date === 'Recent') return false;
+      if (!lead.filing_date.startsWith(yearMon)) return false;
     }
 
-    // 1. Category and Subtype check
+    /* Category / subtype */
     if (activeCategory !== 'all') {
       if (activeCategory === 'subtype_restaurant') {
-        const text = `${lead.concept_name} ${lead.work_description} ${lead.concept_snapshot}`.toLowerCase();
-        if (!text.includes('restaurant') && !text.includes('grill') && !text.includes('kitchen') && !text.includes('dining') && !text.includes('pizza') && !text.includes('taco')) return false;
+        var t1 = ((lead.concept_name || '') + ' ' + (lead.concept_snapshot || '')).toLowerCase();
+        if (!t1.match(/restaurant|grill|kitchen|dining|pizza|taco|bbq|steakhouse/)) return false;
       } else if (activeCategory === 'subtype_bar') {
-        const text = `${lead.concept_name} ${lead.work_description} ${lead.concept_snapshot}`.toLowerCase();
-        if (!text.includes('bar') && !text.includes('pub') && !text.includes('brew') && !text.includes('lounge') && !text.includes('cocktail') && !text.includes('tavern')) return false;
+        var t2 = ((lead.concept_name || '') + ' ' + (lead.concept_snapshot || '')).toLowerCase();
+        if (!t2.match(/bar|pub|brew|lounge|cocktail|tavern|saloon|taproom/)) return false;
       } else if (activeCategory === 'subtype_cafe') {
-        const text = `${lead.concept_name} ${lead.work_description} ${lead.concept_snapshot}`.toLowerCase();
-        if (!text.includes('cafe') && !text.includes('coffee') && !text.includes('bakery') && !text.includes('pastry') && !text.includes('tea') && !text.includes('boba')) return false;
+        var t3 = ((lead.concept_name || '') + ' ' + (lead.concept_snapshot || '')).toLowerCase();
+        if (!t3.match(/cafe|coffee|bakery|pastry|tea|boba|espresso/)) return false;
       } else if (activeCategory === 'Retail & Commercial Buildout') {
         if (lead.category !== 'Retail & Commercial Buildout' && lead.category !== 'General Commercial') return false;
       } else if (lead.category !== activeCategory) {
@@ -190,157 +288,282 @@ function renderFeed() {
       }
     }
 
-    // 2. Search query check
+    /* Search */
     if (searchQuery) {
-      const haystack = `${lead.concept_name} ${lead.street_address} ${lead.city} ${lead.contractor_name || ''} ${lead.permit_number || ''}`.toLowerCase();
-      if (!haystack.includes(searchQuery)) return false;
+      var hay = ((lead.concept_name || '') + ' ' + (lead.street_address || '') + ' ' + (lead.city || '') + ' ' + (lead.permit_number || '') + ' ' + (lead.contractor_name || '')).toLowerCase();
+      if (hay.indexOf(searchQuery) === -1) return false;
     }
 
     return true;
   });
 
-  // Sort: NEWEST FILINGS FIRST ALWAYS
-  filtered.sort((a, b) => {
-    const dateA = a.filing_date && a.filing_date !== 'Recent' ? a.filing_date : '0000-00-00';
-    const dateB = b.filing_date && b.filing_date !== 'Recent' ? b.filing_date : '0000-00-00';
-    return dateB.localeCompare(dateA);
+  /* Sort: newest filing date first */
+  filtered.sort(function (a, b) {
+    var da = (a.filing_date && a.filing_date !== 'Recent') ? a.filing_date : '0000-00-00';
+    var db = (b.filing_date && b.filing_date !== 'Recent') ? b.filing_date : '0000-00-00';
+    return db < da ? -1 : db > da ? 1 : 0;
   });
 
-  document.getElementById('visible-count').textContent = filtered.length;
+  /* Visible count */
+  var vcElem = document.getElementById('visible-count');
+  if (vcElem) vcElem.textContent = filtered.length;
 
+  /* Empty state */
+  var empty = document.getElementById('empty-state');
   if (filtered.length === 0) {
-    container.innerHTML = `
-      <div class="bg-white border border-slate-200 rounded-xl p-12 text-center text-slate-500 shadow-xs">
-        No active leads match your search criteria. Clear your search or change categories.
-      </div>
-    `;
+    container.innerHTML = '';
+    if (empty) empty.style.display = '';
     return;
   }
+  if (empty) empty.style.display = 'none';
 
-  container.innerHTML = filtered.map(lead => {
-    const isContacted   = contactedLeads.has(lead.lead_id);
-    const hasPhone      = lead.display_phone && !lead.display_phone.includes('Pending');
-    const formattedDate = formatDate(lead.filing_date);
+  /* Build rows */
+  var html = '';
+  for (var i = 0; i < filtered.length; i++) {
+    html += buildRow(filtered[i], now, d14);
+  }
+  container.innerHTML = html;
 
-    return `
-      <div class="lead-card bg-white border ${isContacted ? 'border-emerald-300' : 'border-slate-200'} rounded-2xl p-5 sm:p-6">
+  /* Re-apply expanded state without re-render */
+  for (var id in expandedRows) {
+    if (expandedRows[id]) {
+      var dr = document.getElementById('detail-' + id);
+      var ch = document.getElementById('chev-'   + id);
+      if (dr) dr.style.display = '';
+      if (ch) ch.classList.add('open');
+    }
+  }
+}
 
-        <!-- Header row -->
-        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-100">
-          <div class="flex items-center space-x-2.5 flex-wrap text-[11px] mono text-slate-400">
-            <span>#${escapeHtml(lead.permit_number || 'MUNI')}</span>
-            <span class="text-slate-200">|</span>
-            <span class="font-semibold text-slate-600 not-mono" style="font-family:inherit">${escapeHtml(lead.category)}</span>
-            <span class="text-slate-200">|</span>
-            <span>${escapeHtml(lead.metro)}, ${escapeHtml(lead.state)}</span>
-            <span class="text-slate-200">|</span>
-            <span>Filed ${escapeHtml(formattedDate)}</span>
-          </div>
+function buildRow(lead, now, d14) {
+  var isNew      = lead.filing_date && lead.filing_date !== 'Recent' && (now - new Date(lead.filing_date).getTime()) <= d14;
+  var hasPhone   = lead.display_phone && lead.display_phone.indexOf('Pending') === -1 && lead.has_direct_phone;
+  var budget     = lead.estimated_valuation ? '$' + Number(lead.estimated_valuation).toLocaleString() : '—';
+  var shortDate  = lead.filing_date && lead.filing_date !== 'Recent' ? formatDateShort(lead.filing_date) : 'Recent';
+  var catShort   = shortenCategory(lead.category || '');
+  var pipeline   = renderPipelineBadge(lead.lead_id);
+  var newBadge   = isNew ? '<span class="mono text-[9px] font-bold uppercase tracking-wider bg-sky-50 text-sky-700 border border-sky-200 px-1.5 py-0.5 rounded ml-1.5">NEW</span>' : '';
+  var scopeText  = escapeHtml(formatScopeText(lead));
+  var pitchText  = lead.pitch_angle ? escapeHtml(lead.pitch_angle) : '';
+  var status     = getPipelineStatus(lead.lead_id);
 
-          <div class="flex items-center space-x-2">
-            ${lead.estimated_valuation ? `
-              <span class="mono font-bold text-slate-900 text-xs">$${Number(lead.estimated_valuation).toLocaleString()}</span>
-            ` : `
-              <span class="text-slate-400 text-xs">Undisclosed budget</span>
-            `}
-            <button
-              onclick="toggleContacted('${lead.lead_id}')"
-              class="text-xs px-2.5 py-1 rounded-lg border transition font-semibold ${
-                isContacted
-                  ? 'bg-emerald-600 text-white border-emerald-600'
-                  : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
-              }">
-              ${isContacted ? 'Contacted' : 'Mark Contacted'}
-            </button>
-          </div>
-        </div>
+  /* Pipeline action buttons */
+  var pipelineActions = buildPipelineActions(lead.lead_id, status);
 
-        <!-- Business name + address -->
-        <div class="mb-3">
-          <h3 class="text-base font-bold text-slate-900 leading-snug mb-0.5">
-            ${escapeHtml(lead.concept_name)}
-          </h3>
-          <a
-            href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((lead.street_address || '') + ', ' + (lead.city || '') + ', ' + (lead.state || ''))}"
-            target="_blank"
-            class="text-xs text-slate-500 hover:text-emerald-700 transition inline-flex items-center space-x-1">
-            <span>${escapeHtml(lead.street_address)}, ${escapeHtml(lead.city)}, ${lead.state} ${lead.zip_code || ''}</span>
-            <svg class="w-3 h-3 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-          </a>
-        </div>
+  /* Contact + action buttons */
+  var actionBtns = '';
+  if (hasPhone) {
+    actionBtns += '<a href="tel:' + (lead.dial_phone || lead.display_phone) + '" class="inline-flex items-center gap-1.5 mono text-xs font-semibold bg-blue-700 hover:bg-blue-800 text-white px-3 py-1.5 rounded-lg transition">'
+      + '<svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>'
+      + escapeHtml(lead.display_phone)
+      + '</a>';
+  }
+  if (lead.official_portal_url) {
+    actionBtns += '<a href="' + escapeHtml(lead.official_portal_url) + '" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 mono text-xs font-semibold bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg transition">'
+      + '<svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>'
+      + 'City Docket</a>';
+  }
+  /* Map link */
+  var mapQuery = encodeURIComponent((lead.street_address || '') + ', ' + (lead.city || '') + ', ' + (lead.state || ''));
+  actionBtns += '<a href="https://www.google.com/maps/search/?api=1&query=' + mapQuery + '" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 mono text-xs font-semibold bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg transition">'
+    + '<svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>'
+    + 'Map</a>';
 
-        <!-- Contractor bar -->
-        <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 mb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <div class="text-[10px] uppercase font-semibold text-slate-400 tracking-wider mono mb-0.5">Contractor on Record</div>
-            <div class="text-sm font-semibold text-slate-900">
-              ${escapeHtml(lead.contractor_name || lead.owner_raw || 'Commercial Permit on File')}
-            </div>
-            ${lead.registered_address ? `<div class="text-[11px] text-slate-500 mono mt-0.5">${escapeHtml(lead.registered_address)}</div>` : ''}
-          </div>
+  var detailDisplayStyle = (expandedRows[lead.lead_id]) ? '' : 'display:none';
 
-          <div class="flex flex-wrap items-center gap-2">
-            ${hasPhone ? `
-              <a
-                href="tel:${lead.dial_phone || lead.display_phone}"
-                class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-3.5 py-2 rounded-lg transition flex items-center space-x-1.5">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                <span class="mono">${escapeHtml(lead.display_phone)}</span>
-              </a>
-            ` : ''}
+  return ''
+    /* ── Main row ── */
+    + '<tr class="lead-row border-b border-slate-100 hover:bg-slate-50/80 transition-colors" onclick="toggleRow(\'' + lead.lead_id + '\')">'
+    +   '<td class="py-3 px-4 mono text-xs text-slate-500 whitespace-nowrap">' + shortDate + newBadge + '</td>'
+    +   '<td class="py-3 px-4">'
+    +     '<div class="font-semibold text-sm text-slate-900 leading-tight">' + escapeHtml(lead.concept_name || 'Commercial Buildout') + '</div>'
+    +     '<div class="mono text-[11px] text-slate-400 mt-0.5">' + escapeHtml((lead.street_address || '') + (lead.city ? ', ' + lead.city : '')) + '</div>'
+    +   '</td>'
+    +   '<td class="py-3 px-4"><span class="mono text-[11px] text-slate-500">' + escapeHtml(catShort) + '</span></td>'
+    +   '<td class="py-3 px-4 text-right mono text-xs font-semibold text-slate-700">' + budget + '</td>'
+    +   '<td class="py-3 px-4">' + pipeline + '</td>'
+    +   '<td class="py-3 px-4 text-right">'
+    +     '<svg id="chev-' + lead.lead_id + '" class="chevron w-4 h-4 text-slate-400 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">'
+    +       '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>'
+    +     '</svg>'
+    +   '</td>'
+    + '</tr>'
 
-            ${lead.official_portal_url ? `
-              <a
-                href="${escapeHtml(lead.official_portal_url)}"
-                target="_blank"
-                class="bg-white hover:bg-slate-50 text-slate-600 font-semibold text-xs px-3 py-2 rounded-lg border border-slate-200 transition flex items-center space-x-1.5">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                <span>City Hall Docket</span>
-              </a>
-            ` : ''}
-          </div>
-        </div>
+    /* ── Detail row ── */
+    + '<tr id="detail-' + lead.lead_id + '" class="detail-row border-b border-slate-100" style="' + detailDisplayStyle + '">'
+    +   '<td colspan="6" class="detail-content px-4 pb-5 pt-0">'
+    +     '<div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mt-0 space-y-4">'
 
-        <!-- Permit scope -->
-        <div class="bg-slate-50 border border-slate-100 rounded-xl px-3.5 py-2.5">
-          <div class="text-[10px] uppercase font-semibold text-slate-400 tracking-wider mono mb-0.5">Official Permit Scope</div>
-          <div class="text-xs text-slate-700 leading-relaxed">${escapeHtml(formatScopeText(lead))}</div>
-        </div>
+    /* Permit scope */
+    +       '<div>'
+    +         '<div class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Official Permit Scope</div>'
+    +         '<div class="text-sm text-slate-700 leading-relaxed">' + scopeText + '</div>'
+    +       '</div>'
 
-      </div>
-    `;
-  }).join('');
+    /* Sales intelligence */
+    + (pitchText ? ''
+    +       '<div class="bg-blue-50 border border-blue-100 rounded-lg px-4 py-3">'
+    +         '<div class="mono text-[10px] font-bold uppercase tracking-widest text-blue-400 mb-1">Sales Intelligence</div>'
+    +         '<div class="text-sm text-blue-900 leading-relaxed">' + pitchText + '</div>'
+    +       '</div>'
+    : '')
+
+    /* Action buttons */
+    +       '<div class="flex flex-wrap items-center gap-2">' + actionBtns + '</div>'
+
+    /* Pipeline status */
+    +       '<div>'
+    +         '<div class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Pipeline Stage</div>'
+    +         '<div class="flex flex-wrap gap-1.5">' + pipelineActions + '</div>'
+    +       '</div>'
+
+    +     '</div>'
+    +   '</td>'
+    + '</tr>';
+}
+
+function buildPipelineActions(leadId, currentStatus) {
+  var stages = [
+    { key: '',           label: 'Clear'     },
+    { key: 'contacted',  label: 'Contacted' },
+    { key: 'qualified',  label: 'Qualified' },
+    { key: 'closed',     label: 'Converted' }
+  ];
+  var html = '';
+  for (var i = 0; i < stages.length; i++) {
+    var s   = stages[i];
+    var active = s.key === currentStatus;
+    var cls;
+    if (active) {
+      if (s.key === '')          cls = 'bg-slate-200 text-slate-700 border-slate-300';
+      else if (s.key === 'contacted') cls = 'bg-emerald-600 text-white border-emerald-600';
+      else if (s.key === 'qualified') cls = 'bg-blue-700 text-white border-blue-700';
+      else                            cls = 'bg-amber-500 text-white border-amber-500';
+    } else {
+      cls = 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50';
+    }
+    html += '<button onclick="event.stopPropagation();setPipelineStatus(\'' + leadId + '\',\'' + s.key + '\')" '
+      + 'class="mono text-[11px] font-semibold px-3 py-1.5 rounded-lg border transition ' + cls + '">'
+      + s.label + '</button>';
+  }
+  return html;
+}
+
+/* ─── CSV Export ────────────────────────────────────────────────────────────── */
+function exportFilteredCSV() {
+  if (!allLeads || allLeads.length === 0) return;
+
+  var headers = [
+    'Permit #', 'Business Name', 'Category', 'Filed Date', 'Budget ($)',
+    'Street Address', 'City', 'State', 'Zip', 'Metro',
+    'Permit Scope', 'Pitch Angle', 'City Docket URL', 'Pipeline Status'
+  ];
+
+  var rows = [headers.join(',')];
+  var now  = Date.now();
+  var d14  = 14 * 24 * 60 * 60 * 1000;
+
+  for (var i = 0; i < allLeads.length; i++) {
+    var l      = allLeads[i];
+    var status = getPipelineStatus(l.lead_id);
+    rows.push([
+      csvCell(l.permit_number),
+      csvCell(l.concept_name),
+      csvCell(l.category),
+      csvCell(l.filing_date),
+      csvCell(l.estimated_valuation),
+      csvCell(l.street_address),
+      csvCell(l.city),
+      csvCell(l.state),
+      csvCell(l.zip_code),
+      csvCell(l.metro),
+      csvCell(formatScopeText(l)),
+      csvCell(l.pitch_angle),
+      csvCell(l.official_portal_url),
+      csvCell(status || 'New Lead')
+    ].join(','));
+  }
+
+  var blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href   = url;
+  a.setAttribute('download', 'CivicIntel_Leads_' + (userMetro || 'All').replace(/\s/g, '_') + '_' + new Date().toISOString().slice(0, 10) + '.csv');
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function csvCell(val) {
+  if (val === undefined || val === null) return '""';
+  return '"' + String(val).replace(/"/g, '""') + '"';
+}
+
+/* ─── Formatting helpers ────────────────────────────────────────────────────── */
+function formatDateShort(dateStr) {
+  if (!dateStr || dateStr === 'Recent') return 'Recent';
+  var parts = String(dateStr).trim().split('-');
+  if (parts.length === 3) {
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var m = parseInt(parts[1], 10) - 1;
+    if (m >= 0 && m < 12) {
+      return months[m] + ' ' + parseInt(parts[2], 10) + ', ' + parts[0];
+    }
+  }
+  return dateStr;
+}
+
+function shortenCategory(cat) {
+  var map = {
+    'Hospitality & Dining':        'Hospitality',
+    'Healthcare & Wellness':       'Healthcare',
+    'Retail & Commercial Buildout':'Retail',
+    'General Commercial':          'Commercial'
+  };
+  return map[cat] || cat;
 }
 
 function formatScopeText(lead) {
-  let raw = lead.concept_name || lead.concept_snapshot || lead.work_description || '';
-  let text = String(raw).trim();
+  var raw = '';
+  if (lead.buildout_signals && lead.buildout_signals.length > 20) {
+    raw = lead.buildout_signals;
+  } else if (lead.concept_snapshot && lead.concept_snapshot.length > 10) {
+    raw = lead.concept_snapshot;
+  } else {
+    raw = lead.concept_name || '';
+  }
 
-  // Remove administrative tracking prefixes
-  text = text.replace(/^(ePlan:\s*)?(Commercial\s+)?Expedited\s+Review\s*[-–:]\s*/i, '');
-  text = text.replace(/^(QTEAM\s+INHOUSE|QTEAM|NSFAA|DSST|BU\s+ZO|MCR\s+W\/BATTERY|PEXP)[\s\-_/:]*/i, '');
+  var text = String(raw).trim();
+
+  /* Strip administrative prefixes */
+  text = text.replace(/^(ePlan:\s*)?(Commercial\s+)?Expedited\s+Review\s*[-\u2013:]\s*/i, '');
+  text = text.replace(/^(QTEAM\s+INHOUSE|QTEAM|NSFAA|DSST|BU\s+ZO|MCR\s+W\/BATTERY|PEXP)[\s\-_/:.]*/i, '');
   text = text.replace(/^(THIS PROJECT CONSISTS OF A|SCOPE CONSISTS OF)\s+/i, '');
   text = text.replace(/\s+/g, ' ').trim();
 
-  // If ALL CAPS, convert to clean sentence case preserving all words
+  /* ALL CAPS conversion */
   if (text.length > 5 && text === text.toUpperCase()) {
     text = text.toLowerCase();
     text = text.charAt(0).toUpperCase() + text.slice(1);
-    text = text.replace(/([.!?]\s+)([a-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
-    text = text.replace(/\b(sf|sqft|hvac|ada|pos|led|co|llc|inc|apt|bldg)\b/gi, m => m.toUpperCase());
+    text = text.replace(/([.!?]\s+)([a-z])/g, function (m, p1, p2) { return p1 + p2.toUpperCase(); });
+    text = text.replace(/\b(sf|sqft|hvac|ada|pos|led|co|llc|inc|apt|bldg|tx|fl)\b/gi, function (m) { return m.toUpperCase(); });
   }
 
-  if (text && !/[.!?]$/.test(text)) {
-    text += '.';
-  }
+  if (text && !/[.!?]$/.test(text)) text += '.';
 
   return text || 'Commercial interior buildout and equipment installation.';
 }
 
 function escapeHtml(str) {
-  if (!str) return '';
-  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  if (str === undefined || str === null) return '';
+  return String(str)
+    .replace(/&/g,  '&amp;')
+    .replace(/</g,  '&lt;')
+    .replace(/>/g,  '&gt;')
+    .replace(/"/g,  '&quot;')
+    .replace(/'/g,  '&#039;');
 }
 
+/* ─── Init ─────────────────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', initPortal);
-

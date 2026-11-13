@@ -1,147 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Member Portal — CivicIntel</title>
-  <meta name="robots" content="noindex">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CivicIntel — Member Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     * { -webkit-font-smoothing: antialiased; }
     body { font-family: 'Inter', system-ui, sans-serif; }
     .mono { font-family: 'JetBrains Mono', monospace; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    @keyframes pulse-soft {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
+    @keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     .pulse-soft { animation: pulse-soft 2.4s ease-in-out infinite; }
-    .lead-card { transition: box-shadow 0.15s ease, border-color 0.15s ease; }
-    .lead-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); border-color: #cbd5e1; }
+    .lead-row { transition: background-color 0.1s ease; cursor: pointer; }
+    .lead-row:hover td { background-color: rgba(248,250,252,0.9); }
+    .detail-row td { padding: 0; }
+    .detail-content { overflow: hidden; }
+    .chevron { transition: transform 0.2s ease; }
+    .chevron.open { transform: rotate(180deg); }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-900 antialiased min-h-screen">
+<body class="bg-slate-50 min-h-screen">
 
-  <!-- PORTAL HEADER -->
-  <header class="border-b border-slate-200 bg-white/98 backdrop-blur-sm sticky top-0 z-50">
-    <div class="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
+  <!-- STICKY HEADER -->
+  <header class="sticky top-0 z-30 h-16 bg-white border-b border-slate-200 flex items-center px-4 gap-4">
 
-      <div class="flex items-center space-x-3">
-        <a href="portal.html" class="flex items-center space-x-2.5" aria-label="CivicIntel Portal">
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="22" height="22" rx="6" fill="#059669"/>
-            <path d="M6 11h10M11 6v10" stroke="white" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          <span class="font-bold text-[17px] tracking-tight text-slate-900">CivicIntel</span>
-        </a>
-        <span class="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full mono hidden sm:inline-block">
-          LICENSE ACTIVE
-        </span>
+    <!-- Left: Logo + Brand + License badge -->
+    <div class="flex items-center gap-3 flex-shrink-0">
+      <!-- SVG Logo 22x22 -->
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="22" height="22" rx="5" fill="#1D4ED8"/>
+        <path d="M11 5v12M5 11h12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <span class="font-bold text-slate-900 text-sm tracking-tight">CivicIntel</span>
+      <span class="mono text-[10px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-md">License Active</span>
+    </div>
+
+    <!-- Center: Search -->
+    <div class="flex-1 flex justify-center">
+      <input
+        id="search-input"
+        type="search"
+        placeholder="Search permits, addresses, businesses..."
+        oninput="handleSearch()"
+        class="mono w-full max-w-sm text-xs border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+      />
+    </div>
+
+    <!-- Right: Metro, Export, User info, Sign out -->
+    <div class="flex items-center gap-3 flex-shrink-0">
+      <select
+        id="portal-metro-switch"
+        onchange="switchPortalMetro(this.value)"
+        class="mono text-xs border border-slate-200 rounded-lg px-2 py-2 bg-white text-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer"
+      >
+        <option value="all">All Metros</option>
+        <option value="Austin TX">Austin TX</option>
+        <option value="Dallas TX">Dallas TX</option>
+        <option value="Orlando FL">Orlando FL</option>
+      </select>
+
+      <button
+        onclick="exportFilteredCSV()"
+        class="mono text-xs font-semibold bg-blue-700 hover:bg-blue-800 text-white px-3 py-2 rounded-lg transition flex items-center gap-1.5"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        </svg>
+        Export CSV
+      </button>
+
+      <div class="hidden md:flex flex-col items-end leading-tight">
+        <span id="user-display" class="mono text-[11px] text-slate-700 font-medium"></span>
+        <span id="license-meta" class="mono text-[10px] text-slate-400"></span>
       </div>
 
-      <div class="flex items-center space-x-4">
-        <div class="hidden sm:block text-right">
-          <div class="text-sm font-semibold text-slate-900" id="user-display">Territory Licensee</div>
-          <div class="text-[11px] text-emerald-700 mono" id="license-meta">License active</div>
-        </div>
-        <a href="index.html" class="text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-lg transition">
-          Sign Out
-        </a>
-      </div>
-
+      <a href="index.html" class="mono text-[11px] text-slate-500 hover:text-slate-800 transition underline underline-offset-2">Sign out</a>
     </div>
   </header>
 
-  <main class="max-w-5xl mx-auto px-5 py-7">
+  <!-- MAIN CONTENT -->
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-4">
 
-    <!-- TERRITORY HEADER -->
-    <div class="bg-white border border-slate-200 rounded-2xl p-5 mb-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div class="flex items-center space-x-2 mb-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse-soft"></span>
-            <span class="text-[11px] font-semibold text-emerald-700 uppercase tracking-wider mono" id="territory-name">COMMERCIAL TERRITORY</span>
-            <select
-              id="portal-metro-switch"
-              onchange="switchPortalMetro(this.value)"
-              class="ml-1 bg-slate-50 text-slate-700 text-[11px] border border-slate-200 rounded-md px-2 py-0.5 focus:outline-none focus:border-emerald-600 font-semibold mono">
-              <option value="Austin">Austin, TX (122)</option>
-              <option value="Dallas">Dallas, TX (222)</option>
-              <option value="Orlando">Orlando, FL (227)</option>
-              <option value="all">All Markets (571)</option>
-            </select>
-          </div>
-          <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Pre-Opening Commercial Feed</h1>
-          <p class="text-xs text-slate-500 mt-0.5 leading-relaxed">
-            Official city hall permit records synchronized every morning. Each record includes project scope, budget, jobsite address, and contractor on file.
-          </p>
-        </div>
+    <!-- STATS STRIP -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-0 bg-white border border-slate-200 rounded-xl overflow-hidden">
+      <div class="px-5 py-4 border-r border-slate-100">
+        <div class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Total Permits</div>
+        <div id="stat-total" class="mono text-2xl font-bold text-slate-900">—</div>
+      </div>
+      <div class="px-5 py-4 border-r border-slate-100">
+        <div class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">New (14 days)</div>
+        <div id="stat-new" class="mono text-2xl font-bold text-sky-600">—</div>
+      </div>
+      <div class="px-5 py-4 border-r border-slate-100">
+        <div class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Avg Budget</div>
+        <div id="stat-avg" class="mono text-2xl font-bold text-slate-900">—</div>
+      </div>
+      <div class="px-5 py-4">
+        <div class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Last Indexed</div>
+        <div id="stat-updated" class="mono text-2xl font-bold text-slate-900">—</div>
+      </div>
+    </div>
 
-        <!-- SEARCH + EXPORT -->
-        <div class="flex items-center space-x-2 w-full sm:w-auto">
-          <div class="relative flex-1 sm:w-64">
-            <input
-              type="text"
-              id="search-input"
-              oninput="handleSearch()"
-              placeholder="Search business, street, or contractor..."
-              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition"
-            />
-          </div>
+    <!-- FILTER TOOLBAR -->
+    <div class="bg-white border border-slate-200 rounded-xl px-4 py-3 space-y-2.5">
+      <!-- Row 1: Category pills -->
+      <div class="flex items-center gap-3 overflow-x-auto hide-scrollbar">
+        <span class="mono text-[10px] font-bold uppercase tracking-widest text-slate-400 flex-shrink-0">Filter:</span>
+        <div class="flex items-center gap-1.5 flex-shrink-0">
           <button
-            onclick="exportFilteredCSV()"
-            class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold text-xs px-4 py-2 rounded-xl transition flex items-center space-x-1.5 whitespace-nowrap">
-            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            <span>Export CSV</span>
-          </button>
+            class="filter-pill mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition"
+            data-cat="all"
+            onclick="setCategoryFilter('all')"
+          >All <span id="count-all" class="opacity-60"></span></button>
+
+          <button
+            class="filter-pill mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition"
+            data-cat="Hospitality &amp; Dining"
+            onclick="setCategoryFilter('Hospitality &amp; Dining')"
+          >Hospitality <span id="count-hosp" class="opacity-60"></span></button>
+
+          <button
+            class="filter-pill mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition"
+            data-cat="Retail &amp; Commercial Buildout"
+            onclick="setCategoryFilter('Retail &amp; Commercial Buildout')"
+          >Retail <span id="count-retail" class="opacity-60"></span></button>
+
+          <button
+            class="filter-pill mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition"
+            data-cat="Healthcare &amp; Wellness"
+            onclick="setCategoryFilter('Healthcare &amp; Wellness')"
+          >Healthcare <span id="count-health" class="opacity-60"></span></button>
+
+          <button
+            class="filter-pill mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition"
+            data-cat="subtype_restaurant"
+            onclick="setCategoryFilter('subtype_restaurant')"
+          >Restaurant</button>
+
+          <button
+            class="filter-pill mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition"
+            data-cat="subtype_bar"
+            onclick="setCategoryFilter('subtype_bar')"
+          >Bar / Pub</button>
+
+          <button
+            class="filter-pill mono text-xs font-semibold px-3 py-1.5 rounded-lg border transition"
+            data-cat="subtype_cafe"
+            onclick="setCategoryFilter('subtype_cafe')"
+          >Cafe / Coffee</button>
+        </div>
+      </div>
+
+      <!-- Row 2: Results bar -->
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 pulse-soft flex-shrink-0"></span>
+          <span class="text-sm text-slate-600">Showing <strong id="visible-count" class="text-slate-900">0</strong> permits</span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button
+            id="toggle-current-month"
+            onclick="toggleCurrentMonth()"
+            class="mono text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition"
+          >This Month Only</button>
+
+          <span class="mono text-[11px] text-slate-400">Sorted: newest first</span>
         </div>
       </div>
     </div>
 
-    <!-- FILTER BAR -->
-    <div class="flex items-center space-x-2 overflow-x-auto hide-scrollbar pb-3 mb-5" id="filter-bar">
-      <button onclick="setCategoryFilter('all')" class="filter-pill whitespace-nowrap text-xs font-semibold px-4 py-2 rounded-lg transition bg-emerald-600 text-white" data-cat="all">
-        All Openings <span class="mono opacity-80 ml-1">(<span id="count-all">0</span>)</span>
-      </button>
-      <button onclick="setCategoryFilter('Hospitality &amp; Dining')" class="filter-pill whitespace-nowrap text-xs font-semibold px-4 py-2 rounded-lg transition bg-white hover:bg-slate-50 text-slate-700 border border-slate-200" data-cat="Hospitality &amp; Dining">
-        Restaurants &amp; Bars <span class="mono opacity-70 ml-1">(<span id="count-hosp">0</span>)</span>
-      </button>
-      <button onclick="setCategoryFilter('subtype_restaurant')" class="filter-pill whitespace-nowrap text-xs font-medium px-3 py-1.5 rounded-lg transition bg-white hover:bg-slate-50 text-slate-600 border border-slate-200" data-cat="subtype_restaurant">
-        Restaurants
-      </button>
-      <button onclick="setCategoryFilter('subtype_bar')" class="filter-pill whitespace-nowrap text-xs font-medium px-3 py-1.5 rounded-lg transition bg-white hover:bg-slate-50 text-slate-600 border border-slate-200" data-cat="subtype_bar">
-        Bars &amp; Pubs
-      </button>
-      <button onclick="setCategoryFilter('subtype_cafe')" class="filter-pill whitespace-nowrap text-xs font-medium px-3 py-1.5 rounded-lg transition bg-white hover:bg-slate-50 text-slate-600 border border-slate-200" data-cat="subtype_cafe">
-        Cafes &amp; Bakeries
-      </button>
-      <button onclick="setCategoryFilter('Retail &amp; Commercial Buildout')" class="filter-pill whitespace-nowrap text-xs font-semibold px-4 py-2 rounded-lg transition bg-white hover:bg-slate-50 text-slate-700 border border-slate-200" data-cat="Retail &amp; Commercial Buildout">
-        Retail &amp; Commercial <span class="mono opacity-70 ml-1">(<span id="count-retail">0</span>)</span>
-      </button>
-      <button onclick="setCategoryFilter('Healthcare &amp; Wellness')" class="filter-pill whitespace-nowrap text-xs font-semibold px-4 py-2 rounded-lg transition bg-white hover:bg-slate-50 text-slate-700 border border-slate-200" data-cat="Healthcare &amp; Wellness">
-        Healthcare &amp; Clinics <span class="mono opacity-70 ml-1">(<span id="count-health">0</span>)</span>
-      </button>
-    </div>
-
-    <!-- RESULTS STRIP -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-slate-400 mb-4 px-0.5 gap-2">
-      <div>
-        Showing <span class="font-semibold text-slate-700" id="visible-count">0</span> records
-        <span class="mono text-[11px] ml-1">(newest first)</span>
-      </div>
-      <label class="flex items-center space-x-1.5 cursor-pointer select-none">
-        <input type="checkbox" id="toggle-current-month" onchange="toggleCurrentMonth()" class="rounded bg-white border-slate-300 text-emerald-600 focus:ring-0">
-        <span class="font-medium text-slate-600 hover:text-slate-900 transition">Current month only</span>
-      </label>
-    </div>
-
-    <!-- PORTAL LEADS FEED -->
-    <div id="portal-feed" class="space-y-3">
-      <!-- Populated dynamically via portal.js -->
+    <!-- DATA TABLE -->
+    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+      <div id="portal-loading" class="py-16 text-center text-sm text-slate-400 mono">Loading intelligence feed...</div>
+      <div id="empty-state" class="hidden py-16 text-center text-sm text-slate-400">No permits match current filters.</div>
+      <table class="w-full border-collapse">
+        <thead class="sticky top-16 z-10">
+          <tr class="bg-slate-50 border-b border-slate-200">
+            <th class="py-3 px-4 text-left text-[10px] font-bold uppercase tracking-wider text-slate-500 mono w-28">Filed</th>
+            <th class="py-3 px-4 text-left text-[10px] font-bold uppercase tracking-wider text-slate-500 mono">Business</th>
+            <th class="py-3 px-4 text-left text-[10px] font-bold uppercase tracking-wider text-slate-500 mono w-32">Category</th>
+            <th class="py-3 px-4 text-right text-[10px] font-bold uppercase tracking-wider text-slate-500 mono w-28">Budget</th>
+            <th class="py-3 px-4 text-left text-[10px] font-bold uppercase tracking-wider text-slate-500 mono w-36">Pipeline</th>
+            <th class="py-3 px-4 w-10"></th>
+          </tr>
+        </thead>
+        <tbody id="portal-feed"><!-- rows from portal.js --></tbody>
+      </table>
     </div>
 
   </main>

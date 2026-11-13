@@ -23,13 +23,13 @@
     <div class="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
       <a href="index.html" class="flex items-center space-x-2.5" aria-label="CivicIntel Home">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="22" height="22" rx="6" fill="#059669"/>
+          <rect width="22" height="22" rx="6" fill="#1D4ED8"/>
           <path d="M6 11h10M11 6v10" stroke="white" stroke-width="2" stroke-linecap="round"/>
         </svg>
         <span class="font-bold text-[17px] tracking-tight text-slate-900">CivicIntel</span>
       </a>
       <div class="flex items-center space-x-4">
-        <span class="hidden sm:inline text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full mono">
+        <span class="hidden sm:inline text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full mono">
           1 seat per category · exclusivity guaranteed
         </span>
         <a href="index.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 transition">
@@ -72,13 +72,13 @@
               type="button"
               onclick="setCity('Austin')"
               id="city-btn-Austin"
-              class="city-btn border rounded-xl p-4 text-left transition cursor-pointer border-emerald-600 bg-emerald-50/60 ring-2 ring-emerald-600/20">
+              class="city-btn border rounded-xl p-4 text-left transition cursor-pointer border-blue-700 bg-blue-50/60 ring-2 ring-blue-700/20">
               <div class="flex items-center justify-between mb-1">
                 <span class="font-bold text-slate-900">Austin, TX</span>
-                <span class="mono text-[10px] font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">122</span>
+                <span class="mono text-[10px] font-semibold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md">122</span>
               </div>
               <div class="text-xs text-slate-500">Travis County corridors</div>
-              <div id="city-seats-Austin" class="text-[11px] mono text-emerald-700 font-semibold mt-2">Checking...</div>
+              <div id="city-seats-Austin" class="text-[11px] mono text-blue-700 font-semibold mt-2">Checking...</div>
             </button>
 
             <button
@@ -113,11 +113,11 @@
         <!-- TERRITORY SUMMARY BAR -->
         <div id="territory-summary-bar" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
           <div class="flex items-center space-x-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span class="w-2 h-2 rounded-full bg-blue-600"></span>
             <span class="font-semibold text-slate-700" id="summary-bar-text">Loading seat availability...</span>
           </div>
           <div class="text-slate-400 flex items-center space-x-3 mono">
-            <span class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>Open</span></span>
+            <span class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-blue-600"></span><span>Open</span></span>
             <span class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-slate-300"></span><span>Licensed</span></span>
           </div>
         </div>
@@ -137,7 +137,7 @@
                   Join Priority List
                 </button>
               </div>
-              <div id="waitlist-feedback" class="mt-1.5 font-semibold text-emerald-700 hidden"></div>
+              <div id="waitlist-feedback" class="mt-1.5 font-semibold text-blue-700 hidden"></div>
             </div>
           </div>
         </div>
@@ -168,7 +168,7 @@
             id="email"
             required
             placeholder="rep@yourcompany.com"
-            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition"
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition"
           />
           <p class="text-[11px] text-slate-400 mt-1.5 mono">
             Your access token and daily permit docket alerts are delivered here.
@@ -183,7 +183,7 @@
           </div>
           <div class="flex justify-between text-slate-600 text-xs">
             <span>Category exclusivity</span>
-            <span class="font-semibold text-emerald-700">Guaranteed (1 rep per city)</span>
+            <span class="font-semibold text-blue-700">Guaranteed (1 rep per city)</span>
           </div>
           <div class="flex justify-between text-slate-600 text-xs">
             <span>7-day full access trial</span>
@@ -195,7 +195,7 @@
           </div>
           <div class="border-t border-slate-200 pt-2.5 flex justify-between items-baseline font-bold text-base text-slate-900">
             <span>Total due today</span>
-            <span class="text-emerald-700">$1.00</span>
+            <span class="text-blue-700">$1.00</span>
           </div>
         </div>
 
@@ -204,7 +204,7 @@
           type="submit"
           id="submit-btn"
           disabled
-          class="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold text-base py-4 rounded-xl transition cursor-pointer">
+          class="w-full bg-blue-700 hover:bg-blue-800 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold text-base py-4 rounded-xl transition cursor-pointer">
           <span id="btn-text">Select a city and category to continue</span>
         </button>
 
@@ -213,19 +213,19 @@
       <!-- TRUST ROW -->
       <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 sm:gap-8 text-xs text-slate-400">
         <div class="flex items-center space-x-1.5">
-          <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
           <span>Instant portal access</span>
         </div>
         <div class="flex items-center space-x-1.5">
-          <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
           <span>Cancel anytime in one click</span>
         </div>
         <div class="flex items-center space-x-1.5">
-          <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
           <span>Official municipal data only</span>
         </div>
         <div class="flex items-center space-x-1.5">
-          <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
           <span>Full refund if unsatisfied</span>
         </div>
       </div>
@@ -380,8 +380,8 @@
 
         if (btn) {
           if (c === currentCity) {
-            btn.className = 'city-btn border rounded-xl p-4 text-left transition cursor-pointer border-emerald-600 bg-emerald-50/60 ring-2 ring-emerald-600/20';
-            if (seatsLabel) seatsLabel.className = 'text-[11px] mono text-emerald-700 font-semibold mt-2';
+            btn.className = 'city-btn border rounded-xl p-4 text-left transition cursor-pointer border-blue-700 bg-blue-50/60 ring-2 ring-blue-700/20';
+            if (seatsLabel) seatsLabel.className = 'text-[11px] mono text-blue-700 font-semibold mt-2';
           } else {
             btn.className = 'city-btn border border-slate-200 bg-white hover:bg-slate-50 rounded-xl p-4 text-left transition cursor-pointer';
             if (seatsLabel) seatsLabel.className = 'text-[11px] mono text-slate-500 font-semibold mt-2';
@@ -404,7 +404,7 @@
       });
       const stateCode = currentCity === 'Orlando' ? 'FL' : 'TX';
       const el = document.getElementById('summary-bar-text');
-      if (el) el.innerHTML = `<strong>${currentCity}, ${stateCode}:</strong> <span class="text-emerald-700">${available} seats open</span> &nbsp;·&nbsp; <span class="text-slate-500">${sold} exclusively licensed</span>`;
+      if (el) el.innerHTML = `<strong>${currentCity}, ${stateCode}:</strong> <span class="text-blue-700">${available} seats open</span> &nbsp;·&nbsp; <span class="text-slate-500">${sold} exclusively licensed</span>`;
     }
 
     function renderCategories() {
@@ -436,20 +436,20 @@
           `;
         } else {
           const selClass = isSelected
-            ? 'border-emerald-600 bg-emerald-50/60 ring-2 ring-emerald-600/20'
-            : 'border-slate-200 bg-white hover:border-emerald-300 hover:bg-slate-50/60';
+            ? 'border-blue-700 bg-blue-50/60 ring-2 ring-blue-700/20'
+            : 'border-slate-200 bg-white hover:border-blue-300 hover:bg-slate-50/60';
 
           card.className = `category-card relative border rounded-xl p-4 cursor-pointer transition ${selClass}`;
           card.onclick   = () => selectCategory(cat.id, cat.name);
           card.innerHTML = `
             <div class="flex items-start justify-between gap-2 mb-2">
               <span class="font-semibold text-sm text-slate-900">${escapeHtml(cat.name)}</span>
-              <span class="mono text-[10px] font-semibold uppercase bg-emerald-100 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-md whitespace-nowrap">1 Seat Open</span>
+              <span class="mono text-[10px] font-semibold uppercase bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded-md whitespace-nowrap">1 Seat Open</span>
             </div>
             <p class="text-xs text-slate-500 mb-2 leading-relaxed">${escapeHtml(cat.target_vendors)}</p>
-            <div class="text-[11px] mono text-emerald-700 flex items-center justify-between border-t border-slate-100 pt-2">
+            <div class="text-[11px] mono text-blue-700 flex items-center justify-between border-t border-slate-100 pt-2">
               <span>${escapeHtml(cat.short_name)}</span>
-              <span class="font-semibold ${isSelected ? 'text-emerald-800' : 'text-slate-300'}">
+              <span class="font-semibold ${isSelected ? 'text-blue-700' : 'text-slate-300'}">
                 ${isSelected ? 'Selected' : 'Select seat'}
               </span>
             </div>
@@ -567,8 +567,8 @@
           <span>Licensed</span>
         </span>`;
       } else {
-        return `<button type="button" onclick="quickSelectFromMatrix('${city}', '${catId}')" class="mono inline-flex items-center space-x-1 px-2.5 py-1 rounded-md text-[10px] font-semibold uppercase bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 cursor-pointer transition">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+        return `<button type="button" onclick="quickSelectFromMatrix('${city}', '${catId}')" class="mono inline-flex items-center space-x-1 px-2.5 py-1 rounded-md text-[10px] font-semibold uppercase bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 cursor-pointer transition">
+          <span class="w-1.5 h-1.5 rounded-full bg-blue-600 inline-block"></span>
           <span>Open</span>
         </button>`;
       }
