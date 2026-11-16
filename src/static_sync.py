@@ -320,3 +320,4 @@ if __name__ == "__main__":
     res = sync_static_site()
     print("Static Site Synchronization Result:")
     print(json.dumps(res, indent=2))
+

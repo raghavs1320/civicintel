@@ -3,85 +3,30 @@
 > **Project Name:** CivicIntel Commercial Intelligence Systems  
 > **Repository:** [https://github.com/raghavs1320/civicintel](https://github.com/raghavs1320/civicintel)  
 > **Production App:** [https://civicintel-daas.vercel.app](https://civicintel-daas.vercel.app)  
+> **Member Portal:** [https://civicintel-daas.vercel.app/portal?token=tok_live_demo](https://civicintel-daas.vercel.app/portal?token=tok_live_demo)  
+> **Checkout Screen:** [https://civicintel-daas.vercel.app/checkout](https://civicintel-daas.vercel.app/checkout)  
 > **Latest Deployment:** Vercel Edge Network (Auto-deploy on GitHub push)  
 > **Data Infrastructure:** SQLite Relational Database + Daily Autonomous GitHub Actions  
+> **Total Active Permits:** **598 verified commercial projects** (Austin: 141, Dallas: 230, Orlando: 227)  
 > **Cost Profile:** $0 Upfront / $0 Infrastructure Spend (100% Free-Tier Architecture)  
 
 ---
 
 ## 1. Executive Summary & Brand Identity
 
-**CivicIntel** is an enterprise pre-opening commercial permitting Data-as-a-Service (DaaS) platform. It monitors municipal government dockets (building permits, certificates of occupancy, and contractor filings) in real-time, extracts pre-opening commercial projects (restaurants, bars, retail stores, healthcare clinics, and corporate facilities), unmasks corporate shell LLCs to identify real human decision makers, enriches them with direct cell phone numbers, generates AI sales dossiers, and licenses this intelligence to B2B field sales representatives under a **strict category exclusivity lock**.
+**CivicIntel** is an enterprise pre-market commercial permitting Data-as-a-Service (DaaS) platform. It monitors municipal government dockets (building permits, certificates of occupancy, and contractor filings) in real-time across Austin, Dallas, and Orlando, extracts pre-opening commercial projects (restaurants, bars, retail stores, healthcare clinics, and corporate facilities), unmasks corporate shell LLCs to identify real decision makers, enriches them with direct cell phone numbers, generates AI sales dossiers, and licenses this intelligence to B2B field sales representatives under a **strict category exclusivity lock**.
 
 ### Brand Rules (Mandatory for all future AI agents):
 1. **Brand Name:** Strictly **CivicIntel Commercial Intelligence Systems** (or **CivicIntel**).
-2. **Zero Personal Names:** Never expose personal names (e.g., "Raghav") in any customer-facing UI, metadata, HTML, or git commit user configs.
-3. **Zero AI Emojis:** Strictly use professional vector SVG icons. No robotic emojis (🤖, 🚀, 💰, etc.).
-4. **Visual Theme:** Clean, high-trust **enterprise light mode** (`bg-slate-50`, `bg-white`, crisp slate borders `border-slate-200`, and emerald accents `emerald-600`).
-5. **Legal & Compliance:** Explicitly positioned under the Texas Public Information Act, Florida Sunshine Law, and US Freedom of Information Act (FOIA). 100% compliant B2B commercial prospecting data.
+2. **Zero Personal Names:** Never expose personal names in any customer-facing UI, metadata, HTML, or git commit user configs.
+3. **Zero AI Emojis:** Strictly use professional vector SVG icons. No robotic emojis.
+4. **Visual Theme:** Enterprise Blue-700 branding (`#1D4ED8`, `blue-700`) with high-trust white/slate backgrounds (`bg-slate-50`, `bg-white`) and subtle slate borders (`border-slate-200`).
+5. **Session Persistence:** Full `localStorage` persistence across all browser sessions. Users never get logged out automatically.
+6. **Legal & Compliance:** Explicitly positioned under the Texas Public Information Act, Florida Sunshine Law, and US Freedom of Information Act (FOIA). 100% compliant B2B commercial prospecting data.
 
 ---
 
-## 2. The Core Problem & Value Proposition
-
-### The Problem in Commercial Sales:
-In B2B territory sales (POS systems, food wholesale, commercial insurance, signage, commercial kitchen equipment, linens):
-* Once a new restaurant or retail shop hangs a *"Coming Soon"* banner or opens its doors, **it is already too late**. 
-* The POS system (Toast, Square) was contracted 90 days ago.
-* The commercial kitchen stoves, grease traps, and walk-in coolers were ordered 120 days ago.
-* The commercial property & liability insurance policy was signed before the lease was executed.
-* Platforms like ZoomInfo, Apollo, and Google Maps only list businesses **after** they have already been operating for months.
-
-### The CivicIntel Solution:
-1. **90-Day Head Start:** Detects businesses at the municipal permit filing stage—months before physical construction is finished.
-2. **LLC Unmasking:** Converts obscure shell filings like *"TX TACO VENTURES 2026 LLC"* into the real operating principal, managing partner, or general contractor.
-3. **Direct Contact Discovery:** Matches verified corporate registry records to surface direct decision-maker cell phone numbers.
-4. **AI Sales Dossiers:** Provides vendor sales reps with equipment requirements, estimated opening timelines, and tailored sales pitch angles.
-5. **Category Exclusivity (1 Rep per Category per City):** Sales reps know their local direct competitor cannot purchase or receive the same leads.
-
----
-
-## 3. Customer Segments & Sales Rep Personas
-
-CivicIntel sells to 10 non-competing B2B territory vendor categories in each metropolitan area:
-
-| # | Vendor Seat Category | Target Companies / Reps | What They Sell | Why Timing Matters |
-| :-: | :--- | :--- | :--- | :--- |
-| **1** | **Point-of-Sale (POS) Systems** | Toast, Clover, Square, Shift4, SpotOn reps | Touchscreen terminals, handhelds, kitchen display systems (KDS) | Must be cabled and configured 30–60 days before staff training. |
-| **2** | **Food & Beverage Wholesale** | Sysco, US Foods, Gordon Food Service, Ben E. Keith | Meats, seafood, dry goods, produce distribution contracts | Exclusive primary vendor supply contracts signed during kitchen buildout. |
-| **3** | **Commercial Insurance** | State Farm, Farmers, Travelers, independent brokers | General liability, workers' comp, commercial property | Landlords require proof of insurance before handing over buildout keys. |
-| **4** | **Commercial Kitchen Equipment** | Restaurant depot dealers, Hobart, True Refrigeration | Ovens, walk-in coolers, ventilation hoods, fryers | Ordered during rough electrical and plumbing phase (months 2–4). |
-| **5** | **Commercial Signage & Graphics** | FASTSIGNS, Signarama, local custom neon fabricators | Channel letter signs, exterior monument signs, window vinyl | City sign permits take 4–8 weeks; exterior signage needed before launch. |
-| **6** | **Commercial Cleaning & Janitorial** | Post-construction cleaners, commercial janitorial franchises | Rough cleans, final turnover cleans, recurring nightly service | Needed immediately prior to municipal final inspection and certificate of occupancy. |
-| **7** | **Waste & Dumpster Services** | Waste Management, Republic Services | Commercial dumpsters, grease trap pumping | Mandatory city health and environmental compliance requirement. |
-| **8** | **Uniforms & Linen Services** | Cintas, Aramark, UniFirst territory reps | Chef coats, aprons, bar towels, floor mat leasing | Contracts signed 30 days before grand opening. |
-| **9** | **Security & Audio/Visual** | ADT Commercial, local alarm and camera installers | IP cameras, burglar alarms, ceiling audio systems | Low-voltage cabling must be pulled before drywall installation. |
-| **10** | **Merchant Working Capital** | Equipment leasing brokers, merchant cash advance agents | Buildout loans, equipment lease financing | Owners experience capital crunches in months 3–5 of construction. |
-
----
-
-## 4. Monetization & Territory Exclusivity Economics
-
-### The Model: "1 City = 10 Non-Competing Seats"
-* In each city, there are exactly **10 exclusive seats** (1 per product category).
-* A POS rep does not compete with an insurance broker; an insurance broker does not compete with a sign maker. They all sell non-competing goods to the exact same new businesses.
-* **100% Exclusivity**: If a Toast rep buys the Austin POS seat, that card turns red (`SOLD OUT (Austin)`). No other POS vendor can buy Austin.
-
-### Pricing Structure:
-* **Entry / Trial:** **$1.00 for a 7-Day Full Access License** (Zero-friction impulse conversion).
-* **Recurring:** **$199.00 / month per territory seat** (Auto-renews, cancel anytime).
-* **Corporate Expense Sweet Spot:** $199/month sits comfortably below the standard $250.00 US corporate expense threshold that field sales reps can swipe without senior management approval.
-
-### Revenue Unit Economics:
-* **Per City Potential:** 10 seats × $199/mo = **$1,990 / month** ($23,880 / year per city).
-* **Current 3 Metros (Austin, Dallas, Orlando):** 30 seats = **$5,970 / month** ($71,640 / year).
-* **Expansion to 10 Metros (Houston, Miami, Atlanta, Phoenix, etc.):** 100 seats = **$19,900 / month MRR** ($238,800 / year).
-* **Expansion to 25 Metros:** 250 seats = **$49,750 / month MRR** ($597,000 / year).
-* **Gross Margins:** **>98%**. Municipal government data is free public FOIA records; GitHub Actions and Vercel hosting run on free-tier infrastructure.
-
----
-
-## 5. Master Database Architecture & Data State
+## 2. Master Database Architecture & Data State
 
 ### Database Engine:
 * SQLite 3 (`data/database.sqlite`), relational schema optimized for sub-millisecond local queries.
@@ -89,200 +34,111 @@ CivicIntel sells to 10 non-competing B2B territory vendor categories in each met
   1. `leads`: Primary repository of verified commercial projects.
   2. `subscribers`: Active territory license holders, tokens, assigned metros, and billing status.
 
-### Current Verified Data Inventory (535 Commercial Leads):
-* **Austin Metro, TX:** 121 verified projects (21 Hospitality/Dining, 89 Retail/Commercial, 11 Healthcare).
-* **Dallas–Fort Worth, TX:** 187 verified projects ($199.18M pipeline, 9 verified direct mobile numbers, 10 Hospitality, 170 Retail/Commercial, 7 Healthcare).
-* **Orlando Metro, FL:** 227 verified projects ($312.32M pipeline, 9 Hospitality, 210 Retail/Commercial, 8 Healthcare).
-* **Total Master Pipeline Valuation:** **$511,499,582.61** across all 3 metros.
-* **Current Month Filings (Nov 2026):** 276 filings.
-* **Rolling 90-Day Pipeline (Aug–Nov 2026):** 348 filings.
-
-### `leads` Table Schema:
-```sql
-CREATE TABLE IF NOT EXISTS leads (
-    lead_id TEXT PRIMARY KEY,
-    state TEXT,
-    metro TEXT,
-    permit_number TEXT UNIQUE,
-    concept_name TEXT,
-    category TEXT,
-    priority_score REAL,
-    work_type TEXT,
-    street_address TEXT,
-    city TEXT,
-    zip_code TEXT,
-    filing_date TEXT,
-    estimated_valuation REAL,
-    status TEXT,
-    decision_maker_name TEXT,
-    decision_maker_title TEXT,
-    display_phone TEXT,
-    dial_phone TEXT,
-    direct_email TEXT,
-    linkedin_url TEXT,
-    has_direct_phone INTEGER,
-    confidence_score REAL,
-    concept_snapshot TEXT,
-    buildout_signals TEXT,
-    pitch_angle TEXT,
-    ai_dossier_formatted TEXT,
-    official_portal_url TEXT,
-    is_unmasked INTEGER,
-    created_at TEXT
-);
-```
+### Current Verified Data Inventory:
+* **Austin Metro, TX:** 141 verified projects.
+* **Dallas–Fort Worth, TX:** 230 verified projects.
+* **Orlando Metro, FL:** 227 verified projects.
+* **Total Master Pipeline:** **598 verified commercial permits**.
 
 ---
 
-## 6. Autonomous Data Harvesting & Enrichment Pipeline
-
-The Python pipeline is organized in modular stages under `src/`:
-
-```
-[City Open Data Socrata APIs]
-              │
-              ▼
-   [1. src/harvester.py]
-   • Hits Austin (3syk-w9eu), Dallas (9n26-66g4), Orlando (e25j-psfz)
-   • Filters out residential pools, patio covers, fence repairs
-   • Classifies commercial categories & priority scores (1.0 to 10.0)
-              │
-              ▼
-   [2. src/enricher.py]
-   • Unmasks shell LLCs into corporate officers & managing members
-   • Cross-references Texas Comptroller & Florida Sunbiz registries
-              │
-              ▼
-   [3. src/lead_extractor.py & contact discovery]
-   • Formats telephone numbers: display format (512) 840-XXXX and tel:+1...
-   • Matches direct contractor and owner contact records
-              │
-              ▼
-   [4. src/dossier.py]
-   • AI Sales Dossier Engine: estimated opening timeline (60-120 days)
-   • Vendor sales pitch angle & high-value equipment purchase signals
-              │
-              ▼
-   [5. src/database.py & export_frontend_feeds()]
-   • Deduplicates and upserts records into data/database.sqlite
-   • Exports frontend/data/members_feed.json (448 unmasked leads)
-   • Exports frontend/data/previews.json (masked teaser leads by city)
-```
-
----
-
-## 7. Cloud Cron & Automated Deployment Cycle
-
-```
-Every Monday–Friday at 06:00 UTC (2:00 AM Eastern / 11:00 PM Pacific)
-                                │
-                                ▼
-         [GitHub Actions Runner (.github/workflows/daily_harvest.yml)]
-         • Checks out repo, sets up Python 3.11
-         • Runs: PYTHONPATH=. python3 src/orchestrator.py
-         • Updates data/database.sqlite, members_feed.json, previews.json
-         • Commits changes: 'Auto-Harvest: Update leads database and member feed'
-         • Pushes to origin main
-                                │
-                                ▼
-         [Vercel Global Edge Network]
-         • Detects git push to main
-         • Builds and deploys static frontend in ~7 seconds
-         • Edge caches invalidated globally with zero downtime
-                                │
-                                ▼
-         [Subscriber Dashboards Updated Live]
-         • Subscribers refresh portal and see fresh morning filings
-```
-
----
-
-## 8. Frontend Architecture & Screen Specifications
-
-Built with zero framework bloat: pure semantic **HTML5**, **Tailwind CSS (CDN)**, and **Vanilla JavaScript**.
+## 3. Frontend Architecture & Screen Specifications
 
 ### 1. Landing Page (`frontend/index.html` & `frontend/app.js`):
-* **Hero**: Institutional headline *"Close Deals Before Construction Starts."* with live daily sync badge.
-* **1-Click City Switcher**: `[Austin, TX (71 Projects)]` `[Dallas, TX (187 Projects • $199M)]` `[Orlando, FL (190 Projects • $284M)]`.
-* **Category Pills**: `[All Commercial]` `[Restaurants & Bars]` `[Retail & Commercial]` `[Healthcare & Clinics]`.
-* **Top 10 Teaser Cards**: Renders top 10 verified projects with masked phone numbers (`(512) •••-••••`), official permit numbers, registration dates, and `[Unlock Direct Mobile ➔]` CTA.
-* **Luxury Overflow Banner**: Displays total active count (e.g. 187 buildouts) with luxury daily government ingestion notice and trial CTA.
-* **Pricing Card**: $1.00 for 7-day trial, then $199/month.
+* **Hero Live Badge:** `Municipal dockets indexed daily — 598 active permits across Austin, Dallas & Orlando · Latest: Nov 12, 2026`.
+* **Instant First Paint (SSG):** Dynamic pre-rendered cards injected by `src/static_sync.py` for 0ms load with zero layout shift.
+* **1-Click City Switcher:** Synchronized tabs displaying real live counts: `Austin, TX (141)`, `Dallas, TX (230)`, `Orlando, FL (227)`.
+* **Top 10 Teaser Cards:** Renders top verified projects with masked phone numbers, official permit numbers, registration dates, and direct unlock CTA.
+* **Pricing Card:** $1.00 for 7-day trial, then $199/month.
 
 ### 2. Territory Checkout (`frontend/checkout.html`):
-* **City Selector**: Pre-filled from landing page or customizable.
-* **10 Visual Category Cards**: Vector SVG icons, `AVAILABLE • 1 SEAT` green badges, and `🔒 SOLD OUT` red badges driven by `frontend/data/tokens.json`.
-* **Motivation & Valuation Box**: Displays live pipeline size and average commission ($3,000–$7,500).
-* **Instant Activation**: Generates access token, records browser session, and routes immediately to customer's personal portal.
+* **City Selector:** Pre-filled from landing page or customizable.
+* **10 Visual Category Cards:** Vector SVG icons, `AVAILABLE • 1 SEAT` blue badges, and `SOLD OUT` red badges.
+* **Instant Activation:** Generates access token, records permanent `localStorage` session, and routes directly to the personal portal.
 
 ### 3. Member Intelligence Portal (`frontend/portal.html` & `frontend/portal.js`):
-* **Territory Lock Header**: Shows active license status and assigned metro corridor.
-* **Unmasked Intelligence**: 100% full direct phone numbers with `tel:` tap-to-call links.
-* **Filters**: Quick pills for Restaurants, Bars & Breweries, Cafes & Bakeries, Retail, Healthcare.
-* **Toggles**: `Direct Phones Only` toggle and `Current Month Only` toggle.
-* **Live Search**: Instant search by concept name, street address, or owner name.
-* **Sales Dossier Modal**: Complete AI pre-opening dossier with 1-click clipboard copy.
+* **Enterprise Data Table:** High-density table with expandable detail rows showing full permit scope, AI sales intelligence pitch, direct phone, city docket, and Google Maps satellite link.
+* **1-Click Lead CRM:** Tactile checkbox on every row (`toggleConnected(leadId, e)`) to mark leads as Connected, stored persistently in `localStorage`.
+* **5-Metric Stats Strip:** Live counters for Total Leads, Connected Leads, Remaining to Call, Average Project Budget, and Last Updated date.
+* **Pipeline Status Filter Tabs:** Instant 1-click filtering between `All Leads`, `Remaining to Call`, and `Connected`.
+* **Sorting Engine:** `getComparableDate()` sorting ensuring newest filings (including "Recent" filings) always appear at the top.
+* **CSV Export:** Full 1-click CSV export including pipeline connection status.
+* **Session Persistence (`frontend/auth.js`):** Permanent `localStorage` authentication ensures users never get automatically logged out across browser sessions or days.
 
 ---
 
-## 9. Key Architectural Decisions & Pivots Log
+## 4. Autonomous Data Harvesting & Deployment Cycle
 
-| Decision / Pivot | Why It Was Made |
-| :--- | :--- |
-| **90-Day Rolling Pipeline vs 30 Days** | Commercial buildouts take 3–6 months. Contracts for equipment, POS, and food supply are signed in months 2–4. Restricting to 30 days deleted leads right before owners buy. |
-| **10 Vendor Seats at Checkout vs Full City Feed in Portal** | Early design artificially restricted reps to 3–6 leads per micro-category, making the tool feel empty. Solution: sell exclusivity by vendor product type, but grant the subscriber the full city pipeline with in-dashboard filter pills so they never miss deals. |
-| **10 Preview Leads on Landing Page vs 30 Leads** | Showing 30 cards created page scroll fatigue. 10 preview leads provides immediate proof of quality, followed by a luxury callout banner showing the remaining 170+ leads unlocked via trial. |
-| **$199/month Pricing vs $350/month** | Research into US field sales corporate credit card allowances revealed that expenses under $250 do not require VP/manager approval. Reps can expense $199/month on impulse. |
-| **Pure Static Frontend with JSON Feeds vs Dynamic Server API** | Running static JSON feeds deployed to Vercel global CDN achieves 0ms database query latency, $0 server cost, 100% uptime, and scales to millions of visitors without infrastructure failure. |
+```
+[City Open Data APIs (Austin, Dallas, Orlando)]
+                      │
+                      ▼
+            [1. src/harvester.py]
+            • Hits Socrata and ArcGIS REST endpoints
+            • Filters out residential pools and minor repairs
+            • Classifies commercial categories & priority scores
+                      │
+                      ▼
+            [2. src/enricher.py & contact discovery]
+            • Unmasks shell LLCs into corporate officers
+            • Formats contractor dial links and direct contacts
+                      │
+                      ▼
+            [3. src/dossier.py]
+            • AI Sales Dossier Engine: estimated opening timeline
+            • Generates vendor pitch angles and equipment purchase signals
+                      │
+                      ▼
+            [4. src/database.py & src/static_sync.py]
+            • Deduplicates and upserts into data/database.sqlite
+            • Exports frontend/data/members_feed.json & previews.json
+            • Injects live metrics & pre-rendered HTML cards for 0ms paint
+                      │
+                      ▼
+[GitHub Actions (.github/workflows/daily_harvest.yml)] -> [Vercel Edge Network (Auto Deploy)]
+```
 
 ---
 
-## 10. File & Directory Reference Guide
+## 5. Directory Reference Guide
 
 ```
 chinaproducts/
-├── PROJECT_MEMORY.md                     <-- Master quick-reference for AI & developers
-├── requirements.txt                      <-- Python dependencies (requests, pydantic, etc.)
-├── vercel.json                           <-- Production Vercel configuration (outputDirectory: frontend)
+├── PROJECT_MEMORY.md                     <-- Root operational briefing
+├── requirements.txt                      <-- Python dependencies
+├── vercel.json                           <-- Production Vercel config
 ├── serve.py                              <-- Local dev HTTP server (port 8000)
-├── .github/
-│   └── workflows/
-│       ├── daily_harvest.yml             <-- Monday-Friday 06:00 UTC autonomous cron harvester
-│       └── deploy_frontend.yml           <-- GitHub Pages deployment workflow
-├── config/
-│   └── sources.json                      <-- Municipal API endpoints, query filters, and field mappings
+├── .github/workflows/
+│   └── daily_harvest.yml                 <-- Autonomous daily harvest & deploy
+├── config/sources.json                   <-- Municipal API endpoints & query filters
 ├── data/
-│   ├── database.sqlite                   <-- Master SQLite database (448 commercial leads)
+│   ├── database.sqlite                   <-- Master SQLite database (598 leads)
 │   ├── raw/harvested_leads.json          <-- Raw ingested permits
-│   └── processed/
-│       ├── unmasked_leads.json           <-- Leads with unmasked LLC owners
-│       ├── enriched_leads.json           <-- Leads with verified phone numbers
-│       └── dossier_leads.json            <-- Leads with AI sales dossiers
+│   └── processed/                        <-- Enriched and categorized datasets
 ├── docs/
-│   ├── PROJECT_CONTEXT_AND_VISION.md     <-- This master architectural bible
-│   ├── CHAT_HISTORY_TRANSCRIPT.md        <-- Full formatted chronological conversation dialogue
-│   ├── raw_transcript_full.jsonl         <-- Complete raw structured JSONL transcript
-│   └── FIRST_CUSTOMER_SPRINT.md          <-- Outbound sales acquisition playbook
+│   ├── PROJECT_CONTEXT_AND_VISION.md     <-- This master architecture bible
+│   ├── GO_TO_MARKET_AND_VISION.md        <-- Outbound strategy, vision, and Apollo playbook
+│   ├── CHAT_HISTORY_TRANSCRIPT.md        <-- Full chronological conversation transcript
+│   └── raw_transcript_full.jsonl         <-- Raw structured conversation log
 ├── frontend/
-│   ├── index.html                        <-- Public landing page & showcase
+│   ├── index.html                        <-- Public landing page (Blue-700 theme)
 │   ├── checkout.html                     <-- 10-category exclusivity checkout screen
-│   ├── portal.html                       <-- Member intelligence portal
-│   ├── app.js                            <-- Showcase interactive filtering & top 10 rendering
-│   ├── portal.js                         <-- Member portal filtering, search, and dialer logic
-│   ├── auth.js                           <-- Token authentication and license gating logic
+│   ├── portal.html                       <-- Member intelligence portal & CRM table
+│   ├── app.js                            <-- Showcase interactive filtering & logic
+│   ├── portal.js                         <-- Member portal CRM, filtering, search & sorting
+│   ├── auth.js                           <-- Permanent localStorage authentication
 │   └── data/
-│       ├── members_feed.json             <-- 448 unmasked leads for member dashboards
-│       ├── previews.json                 <-- Masked teaser leads by metro (Austin, Dallas, Orlando)
-│       └── tokens.json                   <-- Active territory licensee tokens and FOMO locks
-├── scripts/
-│   └── export_project_memory.py          <-- Generates physical documentation from transcript
+│       ├── members_feed.json             <-- 598 unmasked leads for member portal
+│       ├── previews.json                 <-- Masked teaser leads by metro
+│       └── tokens.json                   <-- Territory licensee tokens
+├── scripts/export_project_memory.py      <-- Synchronizes all physical documentation
 ├── src/
-│   ├── orchestrator.py                   <-- Master pipeline runner (stages 1 to 5)
-│   ├── harvester.py                      <-- Municipal Socrata Open Data scraper & classifier
+│   ├── orchestrator.py                   <-- Master pipeline runner
+│   ├── harvester.py                      <-- Municipal Socrata & ArcGIS scraper
 │   ├── enricher.py                       <-- Corporate LLC unmasker
 │   ├── contact_enricher.py               <-- Phone discovery & dialer formatter
 │   ├── dossier.py                        <-- AI Sales Dossier & pitch engine
-│   └── database.py                       <-- SQLite ORM & frontend feed export engine
-└── tests/
-    └── system_verification.py            <-- 10/10 production health test suite
+│   ├── database.py                       <-- SQLite ORM & frontend feed export engine
+│   └── static_sync.py                    <-- SSG pre-rendering engine
+└── tests/system_verification.py          <-- 10/10 production verification test suite
 ```
